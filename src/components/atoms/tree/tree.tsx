@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, Folder, FolderOpen, File, FileText, Image, Database, Code, Settings, ChevronLeft } from 'lucide-react';
+import { ChevronDown, Folder, FolderOpen, File, FileText, Image, Database, Code, Settings, ChevronLeft, Edit, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ActionsDropdown } from '../actionsDropdown/actionsDropdown';
 
 export interface TreeNode {
   id: string;
@@ -10,18 +11,22 @@ export interface TreeNode {
   children?: TreeNode[];
   data?: Record<string, unknown>;
   isExpanded?: boolean;
+  parentNode?: TreeNode | null;
 }
 
 export interface TreeProps {
   data: TreeNode[];
   className?: string;
-  onNodeClick?: (node: TreeNode) => void;
+  onNodeClick?: (node: TreeNode, parentNode?: TreeNode | null) => void;
   onNodeToggle?: (node: TreeNode, isExpanded: boolean) => void;
+  onNodeEdit?: (node: TreeNode, parentNode?: TreeNode | null) => void;
+  onNodeRemove?: (node: TreeNode, parentNode?: TreeNode | null) => void;
   showIcons?: boolean;
   indentSize?: number;
   selectable?: boolean;
   selectedNodeId?: string;
   onNodeSelect?: (nodeId: string) => void;
+  showActions?: boolean;
 }
 
 const getNodeIcon = (type?: string, isExpanded?: boolean) => {
@@ -52,9 +57,12 @@ const TreeNode: React.FC<{
   showIcons: boolean;
   selectable: boolean;
   selectedNodeId?: string;
-  onNodeClick?: (node: TreeNode) => void;
+  onNodeClick?: (node: TreeNode, parentNode?: TreeNode | null) => void;
   onNodeToggle?: (node: TreeNode, isExpanded: boolean) => void;
   onNodeSelect?: (nodeId: string) => void;
+  onNodeEdit?: (node: TreeNode, parentNode?: TreeNode | null) => void;
+  onNodeRemove?: (node: TreeNode, parentNode?: TreeNode | null) => void;
+  showActions?: boolean;
 }> = ({
   node,
   level,
@@ -65,6 +73,9 @@ const TreeNode: React.FC<{
   onNodeClick,
   onNodeToggle,
   onNodeSelect,
+  onNodeEdit,
+  onNodeRemove,
+  showActions,
 }) => {
   const [isExpanded, setIsExpanded] = useState(node.isExpanded || false);
   const hasChildren = node.children && node.children.length > 0;
@@ -80,7 +91,7 @@ const TreeNode: React.FC<{
   };
 
   const handleClick = () => {
-    onNodeClick?.(node);
+    onNodeClick?.(node, node.parentNode);
     if (selectable) {
       onNodeSelect?.(node.id);
     }
@@ -144,6 +155,27 @@ const TreeNode: React.FC<{
         <span className="flex-1 text-sm font-medium truncate">
           {node.label}
         </span>
+
+        {/* Actions Dropdown */}
+        {showActions && (
+          <ActionsDropdown
+            actions={[
+              {
+                label: 'Edit',
+                onClick: () => onNodeEdit?.(node, node.parentNode),
+                icon: <Edit className="w-4 h-4" />
+              },
+              { separator: true },
+              {
+                label: 'Remove',
+                onClick: () => onNodeRemove?.(node, node.parentNode),
+                icon: <Trash2 className="w-4 h-4" />,
+                danger: true
+              }
+            ]}
+            row={node}
+          />
+        )}
       </div>
 
       {/* Children */}
@@ -161,6 +193,9 @@ const TreeNode: React.FC<{
               onNodeClick={onNodeClick}
               onNodeToggle={onNodeToggle}
               onNodeSelect={onNodeSelect}
+              onNodeEdit={onNodeEdit}
+              onNodeRemove={onNodeRemove}
+              showActions={showActions}
             />
           ))}
         </div>
@@ -169,20 +204,42 @@ const TreeNode: React.FC<{
   );
 };
 
+const buildTreeWithParents = (nodes: TreeNode[], parent: TreeNode | null = null): TreeNode[] => {
+  return nodes.map(node => {
+    const nodeWithParent = {
+      ...node,
+      parentNode: parent,
+    };
+    
+    // Recursively set parent references for children
+    if (node.children) {
+      nodeWithParent.children = buildTreeWithParents(node.children, nodeWithParent);
+    }
+    
+    return nodeWithParent;
+  });
+};
+
 export const Tree: React.FC<TreeProps> = ({
   data,
   className,
   onNodeClick,
   onNodeToggle,
+  onNodeEdit,
+  onNodeRemove,
   showIcons = true,
   indentSize = 20,
   selectable = false,
   selectedNodeId,
   onNodeSelect,
+  showActions = true,
 }) => {
+  // Build tree with parent references
+  const treeWithParents = buildTreeWithParents(data);
+
   return (
     <div className={cn('w-full', className)}>
-      {data.map((node) => (
+      {treeWithParents.map((node) => (
         <TreeNode
           key={node.id}
           node={node}
@@ -194,6 +251,9 @@ export const Tree: React.FC<TreeProps> = ({
           onNodeClick={onNodeClick}
           onNodeToggle={onNodeToggle}
           onNodeSelect={onNodeSelect}
+          onNodeEdit={onNodeEdit}
+          onNodeRemove={onNodeRemove}
+          showActions={showActions}
         />
       ))}
     </div>

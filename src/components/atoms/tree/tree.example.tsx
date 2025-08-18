@@ -151,29 +151,72 @@ export const TreeExample: React.FC = () => {
     }
   ];
 
-  const handleNodeClick = (node: TreeNode) => {
-    console.log('Node clicked:', node);
-  };
-
-  const handleNodeToggle = (node: TreeNode, isExpanded: boolean) => {
-    console.log('Node toggled:', node.label, 'Expanded:', isExpanded);
+  const handleNodeClick = (node: TreeNode, parentNode?: TreeNode | null) => {
+    console.log('=== Node Clicked ===');
+    console.log('Current node:', {
+      id: node.id,
+      label: node.label,
+      type: node.type,
+      hasParent: !!parentNode
+    });
+    
+    if (parentNode) {
+      console.log('Parent node:', {
+        id: parentNode.id,
+        label: parentNode.label,
+        type: parentNode.type,
+        hasParent: !!parentNode.parentNode
+      });
+      
+      // Show the complete parent chain
+      let currentParent = parentNode;
+      const parentChain = [currentParent.label];
+      
+      while (currentParent.parentNode) {
+        currentParent = currentParent.parentNode;
+        parentChain.unshift(currentParent.label);
+      }
+      
+      console.log('Complete parent chain:', parentChain.join(' → '));
+    } else {
+      console.log('This is a root node (no parent)');
+    }
+    console.log('==================');
   };
 
   const handleNodeSelect = (nodeId: string) => {
     setSelectedNodeId(nodeId);
-    console.log('Node selected:', nodeId);
+  //   console.log('Node selected:', nodeId);
+  };
+
+  const handleNodeEdit = (node: TreeNode, parentNode?: TreeNode | null) => {
+console.log('Edit node:', node);
+    if (parentNode) {
+  console.log('Editing child of:', parentNode.label);
+    }
+    // You can implement your edit logic here
+    // For example, open a modal or form
+  };
+
+  const handleNodeRemove = (node: TreeNode, parentNode?: TreeNode | null) => {
+   // console.log('Remove node:', node);
+    if (parentNode) {
+   //   console.log('Removing child from:', parentNode.label);
+    }
+    // You can implement your remove logic here
+    // For example, show confirmation dialog
   };
 
   return (
     <div className="p-8 space-y-8">
       <div>
-        <h2 className="text-2xl font-bold mb-4">Interactive File Tree</h2>
-        <p className="text-gray-600 mb-4">Click on nodes to interact, use arrow keys for navigation</p>
+        <h2 className="text-2xl font-bold mb-4">Interactive File Tree with Actions</h2>
+        <p className="text-gray-600 mb-4">Click on nodes to interact, use arrow keys for navigation, and use the three-dot menu for actions</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Basic Tree */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Basic Tree (Selectable)</h3>
+            <h3 className="text-lg font-semibold mb-3">Tree with Actions (Edit/Remove)</h3>
             <div className="p-4 bg-gray-50 rounded-lg border">
               <Tree
                 data={sampleData}
@@ -182,22 +225,24 @@ export const TreeExample: React.FC = () => {
                 selectable={true}
                 selectedNodeId={selectedNodeId}
                 onNodeClick={handleNodeClick}
-                onNodeToggle={handleNodeToggle}
                 onNodeSelect={handleNodeSelect}
+                onNodeEdit={handleNodeEdit}
+                onNodeRemove={handleNodeRemove}
+                showActions={true}
               />
             </div>
           </div>
 
-          {/* Tree without Icons */}
+          {/* Tree without Actions */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Tree without Icons</h3>
+            <h3 className="text-lg font-semibold mb-3">Tree without Actions</h3>
             <div className="p-4 bg-gray-50 rounded-lg border">
               <Tree
                 data={sampleData}
                 showIcons={false}
                 indentSize={20}
                 onNodeClick={handleNodeClick}
-                onNodeToggle={handleNodeToggle}
+                showActions={false}
               />
             </div>
           </div>
@@ -215,6 +260,7 @@ export const TreeExample: React.FC = () => {
           <li>• <strong>Keyboard Navigation</strong> - Use Tab, Enter, Space, Arrow keys</li>
           <li>• <strong>Customizable Indentation</strong> - Adjust spacing between levels</li>
           <li>• <strong>Event Handlers</strong> - Handle clicks, toggles, and selections</li>
+          <li>• <strong>Node Actions</strong> - Edit and remove nodes via dropdown menu</li>
           <li>• <strong>Dark Mode Support</strong> - Responsive to theme changes</li>
         </ul>
       </div>
