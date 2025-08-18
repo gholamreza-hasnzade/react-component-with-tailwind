@@ -1,5 +1,6 @@
 import { MeterGroupExample } from "./components/atoms/meterGroup";
 import { ToastExample, ToastContainer } from "./components/atoms/toast";
+import { TreeExample } from "./components/atoms/tree";
 
 function App() {
   /*  const [productCode, setProductCode] = useState("");
@@ -30,6 +31,7 @@ function App() {
           helperText="This password field spans the full width of its container"
         /> */}
         <MeterGroupExample />
+       <TreeExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

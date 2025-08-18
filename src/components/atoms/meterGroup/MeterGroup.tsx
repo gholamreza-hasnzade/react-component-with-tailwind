@@ -101,7 +101,7 @@ const Meter: React.FC<MeterProps> = ({
               style={{ width: `${percentage}%` }}
               title={`${segment.label || segment.variant}: ${segment.value}%`}
               onClick={() => handleSegmentClick(segment, index)}
-              role={onSegmentClick ? 'button' : undefined}
+              {...(onSegmentClick && { role: 'button' })}
               tabIndex={onSegmentClick ? 0 : undefined}
               onKeyDown={(e) => {
                 if (onSegmentClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -137,7 +137,7 @@ const Meter: React.FC<MeterProps> = ({
               onSegmentClick ? 'hover:opacity-80 hover:scale-105' : ''
             )}
             onClick={() => handleSegmentClick(segment, index)}
-            role={onSegmentClick ? 'button' : undefined}
+            {...(onSegmentClick && { role: 'button' })}
             tabIndex={onSegmentClick ? 0 : undefined}
             onKeyDown={(e) => {
               if (onSegmentClick && (e.key === 'Enter' || e.key === ' ')) {
