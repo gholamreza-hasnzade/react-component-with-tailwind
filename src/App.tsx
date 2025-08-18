@@ -1,16 +1,12 @@
-/* import { useState } from "react";
-
-import { Input, Password } from "./components/atoms";
-import { DialogExample } from "./components/atoms/dialog/dialog.example"; */
-import { DrawerExample } from "./components/atoms/drawer/drawer.example";
+import { ToastExample, ToastContainer } from "./components/atoms/toast";
 
 function App() {
- /*  const [productCode, setProductCode] = useState("");
+  /*  const [productCode, setProductCode] = useState("");
   const [password3, setPassword3] = useState(""); */
   return (
     <>
       <div className="w-full h-screen p-4 bg-gray-50 pb-60">
-      {/*   <Input
+        {/*   <Input
           id="productCode"
           label="Product Code"
           value={productCode}
@@ -32,10 +28,9 @@ function App() {
           color="primary"
           helperText="This password field spans the full width of its container"
         /> */}
-       {/*  <DialogExample /> */}
-
-       <DrawerExample />
+        <ToastExample />
       </div>
+      <ToastContainer position="top-right" maxToasts={5} />
     </>
   );
 }
