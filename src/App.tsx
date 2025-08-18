@@ -1,3 +1,4 @@
+import { MeterGroupExample } from "./components/atoms/meterGroup";
 import { ToastExample, ToastContainer } from "./components/atoms/toast";
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
           color="primary"
           helperText="This password field spans the full width of its container"
         /> */}
-        <ToastExample />
+        <MeterGroupExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
