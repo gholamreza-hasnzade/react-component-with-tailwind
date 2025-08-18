@@ -1,0 +1,6 @@
+{
+  "validation": {
+    "fieldRequired": "The {{fieldName}} field is required"
+ 
+  }
+}

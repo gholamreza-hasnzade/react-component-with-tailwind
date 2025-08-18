@@ -1,0 +1,6 @@
+{
+  "validation": {
+    "fieldRequired": "  لطفا {{fieldName}} را خالی نگذارید "
+    
+  }
+}
