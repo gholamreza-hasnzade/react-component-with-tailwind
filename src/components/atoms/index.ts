@@ -45,3 +45,6 @@ export type { ToastContainerProps } from "@/components/atoms/toast/ToastContaine
 
 export { Tree } from "@/components/atoms/tree/tree";
 export type { TreeNode, TreeProps } from "@/components/atoms/tree/tree";
+
+export { Tooltip } from "@/components/atoms/tooltip/tooltip";
+export type { TooltipProps } from "@/components/atoms/tooltip/tooltip";
