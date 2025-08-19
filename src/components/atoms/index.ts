@@ -12,3 +12,5 @@ export { Password } from "@/components/atoms/password/password";
 export { Dialog, ConfirmDialog, AlertDialog } from "@/components/atoms/dialog/dialog";
 export { useDialog } from "@/components/atoms/dialog/useDialog";
 export { Drawer, DrawerHeader, DrawerBody, DrawerFooter } from "@/components/atoms/drawer/drawer";
+export { MultiFileUpload } from "@/components/atoms/multiFileUpload/multiFileUpload";
+export { SingleFileUpload } from "@/components/atoms/singleFileUpload/singleFileUpload";

@@ -1,7 +1,9 @@
-import { MeterGroupExample } from "./components/atoms/meterGroup";
-import { ToastExample, ToastContainer } from "./components/atoms/toast";
-import { TreeExample } from "./components/atoms/tree";
-
+/* import { MeterGroupExample } from "./components/atoms/meterGroup";
+ */import { MultiFileUploadExample } from "./components/atoms/multiFileUpload";
+/* import { SingleFileUploadExample } from "./components/atoms/singleFileUpload";
+ */import { /* ToastExample, */ ToastContainer } from "./components/atoms/toast";
+/* import { TreeExample } from "./components/atoms/tree";
+ */
 function App() {
   /*  const [productCode, setProductCode] = useState("");
   const [password3, setPassword3] = useState(""); */
@@ -30,8 +32,10 @@ function App() {
           color="primary"
           helperText="This password field spans the full width of its container"
         /> */}
-        <MeterGroupExample />
-       <TreeExample />
+       {/*  <MeterGroupExample />
+       <TreeExample /> */}
+
+       <MultiFileUploadExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
