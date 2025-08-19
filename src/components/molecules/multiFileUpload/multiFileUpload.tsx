@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useToast } from "../toast/useToast";
+import { useToast } from "../../atoms/toast/useToast";
 
 export interface FileUploadConfig {
   maxSize?: number; // in bytes

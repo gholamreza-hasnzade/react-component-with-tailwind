@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, X, File, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useToast } from '../toast/useToast';
+import { useToast } from '../../atoms/toast/useToast';
 
 export interface FileUploadConfig {
   maxSize?: number; // in bytes
