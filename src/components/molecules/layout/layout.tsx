@@ -48,6 +48,7 @@ export const Layout: React.FC<LayoutProps> = ({
   const [isCollapsedState, setIsCollapsedState] = useState(isCollapsed);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
+  const [hideTimeout, setHideTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Internal state for managing expanded items
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
@@ -89,6 +90,12 @@ export const Layout: React.FC<LayoutProps> = ({
   const handleItemHover = (itemId: string, event: React.MouseEvent) => {
     if (!isCollapsedState) return;
     
+    // Clear any existing hide timeout
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      setHideTimeout(null);
+    }
+    
     const rect = event.currentTarget.getBoundingClientRect();
     const sidebarRect = event.currentTarget.closest('[data-sidebar]')?.getBoundingClientRect();
     
@@ -123,7 +130,27 @@ export const Layout: React.FC<LayoutProps> = ({
   };
 
   const handleItemLeave = () => {
-    setHoveredItem(null);
+    // Set a delay before hiding the popover
+    const timeout = setTimeout(() => {
+      setHoveredItem(null);
+    }, 150); // 150ms delay
+    setHideTimeout(timeout);
+  };
+
+  const handlePopoverEnter = () => {
+    // Clear hide timeout when mouse enters popover
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      setHideTimeout(null);
+    }
+  };
+
+  const handlePopoverLeave = () => {
+    // Set a delay before hiding the popover
+    const timeout = setTimeout(() => {
+      setHoveredItem(null);
+    }, 150); // 150ms delay
+    setHideTimeout(timeout);
   };
 
   const renderSidebarItems = (
@@ -433,68 +460,84 @@ export const Layout: React.FC<LayoutProps> = ({
     if (!item || !item.children || item.children.length === 0) return null;
 
     const popoverContent = (
-      <div
-        className="fixed bg-white border border-gray-200 rounded-lg shadow-2xl p-1 min-w-[220px] max-h-[400px] overflow-y-auto"
-        style={{
-          left: popoverPosition.x,
-          top: popoverPosition.y,
-          zIndex: 99999,
-        }}
-        onMouseEnter={() => setHoveredItem(hoveredItem)}
-        onMouseLeave={handleItemLeave}
-      >
-        {/* Arrow indicator */}
-        <div 
-          className={cn(
-            "absolute top-3 w-2 h-2 bg-white border-l border-t border-gray-200 transform rotate-45",
-            // Determine arrow position based on actual popover position relative to sidebar
-            (sidebarPosition === "left" && popoverPosition.x > window.innerWidth / 2) ||
-            (sidebarPosition === "right" && popoverPosition.x < window.innerWidth / 2)
-              ? "-right-1" // Arrow on right side of popover
-              : "-left-1"  // Arrow on left side of popover
-          )}
+      <>
+        {/* Invisible bridge area to prevent popover from hiding when moving mouse */}
+        <div
+          className="fixed"
+          style={{
+            left: sidebarPosition === "left" ? popoverPosition.x - 20 : popoverPosition.x + 220,
+            top: popoverPosition.y,
+            width: "20px",
+            height: "40px",
+            zIndex: 99998,
+          }}
+          onMouseEnter={handlePopoverEnter}
+          onMouseLeave={handlePopoverLeave}
         />
         
-        {/* Menu header */}
-        <div className="px-3 py-2 text-xs font-semibold text-gray-600 border-b border-gray-100 bg-gray-50 rounded-t-lg sticky top-0">
-          {item.label}
-        </div>
-        {/* Menu items */}
-        <div className="py-1">
-          {item.children.map((child) => (
-            <div
-              key={child.id}
-              className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
-              onClick={() => {
-                if (child.href) {
-                  window.location.href = child.href;
-                } else if (child.onClick) {
-                  child.onClick();
-                }
-              }}
-            >
-              {child.icon && (
-                <div className="w-4 h-4 mr-3 text-gray-500 group-hover:text-blue-600">
-                  {child.icon}
-                </div>
-              )}
-              <span
-                className={cn(
-                  "text-sm font-medium text-gray-700 group-hover:text-blue-700",
-                  !child.icon && "ml-0"
-                )}
+        <div
+          className="fixed bg-white border border-gray-200 rounded-lg shadow-2xl p-1 min-w-[220px] max-h-[400px] overflow-y-auto"
+          style={{
+            left: popoverPosition.x,
+            top: popoverPosition.y,
+            zIndex: 99999,
+          }}
+          onMouseEnter={handlePopoverEnter}
+          onMouseLeave={handlePopoverLeave}
+        >
+          {/* Arrow indicator */}
+          <div 
+            className={cn(
+              "absolute top-3 w-2 h-2 bg-white border-l border-t border-gray-200 transform rotate-45",
+              // Determine arrow position based on actual popover position relative to sidebar
+              (sidebarPosition === "left" && popoverPosition.x > window.innerWidth / 2) ||
+              (sidebarPosition === "right" && popoverPosition.x < window.innerWidth / 2)
+                ? "-right-1" // Arrow on right side of popover
+                : "-left-1"  // Arrow on left side of popover
+            )}
+          />
+          
+          {/* Menu header */}
+          <div className="px-3 py-2 text-xs font-semibold text-gray-600 border-b border-gray-100 bg-gray-50 rounded-t-lg sticky top-0">
+            {item.label}
+          </div>
+          {/* Menu items */}
+          <div className="py-1">
+            {item.children.map((child) => (
+              <div
+                key={child.id}
+                className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
+                onClick={() => {
+                  if (child.href) {
+                    window.location.href = child.href;
+                  } else if (child.onClick) {
+                    child.onClick();
+                  }
+                }}
               >
-                {child.label}
-              </span>
-              {child.badge && (
-                <span className="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center text-[10px] font-bold">
-                  {child.badge}
+                {child.icon && (
+                  <div className="w-4 h-4 mr-3 text-gray-500 group-hover:text-blue-600">
+                    {child.icon}
+                  </div>
+                )}
+                <span
+                  className={cn(
+                    "text-sm font-medium text-gray-700 group-hover:text-blue-700",
+                    !child.icon && "ml-0"
+                  )}
+                >
+                  {child.label}
                 </span>
-              )}
-            </div>
-          ))}
+                {child.badge && (
+                  <span className="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center text-[10px] font-bold">
+                    {child.badge}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </>
     );
 
     return createPortal(popoverContent, document.body);
