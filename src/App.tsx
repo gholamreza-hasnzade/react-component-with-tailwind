@@ -1,7 +1,9 @@
 /* import { TextareaExample } from "./components/atoms/textarea/textarea.example";
- */ import { ToastContainer } from "./components/atoms/toast/ToastContainer";
+ */ import InputExample from "./components/atoms/input/input.example";
+import TagsInputExample from "./components/atoms/tagsInput/tagsInput.example";
+import { ToastContainer } from "./components/atoms/toast/ToastContainer";
 /* import TooltipExample from "./components/atoms/tooltip/tooltip.example";
- */import { LayoutExample } from "./components/molecules/layout";
+ */ /* import { LayoutExample } from "./components/molecules/layout"; */
 function App() {
   return (
     <>
@@ -10,7 +12,9 @@ function App() {
         {/* <TextareaExample /> */}
         {/*       <TooltipExample />
          */}
-        <LayoutExample />
+        {/*  <LayoutExample /> */}
+        {/*  <InputExample /> */}
+        <TagsInputExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
