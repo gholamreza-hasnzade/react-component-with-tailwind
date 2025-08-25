@@ -41,7 +41,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 
     setToasts(prev => {
       const newToasts = [...prev, toast];
-      return newToasts.slice(-maxToasts); // Keep only the latest toasts
+      return newToasts.slice(-maxToasts); 
     });
     setNextId(prev => prev + 1);
     return id;
@@ -55,11 +55,9 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
     setToasts([]);
   }, []);
 
-  // Connect to the hook system
   useEffect(() => {
     setToastManager({ addToast, clearToasts });
     
-    // Keep window methods as fallback
     window.showToast = addToast;
     window.showSuccessToast = (options: Omit<ToastOptions, 'variant'>) => 
       addToast({ ...options, variant: 'success' });

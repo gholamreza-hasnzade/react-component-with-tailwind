@@ -1,37 +1,22 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { cn } from "@/lib/utils";
 
 export interface TooltipProps {
-  /** The content to be displayed in the tooltip */
   content: React.ReactNode;
-  /** The element that triggers the tooltip */
   children: React.ReactElement;
-  /** Position of the tooltip relative to the trigger element */
-  position?: 'top' | 'bottom' | 'left' | 'right';
-  /** Delay before showing the tooltip (in milliseconds) */
+  position?: "top" | "bottom" | "left" | "right";
   delay?: number;
-  /** Whether the tooltip is disabled */
   disabled?: boolean;
-  /** Custom CSS classes for the tooltip */
   className?: string;
-  /** Maximum width of the tooltip */
   maxWidth?: number | string;
-  /** Whether to show the tooltip arrow */
   showArrow?: boolean;
-  /** Custom offset from the trigger element */
   offset?: number;
-  /** Custom styles for the tooltip container */
   tooltipStyle?: React.CSSProperties;
-  /** Custom styles for the tooltip content */
   contentStyle?: React.CSSProperties;
-  /** Custom CSS classes for the tooltip content */
   contentClassName?: string;
-  /** Whether to allow HTML content (be careful with user input) */
   allowHtml?: boolean;
-  /** Custom arrow styles */
   arrowStyle?: React.CSSProperties;
-  /** Custom arrow CSS classes */
   arrowClassName?: string;
 }
 
@@ -46,7 +31,7 @@ const DEFAULT_OFFSET = 8;
 export const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
-  position = 'top',
+  position = "top",
   delay = 300,
   disabled = false,
   className,
@@ -61,13 +46,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
   arrowClassName,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState<Position>({ top: 0, left: 0 });
-  
+  const [tooltipPosition, setTooltipPosition] = useState<Position>({
+    top: 0,
+    left: 0,
+  });
+
   const triggerRef = useRef<HTMLElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  // Calculate tooltip position
   const calculatePosition = useCallback((): Position => {
     if (!triggerRef.current) {
       return { top: 0, left: 0 };
@@ -77,35 +64,36 @@ export const Tooltip: React.FC<TooltipProps> = ({
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
-    // Calculate tooltip width based on maxWidth
-    const tooltipWidth = typeof maxWidth === 'number' ? maxWidth : 
-                        typeof maxWidth === 'string' && maxWidth.includes('px') ? 
-                        parseInt(maxWidth) : 200;
+    const tooltipWidth =
+      typeof maxWidth === "number"
+        ? maxWidth
+        : typeof maxWidth === "string" && maxWidth.includes("px")
+        ? parseInt(maxWidth)
+        : 200;
     const halfTooltipWidth = tooltipWidth / 2;
 
     let top = 0;
     let left = 0;
 
     switch (position) {
-      case 'top':
+      case "top":
         top = triggerRect.top - 40 - offset;
-        left = triggerRect.left + (triggerRect.width / 2) - halfTooltipWidth;
+        left = triggerRect.left + triggerRect.width / 2 - halfTooltipWidth;
         break;
-      case 'bottom':
+      case "bottom":
         top = triggerRect.bottom + offset;
-        left = triggerRect.left + (triggerRect.width / 2) - halfTooltipWidth;
+        left = triggerRect.left + triggerRect.width / 2 - halfTooltipWidth;
         break;
-      case 'left':
-        top = triggerRect.top + (triggerRect.height / 2) - 15;
+      case "left":
+        top = triggerRect.top + triggerRect.height / 2 - 15;
         left = triggerRect.left - tooltipWidth - offset;
         break;
-      case 'right':
-        top = triggerRect.top + (triggerRect.height / 2) - 15;
+      case "right":
+        top = triggerRect.top + triggerRect.height / 2 - 15;
         left = triggerRect.right + offset;
         break;
     }
 
-    // Prevent overflow
     if (left < 8) left = 8;
     if (left + tooltipWidth > viewportWidth - 8) {
       left = viewportWidth - tooltipWidth - 8;
@@ -118,13 +106,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
     return { top, left };
   }, [position, offset, maxWidth]);
 
-  // Show tooltip
   const showTooltip = useCallback(() => {
     if (disabled) return;
-    
+
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
-      // Calculate position immediately after showing
       requestAnimationFrame(() => {
         const pos = calculatePosition();
         setTooltipPosition(pos);
@@ -132,7 +118,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
     }, delay);
   }, [disabled, delay, calculatePosition]);
 
-  // Hide tooltip
   const hideTooltip = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -140,21 +125,19 @@ export const Tooltip: React.FC<TooltipProps> = ({
     setIsVisible(false);
   }, []);
 
-  // Handle escape key
   useEffect(() => {
     if (!isVisible) return;
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         hideTooltip();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isVisible, hideTooltip]);
 
-  // Update position on scroll/resize
   useEffect(() => {
     if (!isVisible) return;
 
@@ -162,26 +145,24 @@ export const Tooltip: React.FC<TooltipProps> = ({
       setTooltipPosition(calculatePosition());
     };
 
-    window.addEventListener('scroll', updatePosition, true);
-    window.addEventListener('resize', updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
 
     return () => {
-      window.removeEventListener('scroll', updatePosition, true);
-      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
     };
   }, [isVisible, calculatePosition]);
 
-  // Clone children and add event handlers
   const triggerElement = React.cloneElement(children, {
     ref: triggerRef,
     onMouseEnter: showTooltip,
     onMouseLeave: hideTooltip,
     onFocus: showTooltip,
     onBlur: hideTooltip,
-    'aria-describedby': isVisible ? 'tooltip-content' : undefined,
+    "aria-describedby": isVisible ? "tooltip-content" : undefined,
   } as React.HTMLAttributes<HTMLElement>);
 
-  // Render tooltip content
   const tooltipContent = (
     <div
       ref={tooltipRef}
@@ -189,65 +170,75 @@ export const Tooltip: React.FC<TooltipProps> = ({
       role="tooltip"
       aria-hidden={!isVisible}
       className={cn(
-        'fixed z-[9999] pointer-events-none select-none',
-        'transition-all duration-200 ease-out',
+        "fixed z-[9999] pointer-events-none select-none",
+        "transition-all duration-200 ease-out",
         className
       )}
       style={{
         top: tooltipPosition.top,
         left: tooltipPosition.left,
-        ...(maxWidth && { 
-          width: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
-          maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth 
+        ...(maxWidth && {
+          width: typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth,
+          maxWidth: typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth,
         }),
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'scale(1)' : 'scale(0.95)',
-        visibility: isVisible ? 'visible' : 'hidden',
-        // Debug styles to ensure visibility
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        color: 'white',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        fontSize: '14px',
-        lineHeight: '1.4',
-        whiteSpace: maxWidth ? 'normal' : 'nowrap',
-        wordWrap: 'break-word',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        border: '1px solid rgba(55, 65, 81, 1)',
+        transform: isVisible ? "scale(1)" : "scale(0.95)",
+        visibility: isVisible ? "visible" : "hidden",
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
+        color: "white",
+        padding: "8px 12px",
+        borderRadius: "6px",
+        fontSize: "14px",
+        lineHeight: "1.4",
+        whiteSpace: maxWidth ? "normal" : "nowrap",
+        wordWrap: "break-word",
+        boxShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        border: "1px solid rgba(55, 65, 81, 1)",
         ...tooltipStyle,
       }}
     >
-      <div 
-        className={cn(
-          'tooltip-content',
-          contentClassName
-        )}
+      <div
+        className={cn("tooltip-content", contentClassName)}
         style={{
-          width: '100%',
-          maxWidth: '100%',
-          overflowWrap: 'break-word',
+          width: "100%",
+          maxWidth: "100%",
+          overflowWrap: "break-word",
           ...contentStyle,
         }}
-        {...(allowHtml && typeof content === 'string' ? { dangerouslySetInnerHTML: { __html: content } } : {})}
+        {...(allowHtml && typeof content === "string"
+          ? { dangerouslySetInnerHTML: { __html: content } }
+          : {})}
       >
-        {!allowHtml || typeof content !== 'string' ? content : null}
+        {!allowHtml || typeof content !== "string" ? content : null}
       </div>
       {showArrow && (
         <div
-          className={cn('absolute w-0 h-0', arrowClassName)}
+          className={cn("absolute w-0 h-0", arrowClassName)}
           style={{
-            [position === 'top' || position === 'bottom' ? 'left' : 'top']: '50%',
-            [position === 'top' ? 'top' : position === 'bottom' ? 'bottom' : position === 'left' ? 'left' : 'right']: `-${ARROW_SIZE}px`,
-            transform: position === 'top' || position === 'bottom' ? 'translateX(-50%)' : 'translateY(-50%)',
-            borderStyle: 'solid',
+            [position === "top" || position === "bottom" ? "left" : "top"]:
+              "50%",
+            [position === "top"
+              ? "top"
+              : position === "bottom"
+              ? "bottom"
+              : position === "left"
+              ? "left"
+              : "right"]: `-${ARROW_SIZE}px`,
+            transform:
+              position === "top" || position === "bottom"
+                ? "translateX(-50%)"
+                : "translateY(-50%)",
+            borderStyle: "solid",
             borderWidth: `${ARROW_SIZE}px`,
-            borderColor: position === 'top' 
-              ? 'transparent transparent rgba(0, 0, 0, 0.9) transparent'
-              : position === 'bottom'
-              ? 'rgba(0, 0, 0, 0.9) transparent transparent transparent'
-              : position === 'left'
-              ? 'transparent rgba(0, 0, 0, 0.9) transparent transparent'
-              : 'transparent transparent transparent rgba(0, 0, 0, 0.9)',
+            borderColor:
+              position === "top"
+                ? "transparent transparent rgba(0, 0, 0, 0.9) transparent"
+                : position === "bottom"
+                ? "rgba(0, 0, 0, 0.9) transparent transparent transparent"
+                : position === "left"
+                ? "transparent rgba(0, 0, 0, 0.9) transparent transparent"
+                : "transparent transparent transparent rgba(0, 0, 0, 0.9)",
             ...arrowStyle,
           }}
         />
@@ -262,4 +253,3 @@ export const Tooltip: React.FC<TooltipProps> = ({
     </>
   );
 };
-

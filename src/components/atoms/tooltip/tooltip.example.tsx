@@ -9,7 +9,6 @@ export const TooltipExample: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Tooltip Component Test</h1>
         
-        {/* Predefined Style Examples */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Predefined Styles (Matching Your Palette)</h2>
           <div className="flex flex-wrap gap-4 items-center">
@@ -60,11 +59,9 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
         
-        {/* Custom HTML and Styling Examples */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Custom HTML & Styling</h2>
           <div className="flex flex-wrap gap-4 items-center">
-            {/* Custom HTML Content */}
             <Tooltip 
               content="<strong>Bold text</strong> and <em>italic text</em> with <span style='color: #ff6b6b;'>custom color</span>"
               allowHtml={true}
@@ -75,7 +72,6 @@ export const TooltipExample: React.FC = () => {
               </div>
             </Tooltip>
             
-            {/* Custom Styling */}
             <Tooltip 
               content="Custom styled tooltip"
               tooltipStyle={{
@@ -96,7 +92,6 @@ export const TooltipExample: React.FC = () => {
               </div>
             </Tooltip>
             
-            {/* Custom Content Styling */}
             <Tooltip 
               content={
                 <div className="text-center">
@@ -123,7 +118,6 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
         
-        {/* Very Simple Test - Just a div */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Simple Div Test</h2>
           <Tooltip content="🎉 This should work!">
@@ -136,7 +130,6 @@ export const TooltipExample: React.FC = () => {
           </Tooltip>
         </section>
         
-        {/* Simple Test Tooltip - Easy to test */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Test Tooltip (Hover Here)</h2>
           <Tooltip content="🎉 Tooltip is working! This is a test tooltip.">
@@ -146,7 +139,6 @@ export const TooltipExample: React.FC = () => {
           </Tooltip>
         </section>
         
-        {/* Simple Test Tooltips */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Basic Tooltips</h2>
           <div className="flex flex-wrap gap-4 items-center">
@@ -168,7 +160,6 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
 
-        {/* Icon Tooltip Test */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Icon Tooltips</h2>
           <div className="flex flex-wrap gap-4 items-center">
@@ -186,7 +177,6 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
 
-        {/* Text Tooltip Test */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Text Tooltips</h2>
           <div className="flex flex-wrap gap-4 items-center">
@@ -204,7 +194,6 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
 
-        {/* MaxWidth Test */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">MaxWidth Test</h2>
           <div className="flex flex-wrap gap-4 items-center">
@@ -246,7 +235,6 @@ export const TooltipExample: React.FC = () => {
           </div>
         </section>
 
-        {/* Debug Info */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Debug Information</h2>
           <div className="bg-white p-6 rounded-lg border">

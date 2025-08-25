@@ -2,7 +2,6 @@ import React from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Ensure the creation log prints only once per toast id (avoids StrictMode double-invoke noise)
 const loggedToastIds = new Set<string>();
 
 export interface ToastProps {
@@ -39,7 +38,6 @@ const Toast: React.FC<ToastProps> = ({
   const [progress, setProgress] = React.useState(100);
 
   React.useEffect(() => {
-    // Log only once when toast is created (even under StrictMode in dev)
     if (!loggedToastIds.has(id)) {
       loggedToastIds.add(id);
     }

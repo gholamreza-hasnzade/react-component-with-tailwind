@@ -1,55 +1,78 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
+import type { ToastOptions } from "./types";
 
-// Get the toast manager from the container
-let toastManager: any = null;
+interface ToastManager {
+  addToast: (options: ToastOptions) => string;
+  clearToasts: () => void;
+}
 
-export const setToastManager = (manager: any) => {
+let toastManager: ToastManager | null = null;
+
+export const setToastManager = (manager: ToastManager | null) => {
   toastManager = manager;
 };
 
 export const useToast = () => {
-  const showToast = useCallback((options: any) => {
+  const showToast = useCallback((options: ToastOptions) => {
     if (toastManager?.addToast) {
       return toastManager.addToast(options);
     }
-    // Fallback to window if manager not set
     return window.showToast?.(options);
   }, []);
 
-  const showSuccessToast = useCallback((options: any) => {
-    if (toastManager?.addToast) {
-      return toastManager.addToast({ ...options, variant: 'success' });
-    }
-    return window.showSuccessToast?.(options);
-  }, []);
+  const showSuccessToast = useCallback(
+    (options: Omit<ToastOptions, "variant">) => {
+      if (toastManager?.addToast) {
+        return toastManager.addToast({ ...options, variant: "success" });
+      }
+      return window.showSuccessToast?.(options);
+    },
+    []
+  );
 
-  const showErrorToast = useCallback((options: any) => {
-    if (toastManager?.addToast) {
-      return toastManager.addToast({ ...options, variant: 'error' });
-    }
-    return window.showErrorToast?.(options);
-  }, []);
+  const showErrorToast = useCallback(
+    (options: Omit<ToastOptions, "variant">) => {
+      if (toastManager?.addToast) {
+        return toastManager.addToast({ ...options, variant: "error" });
+      }
+      return window.showErrorToast?.(options);
+    },
+    []
+  );
 
-  const showWarningToast = useCallback((options: any) => {
-    if (toastManager?.addToast) {
-      return toastManager.addToast({ ...options, variant: 'warning' });
-    }
-    return window.showWarningToast?.(options);
-  }, []);
+  const showWarningToast = useCallback(
+    (options: Omit<ToastOptions, "variant">) => {
+      if (toastManager?.addToast) {
+        return toastManager.addToast({ ...options, variant: "warning" });
+      }
+      return window.showWarningToast?.(options);
+    },
+    []
+  );
 
-  const showInfoToast = useCallback((options: any) => {
-    if (toastManager?.addToast) {
-      return toastManager.addToast({ ...options, variant: 'info' });
-    }
-    return window.showInfoToast?.(options);
-  }, []);
+  const showInfoToast = useCallback(
+    (options: Omit<ToastOptions, "variant">) => {
+      if (toastManager?.addToast) {
+        return toastManager.addToast({ ...options, variant: "info" });
+      }
+      return window.showInfoToast?.(options);
+    },
+    []
+  );
 
-  const showLoadingToast = useCallback((options: any) => {
-    if (toastManager?.addToast) {
-      return toastManager.addToast({ ...options, loading: true, persistent: true });
-    }
-    return window.showLoadingToast?.(options);
-  }, []);
+  const showLoadingToast = useCallback(
+    (options: Omit<ToastOptions, "loading" | "persistent">) => {
+      if (toastManager?.addToast) {
+        return toastManager.addToast({
+          ...options,
+          loading: true,
+          persistent: true,
+        });
+      }
+      return window.showLoadingToast?.(options);
+    },
+    []
+  );
 
   const clearToasts = useCallback(() => {
     if (toastManager?.clearToasts) {
