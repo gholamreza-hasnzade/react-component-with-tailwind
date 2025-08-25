@@ -1,6 +1,22 @@
 import React, { useState } from "react";
 import { Layout } from "./layout";
 import type { SidebarItem } from "./layout";
+import { 
+  HiHome, 
+  HiUsers, 
+  HiChartBar, 
+  HiCog, 
+  HiPlus, 
+  HiChat, 
+  HiDocumentReport, 
+  HiCalendar, 
+  HiShieldCheck, 
+  HiBell, 
+  HiChevronDown, 
+  HiChevronRight,
+  HiChevronUp,
+  HiChevronLeft
+} from "react-icons/hi";
 
 export const LayoutExample: React.FC = () => {
   const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">(
@@ -8,100 +24,41 @@ export const LayoutExample: React.FC = () => {
   );
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  
-
 
   // Define sidebar items as objects
   const sidebarItems: SidebarItem[] = [
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-          />
-        </svg>
-      ),
+      icon: <HiHome className="w-5 h-5" />,
       href: "#dashboard",
     },
     {
       id: "users",
       label: "Users",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-          />
-        </svg>
-      ),
+      icon: <HiUsers className="w-5 h-5" />,
       href: "#users",
       badge: 12,
     },
     {
       id: "analytics",
       label: "Analytics",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-
+      icon: <HiChartBar className="w-5 h-5" />,
       children: [
         {
           id: "reports",
           label: "Reports",
-          icon: (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          ),
-
+          icon: <HiDocumentReport className="w-4 h-4" />,
           children: [
             {
               id: "daily-reports",
               label: "Daily Reports",
-              icon: (
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              ),
               href: "#daily-reports",
             },
             {
               id: "weekly-reports",
               label: "Weekly Reports",
-              icon: (
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              ),
+              icon: <HiCalendar className="w-3 h-3" />,
               href: "#weekly-reports",
             },
           ],
@@ -109,21 +66,12 @@ export const LayoutExample: React.FC = () => {
         {
           id: "insights",
           label: "Insights",
-          icon: (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          ),
           href: "#insights",
         },
         {
           id: "metrics",
           label: "Metrics",
-          icon: (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          ),
+          icon: <HiChartBar className="w-4 h-4" />,
           href: "#metrics",
         },
       ],
@@ -131,87 +79,23 @@ export const LayoutExample: React.FC = () => {
     {
       id: "settings",
       label: "Settings",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
-
+      icon: <HiCog className="w-5 h-5" />,
       children: [
         {
           id: "general-settings",
           label: "General",
-          icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ),
           href: "#general-settings",
         },
         {
           id: "security-settings",
           label: "Security",
-          icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          ),
+          icon: <HiShieldCheck className="w-4 h-4" />,
           href: "#security-settings",
         },
         {
           id: "notifications-settings",
           label: "Notifications",
-          icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-5 5v-5z"
-              />
-            </svg>
-          ),
+          icon: <HiBell className="w-4 h-4" />,
           href: "#notifications-settings",
         },
       ],
@@ -219,41 +103,13 @@ export const LayoutExample: React.FC = () => {
     {
       id: "new-project",
       label: "New Project",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-      ),
+      icon: <HiPlus className="w-5 h-5" />,
       onClick: () => alert("New Project clicked!"),
     },
     {
       id: "messages",
       label: "Messages",
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-          />
-        </svg>
-      ),
+      icon: <HiChat className="w-5 h-5" />,
       href: "#messages",
       badge: 3,
     },
@@ -289,22 +145,10 @@ export const LayoutExample: React.FC = () => {
               Layout Controls
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-blue-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-                    />
-                  </svg>
+                  <HiChevronDown className="w-5 h-5 mr-2 text-blue-500" />
                   Sidebar Position
                 </h3>
                 <div className="flex space-x-3">
@@ -337,19 +181,7 @@ export const LayoutExample: React.FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                    />
-                  </svg>
+                  <HiChevronUp className="w-5 h-5 mr-2 text-green-500" />
                   Sidebar Width
                 </h3>
                 <div className="space-y-3">
@@ -379,19 +211,7 @@ export const LayoutExample: React.FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-purple-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
+                  <HiChevronLeft className="w-5 h-5 mr-2 text-purple-500" />
                   Collapse Mode
                 </h3>
                 <div className="space-y-3">
@@ -425,19 +245,7 @@ export const LayoutExample: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg">
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <HiHome className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -452,19 +260,7 @@ export const LayoutExample: React.FC = () => {
 
               <div className="flex items-start space-x-3 p-4 bg-green-50 rounded-lg">
                 <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <HiChevronRight className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -479,19 +275,7 @@ export const LayoutExample: React.FC = () => {
 
               <div className="flex items-start space-x-3 p-4 bg-purple-50 rounded-lg">
                 <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <HiBell className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">Badge Support</h4>
@@ -504,26 +288,15 @@ export const LayoutExample: React.FC = () => {
 
               <div className="flex items-start space-x-3 p-4 bg-orange-50 rounded-lg">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <HiChevronDown className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">
                     Automatic Expandable Navigation
                   </h4>
                   <p className="text-sm text-gray-600">
-                    Click parent items to expand/collapse children automatically - no manual state management needed!
+                    Click parent items to expand/collapse children automatically
+                    - no manual state management needed!
                   </p>
                 </div>
               </div>
@@ -537,30 +310,32 @@ export const LayoutExample: React.FC = () => {
             </h3>
             <div className="bg-gray-800 rounded-lg p-4 overflow-x-auto">
               <pre className="text-green-400 text-sm">
-                {`// Define sidebar items as objects
+                {`// Import react-icons
+import { HiHome, HiCog, HiShieldCheck } from "react-icons/hi";
+
+// Define sidebar items as objects
 const sidebarItems: SidebarItem[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: <DashboardIcon />,
+    icon: <HiHome className="w-5 h-5" />,
     href: '#dashboard'
   },
   {
     id: 'settings',
     label: 'Settings',
-    icon: <SettingsIcon />,
+    icon: <HiCog className="w-5 h-5" />,
     href: '#settings',
     children: [
       {
         id: 'general',
         label: 'General',
-        icon: <GeneralIcon />,
         href: '#general'
       },
       {
         id: 'security',
         label: 'Security',
-        icon: <SecurityIcon />,
+        icon: <HiShieldCheck className="w-4 h-4" />,
         href: '#security'
       }
     ]

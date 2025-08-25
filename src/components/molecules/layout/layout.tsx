@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
+import { HiChevronRight, HiBell, HiX } from "react-icons/hi";
 
 export interface SidebarItem {
   id: string;
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   href?: string;
   onClick?: () => void;
   badge?: string | number;
@@ -44,13 +46,22 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(showSidebar);
   const [isCollapsedState, setIsCollapsedState] = useState(isCollapsed);
-  
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
+
   // Internal state for managing expanded items
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  
+
+  // Close all children when sidebar is collapsed
+  useEffect(() => {
+    if (isCollapsedState) {
+      setExpandedItems(new Set());
+    }
+  }, [isCollapsedState]);
+
   // Toggle function for expandable items
   const toggleItem = useCallback((itemId: string) => {
-    setExpandedItems(prev => {
+    setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
@@ -75,7 +86,50 @@ export const Layout: React.FC<LayoutProps> = ({
 
   const currentSidebarWidth = isCollapsedState ? collapsedWidth : sidebarWidth;
 
-  const renderSidebarItems = (items: SidebarItem[] = sidebarItems, level: number = 0) => {
+  const handleItemHover = (itemId: string, event: React.MouseEvent) => {
+    if (!isCollapsedState) return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const sidebarRect = event.currentTarget.closest('[data-sidebar]')?.getBoundingClientRect();
+    
+    if (sidebarRect) {
+      let x: number;
+      if (sidebarPosition === "left") {
+        // For left sidebar: popover appears to the right
+        x = sidebarRect.right + 8;
+      } else {
+        // For right sidebar: popover appears to the left
+        x = sidebarRect.left - 8;
+      }
+      
+      // Ensure popover doesn't go off-screen
+      const popoverWidth = 220; // min-width from CSS
+      const viewportWidth = window.innerWidth;
+      
+      if (sidebarPosition === "left" && x + popoverWidth > viewportWidth) {
+        // If popover would go off right edge, position it to the left of sidebar
+        x = sidebarRect.left - popoverWidth - 8;
+      } else if (sidebarPosition === "right" && x - popoverWidth < 0) {
+        // If popover would go off left edge, position it to the right of sidebar
+        x = sidebarRect.right + 8;
+      }
+      
+      setPopoverPosition({
+        x,
+        y: rect.top
+      });
+      setHoveredItem(itemId);
+    }
+  };
+
+  const handleItemLeave = () => {
+    setHoveredItem(null);
+  };
+
+  const renderSidebarItems = (
+    items: SidebarItem[] = sidebarItems,
+    level: number = 0
+  ) => {
     if (items.length === 0) {
       return sidebar || null;
     }
@@ -95,15 +149,21 @@ export const Layout: React.FC<LayoutProps> = ({
                 <a
                   href={item.href}
                   className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors group",
+                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
                     isCollapsedState
                       ? "justify-center p-2 w-10 h-10"
                       : "px-3 py-2 justify-start"
                   )}
-                  style={!isCollapsedState && level > 0 ? { paddingLeft: `${16 + (level * 20)}px` } : {}}
+                  style={
+                    !isCollapsedState && level > 0
+                      ? { paddingLeft: `${16 + level * 20}px` }
+                      : {}
+                  }
+                  onMouseEnter={(e) => handleItemHover(item.id, e)}
+                  onMouseLeave={handleItemLeave}
                 >
                   <div className="relative">
-                    {item.icon}
+                    {item.icon }
                     {item.badge && (
                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                         {item.badge}
@@ -112,7 +172,9 @@ export const Layout: React.FC<LayoutProps> = ({
                   </div>
                   {!isCollapsedState && (
                     <>
-                      <span className="ml-3 text-sm font-medium">{item.label}</span>
+                      <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
                       {/* Expand/Collapse Arrow for items with children */}
                       {item.children && item.children.length > 0 && (
                         <button
@@ -121,25 +183,23 @@ export const Layout: React.FC<LayoutProps> = ({
                             toggleItem(item.id);
                           }}
                           className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                          aria-label={expandedItems.has(item.id) ? `Collapse ${item.label}` : `Expand ${item.label}`}
-                          title={expandedItems.has(item.id) ? `Collapse ${item.label}` : `Expand ${item.label}`}
+                          aria-label={
+                            expandedItems.has(item.id)
+                              ? `Collapse ${item.label}`
+                              : `Expand ${item.label}`
+                          }
+                          title={
+                            expandedItems.has(item.id)
+                              ? `Collapse ${item.label}`
+                              : `Expand ${item.label}`
+                          }
                         >
-                          <svg
+                          <HiChevronRight
                             className={cn(
                               "w-4 h-4 text-gray-500 transition-transform duration-200",
                               expandedItems.has(item.id) ? "rotate-90" : ""
                             )}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
+                          />
                         </button>
                       )}
                     </>
@@ -149,12 +209,18 @@ export const Layout: React.FC<LayoutProps> = ({
                 <button
                   onClick={item.onClick}
                   className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors group",
+                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
                     isCollapsedState
                       ? "justify-center p-2 w-10 h-10"
                       : "px-3 py-2 justify-start w-full"
                   )}
-                  style={!isCollapsedState && level > 0 ? { paddingLeft: `${16 + (level * 20)}px` } : {}}
+                  style={
+                    !isCollapsedState && level > 0
+                      ? { paddingLeft: `${16 + level * 20}px` }
+                      : {}
+                  }
+                  onMouseEnter={(e) => handleItemHover(item.id, e)}
+                  onMouseLeave={handleItemLeave}
                 >
                   <div className="relative">
                     {item.icon}
@@ -166,7 +232,9 @@ export const Layout: React.FC<LayoutProps> = ({
                   </div>
                   {!isCollapsedState && (
                     <>
-                      <span className="ml-3 text-sm font-medium">{item.label}</span>
+                      <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
                       {/* Expand/Collapse Arrow for items with children */}
                       {item.children && item.children.length > 0 && (
                         <button
@@ -175,25 +243,23 @@ export const Layout: React.FC<LayoutProps> = ({
                             toggleItem(item.id);
                           }}
                           className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                          aria-label={expandedItems.has(item.id) ? `Collapse ${item.label}` : `Expand ${item.label}`}
-                          title={expandedItems.has(item.id) ? `Collapse ${item.label}` : `Expand ${item.label}`}
+                          aria-label={
+                            expandedItems.has(item.id)
+                              ? `Collapse ${item.label}`
+                              : `Expand ${item.label}`
+                          }
+                          title={
+                            expandedItems.has(item.id)
+                              ? `Collapse ${item.label}`
+                              : `Expand ${item.label}`
+                          }
                         >
-                          <svg
+                          <HiChevronRight
                             className={cn(
                               "w-4 h-4 text-gray-500 transition-transform duration-200",
                               expandedItems.has(item.id) ? "rotate-90" : ""
                             )}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
+                          />
                         </button>
                       )}
                     </>
@@ -202,16 +268,94 @@ export const Layout: React.FC<LayoutProps> = ({
               )}
             </div>
 
-            {/* Render Children - Always show when expanded, regardless of sidebar collapse state */}
-            {item.children && item.children.length > 0 && expandedItems.has(item.id) && (
-              <div className="mt-1">
-                {renderSidebarItems(item.children, level + 1)}
-              </div>
-            )}
+            {/* Render Children - Only show when expanded and sidebar is not collapsed */}
+            {item.children &&
+              item.children.length > 0 &&
+              expandedItems.has(item.id) &&
+              !isCollapsedState && (
+                <div className="mt-1">
+                  {renderSidebarItems(item.children, level + 1)}
+                </div>
+              )}
           </div>
         ))}
       </div>
     );
+  };
+
+  // Render popover portal
+  const renderPopover = () => {
+    if (!hoveredItem || !isCollapsedState) return null;
+
+    const item = sidebarItems.find(i => i.id === hoveredItem);
+    if (!item || !item.children || item.children.length === 0) return null;
+
+    const popoverContent = (
+      <div
+        className="fixed bg-white border border-gray-200 rounded-lg shadow-2xl p-1 min-w-[220px] max-h-[400px] overflow-y-auto"
+        style={{
+          left: popoverPosition.x,
+          top: popoverPosition.y,
+          zIndex: 99999,
+        }}
+        onMouseEnter={() => setHoveredItem(hoveredItem)}
+        onMouseLeave={handleItemLeave}
+      >
+        {/* Arrow indicator */}
+        <div 
+          className={cn(
+            "absolute top-3 w-2 h-2 bg-white border-l border-t border-gray-200 transform rotate-45",
+            // Determine arrow position based on actual popover position relative to sidebar
+            (sidebarPosition === "left" && popoverPosition.x > window.innerWidth / 2) ||
+            (sidebarPosition === "right" && popoverPosition.x < window.innerWidth / 2)
+              ? "-right-1" // Arrow on right side of popover
+              : "-left-1"  // Arrow on left side of popover
+          )}
+        />
+        
+        {/* Menu header */}
+        <div className="px-3 py-2 text-xs font-semibold text-gray-600 border-b border-gray-100 bg-gray-50 rounded-t-lg sticky top-0">
+          {item.label}
+        </div>
+        {/* Menu items */}
+        <div className="py-1">
+          {item.children.map((child) => (
+            <div
+              key={child.id}
+              className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
+              onClick={() => {
+                if (child.href) {
+                  window.location.href = child.href;
+                } else if (child.onClick) {
+                  child.onClick();
+                }
+              }}
+            >
+              {child.icon && (
+                <div className="w-4 h-4 mr-3 text-gray-500 group-hover:text-blue-600">
+                  {child.icon}
+                </div>
+              )}
+              <span
+                className={cn(
+                  "text-sm font-medium text-gray-700 group-hover:text-blue-700",
+                  !child.icon && "ml-0"
+                )}
+              >
+                {child.label}
+              </span>
+              {child.badge && (
+                <span className="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center text-[10px] font-bold">
+                  {child.badge}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    return createPortal(popoverContent, document.body);
   };
 
   return (
@@ -222,8 +366,8 @@ export const Layout: React.FC<LayoutProps> = ({
           className={cn(
             "relative bg-white transition-all duration-300 ease-in-out overflow-hidden shadow-lg",
             sidebarPosition === "left"
-              ? "order-last border-l border-gray-200"
-              : "order-first border-r border-gray-200",
+              ? "order-first border-r border-gray-200"
+              : "order-last border-l border-gray-200",
             // Desktop: always show, Mobile: always hidden
             "hidden lg:block",
             sidebarClassName
@@ -231,6 +375,7 @@ export const Layout: React.FC<LayoutProps> = ({
           style={{
             width: `${currentSidebarWidth}px`,
           }}
+          data-sidebar
         >
           {/* Collapse Toggle Button */}
           <button
@@ -243,30 +388,14 @@ export const Layout: React.FC<LayoutProps> = ({
               isCollapsedState ? "Expand sidebar" : "Collapse sidebar"
             }
           >
-            <svg
+            <HiChevronRight
               className={cn(
                 "w-4 h-4 transition-transform duration-200",
-                isCollapsedState && "rotate-180"
+                sidebarPosition === "left" 
+                  ? (isCollapsedState ? "rotate-180" : "")
+                  : (isCollapsedState ? "" : "rotate-180")
               )}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  sidebarPosition === "left"
-                    ? isCollapsedState
-                      ? "M9 5l7 7-7 7"
-                      : "M15 19l-7-7 7-7"
-                    : isCollapsedState
-                    ? "M15 19l-7-7 7-7"
-                    : "M9 5l7 7-7 7"
-                }
-              />
-            </svg>
+            />
           </button>
 
           {/* Desktop Sidebar Content */}
@@ -313,19 +442,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 className="p-2 text-gray-400 hover:text-gray-600 transition-colors relative"
                 aria-label="Notifications"
               >
-                <svg
-                  className="w-5 h-5 md:w-6 md:h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 17h5l-5 5v-5z"
-                  />
-                </svg>
+                <HiBell className="w-5 h-5 md:w-6 md:h-6" />
                 {/* Notification Badge */}
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
               </button>
@@ -344,7 +461,12 @@ export const Layout: React.FC<LayoutProps> = ({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-6 bg-gray-50">
+        <main
+          className={cn(
+            "flex-1 overflow-auto p-4 md:p-6 bg-gray-50",
+            contentClassName
+          )}
+        >
           {children}
         </main>
       </div>
@@ -379,19 +501,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
                 aria-label="Close sidebar"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <HiX className="w-5 h-5" />
               </button>
             </div>
 
@@ -402,6 +512,9 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
         </div>
       )}
+
+      {/* Render popover portal */}
+      {renderPopover()}
     </div>
   );
 };
