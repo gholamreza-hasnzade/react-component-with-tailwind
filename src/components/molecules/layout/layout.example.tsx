@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "./layout";
 import type { SidebarItem } from "./layout";
 import { 
@@ -18,26 +19,29 @@ import {
   HiChevronLeft
 } from "react-icons/hi";
 
-export const LayoutExample: React.FC = () => {
-  const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">(
-    "right"
-  );
+// Main content component that uses routing
+const LayoutContent: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">("right");
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Define sidebar items as objects
+  // Define sidebar items as objects with proper paths
   const sidebarItems: SidebarItem[] = [
     {
       id: "dashboard",
       label: "Dashboard",
       icon: <HiHome className="w-5 h-5" />,
-      href: "#dashboard",
+      href: "/dashboard",
+      onClick: () => navigate("/dashboard"),
     },
     {
       id: "users",
       label: "Users",
       icon: <HiUsers className="w-5 h-5" />,
-      href: "#users",
+      href: "/users",
+      onClick: () => navigate("/users"),
       badge: 12,
     },
     {
@@ -53,26 +57,30 @@ export const LayoutExample: React.FC = () => {
             {
               id: "daily-reports",
               label: "Daily Reports",
-              href: "#daily-reports",
+              href: "/analytics/reports/daily",
+              onClick: () => navigate("/analytics/reports/daily"),
             },
             {
               id: "weekly-reports",
               label: "Weekly Reports",
               icon: <HiCalendar className="w-3 h-3" />,
-              href: "#weekly-reports",
+              href: "/analytics/reports/weekly",
+              onClick: () => navigate("/analytics/reports/weekly"),
             },
           ],
         },
         {
           id: "insights",
           label: "Insights",
-          href: "#insights",
+          href: "/analytics/insights",
+          onClick: () => navigate("/analytics/insights"),
         },
         {
           id: "metrics",
           label: "Metrics",
           icon: <HiChartBar className="w-4 h-4" />,
-          href: "#metrics",
+          href: "/analytics/metrics",
+          onClick: () => navigate("/analytics/metrics"),
         },
       ],
     },
@@ -84,19 +92,22 @@ export const LayoutExample: React.FC = () => {
         {
           id: "general-settings",
           label: "General",
-          href: "#general-settings",
+          href: "/settings/general",
+          onClick: () => navigate("/settings/general"),
         },
         {
           id: "security-settings",
           label: "Security",
           icon: <HiShieldCheck className="w-4 h-4" />,
-          href: "#security-settings",
+          href: "/settings/security",
+          onClick: () => navigate("/settings/security"),
         },
         {
           id: "notifications-settings",
           label: "Notifications",
           icon: <HiBell className="w-4 h-4" />,
-          href: "#notifications-settings",
+          href: "/settings/notifications",
+          onClick: () => navigate("/settings/notifications"),
         },
       ],
     },
@@ -104,13 +115,18 @@ export const LayoutExample: React.FC = () => {
       id: "new-project",
       label: "New Project",
       icon: <HiPlus className="w-5 h-5" />,
-      onClick: () => alert("New Project clicked!"),
+      href: "/new-project",
+      onClick: () => {
+        alert("New Project clicked!");
+        navigate("/new-project");
+      },
     },
     {
       id: "messages",
       label: "Messages",
       icon: <HiChat className="w-5 h-5" />,
-      href: "#messages",
+      href: "/messages",
+      onClick: () => navigate("/messages"),
       badge: 3,
     },
   ];
@@ -118,7 +134,10 @@ export const LayoutExample: React.FC = () => {
   return (
     <div className="h-screen">
       <Layout
-        sidebarItems={sidebarItems}
+        sidebarItems={sidebarItems.map(item => ({
+          ...item,
+          onClick: item.onClick
+        }))}
         sidebarPosition={sidebarPosition}
         sidebarWidth={sidebarWidth}
         collapsedWidth={64}
@@ -126,6 +145,7 @@ export const LayoutExample: React.FC = () => {
         onCollapseToggle={setIsCollapsed}
         showSidebar={true}
         onSidebarToggle={(show) => console.log("Sidebar toggled:", show)}
+        currentLocation={location.pathname} // Pass React Router location
       >
         <div className="space-y-6">
           {/* Welcome Section */}
@@ -137,6 +157,42 @@ export const LayoutExample: React.FC = () => {
               A modern, responsive layout component with collapsible sidebar and
               object-based navigation.
             </p>
+            
+            {/* Current Route Display */}
+            <div className="mt-4 p-4 bg-white/20 rounded-lg">
+              <p className="text-sm text-blue-100 mb-2">Current Route:</p>
+              <code className="text-lg font-mono bg-white/30 px-3 py-1 rounded">
+                {location.pathname}
+              </code>
+            </div>
+          </div>
+
+          {/* Quick Navigation Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              🚀 Quick Navigation
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { path: "/dashboard", label: "Dashboard", icon: "🏠" },
+                { path: "/users", label: "Users", icon: "👥" },
+                { path: "/analytics/reports/weekly", label: "Weekly Reports", icon: "📊" },
+                { path: "/settings/security", label: "Security", icon: "🔒" },
+              ].map((route) => (
+                <button
+                  key={route.path}
+                  onClick={() => navigate(route.path)}
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                    location.pathname === route.path
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
+                  }`}
+                >
+                  <div className="text-2xl mb-2">{route.icon}</div>
+                  <div className="text-sm font-medium">{route.label}</div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Controls Section */}
@@ -319,24 +375,24 @@ const sidebarItems: SidebarItem[] = [
     id: 'dashboard',
     label: 'Dashboard',
     icon: <HiHome className="w-5 h-5" />,
-    href: '#dashboard'
+    href: '/dashboard'
   },
   {
     id: 'settings',
     label: 'Settings',
     icon: <HiCog className="w-5 h-5" />,
-    href: '#settings',
+    href: '/settings',
     children: [
       {
         id: 'general',
         label: 'General',
-        href: '#general'
+        href: '/general'
       },
       {
         id: 'security',
         label: 'Security',
         icon: <HiShieldCheck className="w-4 h-4" />,
-        href: '#security'
+        href: '/security'
       }
     ]
   }
@@ -355,6 +411,27 @@ const sidebarItems: SidebarItem[] = [
         </div>
       </Layout>
     </div>
+  );
+};
+
+export const LayoutExample: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LayoutContent />} />
+        <Route path="/dashboard" element={<LayoutContent />} />
+        <Route path="/users" element={<LayoutContent />} />
+        <Route path="/analytics/reports/daily" element={<LayoutContent />} />
+        <Route path="/analytics/reports/weekly" element={<LayoutContent />} />
+        <Route path="/analytics/insights" element={<LayoutContent />} />
+        <Route path="/analytics/metrics" element={<LayoutContent />} />
+        <Route path="/settings/general" element={<LayoutContent />} />
+        <Route path="/settings/security" element={<LayoutContent />} />
+        <Route path="/settings/notifications" element={<LayoutContent />} />
+        <Route path="/new-project" element={<LayoutContent />} />
+        <Route path="/messages" element={<LayoutContent />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

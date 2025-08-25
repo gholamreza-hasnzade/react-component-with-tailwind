@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { HiChevronRight, HiBell, HiX } from "react-icons/hi";
 
@@ -27,6 +28,7 @@ export interface LayoutProps {
   className?: string;
   sidebarClassName?: string;
   contentClassName?: string;
+  currentLocation?: string; // Add this for React Router integration
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -43,6 +45,7 @@ export const Layout: React.FC<LayoutProps> = ({
   className,
   sidebarClassName,
   contentClassName,
+  currentLocation = "/", // Default to root path
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(showSidebar);
   const [isCollapsedState, setIsCollapsedState] = useState(isCollapsed);
@@ -52,6 +55,61 @@ export const Layout: React.FC<LayoutProps> = ({
 
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
+  // Helper function to check if an item is active (exact match only)
+  const isItemActive = useCallback((item: SidebarItem): boolean => {
+    if (!currentLocation) return false;
+    
+    // Check if current item is active by comparing with currentLocation
+    // For items with href, use that; for items with onClick, we need to infer the route
+    if (item.href && item.href === currentLocation) {
+      return true;
+    }
+    
+    // For items with onClick, we can't easily determine the route they navigate to
+    // So we'll return false for now - in a real app you might want to store the route
+    // that each onClick handler navigates to
+    return false;
+  }, [currentLocation]);
+
+  // Helper function to check if an item or its children should be expanded
+  const shouldExpandItem = useCallback((item: SidebarItem): boolean => {
+    if (!currentLocation) return false;
+    
+    // Check if current item is active
+    if (item.href && item.href === currentLocation) {
+      return true;
+    }
+    
+    // Check if any children are active
+    if (item.children) {
+      return item.children.some(child => shouldExpandItem(child));
+    }
+    
+    return false;
+  }, [currentLocation]);
+
+  // Auto-expand parent items when their children are active
+  useEffect(() => {
+    if (currentLocation) {
+      const newExpandedItems = new Set<string>();
+      
+      const expandActiveParents = (items: SidebarItem[]) => {
+        items.forEach(item => {
+          if (shouldExpandItem(item)) {
+            newExpandedItems.add(item.id);
+            if (item.children) {
+              expandActiveParents(item.children);
+            }
+          }
+        });
+      };
+      
+      expandActiveParents(sidebarItems);
+      setExpandedItems(newExpandedItems);
+    }
+  }, [currentLocation, sidebarItems, shouldExpandItem]);
+
+  // Reset expanded items when sidebar is collapsed
   useEffect(() => {
     if (isCollapsedState) {
       setExpandedItems(new Set());
@@ -161,80 +219,17 @@ export const Layout: React.FC<LayoutProps> = ({
         {items.map((item) => (
           <div key={item.id} className={isCollapsedState ? "w-full" : ""}>
             <div className="relative">
-              {item.href ? (
-                <a
-                  href={item.href}
-                  className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
-                    isCollapsedState
-                      ? "justify-center p-2 w-10 h-10"
-                      : "px-3 py-2 justify-start"
-                  )}
-                  style={
-                    !isCollapsedState && level > 0
-                      ? {
-                          paddingLeft:
-                            sidebarPosition === "left"
-                              ? `${16 + level * 20}px`
-                              : "auto",
-                          paddingRight:
-                            sidebarPosition === "right"
-                              ? `${16 + level * 20}px`
-                              : "auto",
-                        }
-                      : {}
-                  }
-                  onMouseEnter={(e) => handleItemHover(item.id, e)}
-                  onMouseLeave={handleItemLeave}
-                  onClick={
-                    item.children && item.children.length > 0
-                      ? (e) => {
-                          e.preventDefault();
-                          toggleItem(item.id);
-                        }
-                      : undefined
-                  }
-                >
-                  <div className="relative flex items-center gap-1">
-                    {item.icon}
-                    {item.badge && (
-                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                        {item.badge}
-                      </span>
-                    )}
-                    {!isCollapsedState && (
-                      <span className="ml-3 text-sm font-medium">
-                        {item.label}
-                      </span>
-                    )}
-                  </div>
-                  {!isCollapsedState && (
-                    <>
-                      {item.children && item.children.length > 0 && (
-                        <div className="ml-auto p-1">
-                          <HiChevronRight
-                            className={cn(
-                              "w-4 h-4 text-gray-500 transition-transform duration-200",
-                              expandedItems.has(item.id) ? "rotate-90" : ""
-                            )}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
-                </a>
-              ) : (
+              {item.children && item.children.length > 0 ? (
                 <button
-                  onClick={
-                    item.children && item.children.length > 0
-                      ? () => toggleItem(item.id)
-                      : item.onClick
-                  }
+                  onClick={() => toggleItem(item.id)}
                   className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
+                    "flex items-center rounded-md transition-colors",
                     isCollapsedState
                       ? "justify-center p-2 w-10 h-10"
-                      : "px-3 py-2 justify-between w-full"
+                      : "px-3 py-2 justify-between w-full",
+                    isItemActive(item)
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
                   )}
                   style={
                     !isCollapsedState && level > 0
@@ -282,6 +277,92 @@ export const Layout: React.FC<LayoutProps> = ({
                     </>
                   )}
                 </button>
+              ) : item.onClick ? (
+                <button
+                  onClick={item.onClick}
+                  className={cn(
+                    "flex items-center rounded-md transition-colors",
+                    isCollapsedState
+                      ? "justify-center p-2 w-10 h-10"
+                      : "px-3 py-2 justify-between w-full",
+                    isItemActive(item)
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                  )}
+                  style={
+                    !isCollapsedState && level > 0
+                      ? {
+                          paddingLeft:
+                            sidebarPosition === "left"
+                              ? `${16 + level * 20}px`
+                              : "auto",
+                          paddingRight:
+                            sidebarPosition === "right"
+                              ? `${16 + level * 20}px`
+                              : "auto",
+                        }
+                      : {}
+                  }
+                  onMouseEnter={(e) => handleItemHover(item.id, e)}
+                  onMouseLeave={handleItemLeave}
+                  title={item.label}
+                >
+                  <div className="relative flex items-center gap-1">
+                    {item.icon}
+                    {item.badge && (
+                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {item.badge}
+                      </span>
+                    )}
+                    {!isCollapsedState && (
+                      <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              ) : (
+                <div
+                  className={cn(
+                    "flex items-center rounded-md transition-colors",
+                    isCollapsedState
+                      ? "justify-center p-2 w-10 h-10"
+                      : "px-3 py-2 justify-between w-full",
+                    isItemActive(item)
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                  )}
+                  style={
+                    !isCollapsedState && level > 0
+                      ? {
+                          paddingLeft:
+                            sidebarPosition === "left"
+                              ? `${16 + level * 20}px`
+                              : "auto",
+                          paddingRight:
+                            sidebarPosition === "right"
+                              ? `${16 + level * 20}px`
+                              : "auto",
+                        }
+                      : {}
+                  }
+                  onMouseEnter={(e) => handleItemHover(item.id, e)}
+                  onMouseLeave={handleItemLeave}
+                >
+                  <div className="relative flex items-center gap-1">
+                    {item.icon}
+                    {item.badge && (
+                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {item.badge}
+                      </span>
+                    )}
+                    {!isCollapsedState && (
+                      <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
 
@@ -313,11 +394,14 @@ export const Layout: React.FC<LayoutProps> = ({
           <div key={item.id}>
             <div className="relative">
               {item.href ? (
-                <a
-                  href={item.href}
+                <Link
+                  to={item.href}
                   className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors px-3 py-2 w-full",
-                    sidebarPosition === "left" ? "justify-start" : "justify-end"
+                    "flex items-center rounded-md transition-colors px-3 py-2 w-full",
+                    sidebarPosition === "left" ? "justify-start" : "justify-end",
+                    isItemActive(item)
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
                   )}
                   style={
                     level > 0
@@ -385,13 +469,16 @@ export const Layout: React.FC<LayoutProps> = ({
                         />
                       </div>
                     )}
-                </a>
+                </Link>
               ) : (
                 <button
                   onClick={item.onClick}
                   className={cn(
-                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors px-3 py-2 w-full",
-                    sidebarPosition === "left" ? "justify-start" : "justify-end"
+                    "flex items-center rounded-md transition-colors px-3 py-2 w-full",
+                    sidebarPosition === "left" ? "justify-start" : "justify-end",
+                    isItemActive(item)
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
                   )}
                   style={
                     level > 0
@@ -524,9 +611,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 key={child.id}
                 className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
                 onClick={() => {
-                  if (child.href) {
-                    window.location.href = child.href;
-                  } else if (child.onClick) {
+                  if (child.onClick) {
                     child.onClick();
                   }
                 }}
