@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
   sidebar,
   sidebarItems = [],
-  sidebarPosition = "left",
+  sidebarPosition = "right",
   sidebarWidth = 280,
   collapsedWidth = 64,
   isCollapsed = false,

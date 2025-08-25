@@ -20,7 +20,7 @@ import {
 
 export const LayoutExample: React.FC = () => {
   const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">(
-    "left"
+    "right"
   );
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -167,7 +167,7 @@ export const LayoutExample: React.FC = () => {
                     className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                       sidebarPosition === "right"
                         ? "bg-blue-600 text-white shadow-lg transform scale-105"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
+                        : "bg-gray-700 text-white hover:bg-gray-800 hover:shadow-md"
                     }`}
                   >
                     Right Side
