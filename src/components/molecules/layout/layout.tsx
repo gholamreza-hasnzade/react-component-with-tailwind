@@ -484,7 +484,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 </Link>
               ) : (
                 <button
-                  onClick={item.onClick}
+                onClick={() => toggleItem(item.id)}
                   className={cn(
                     "flex items-center rounded-md transition-colors px-3 py-2 w-full",
                     sidebarPosition === "left"
