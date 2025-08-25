@@ -156,7 +156,14 @@ export const Layout: React.FC<LayoutProps> = ({
                   )}
                   style={
                     !isCollapsedState && level > 0
-                      ? { paddingLeft: `${16 + level * 20}px` }
+                      ? { 
+                          paddingLeft: sidebarPosition === "left" 
+                            ? `${16 + level * 20}px` 
+                            : "auto",
+                          paddingRight: sidebarPosition === "right" 
+                            ? `${16 + level * 20}px` 
+                            : "auto"
+                        }
                       : {}
                   }
                   onMouseEnter={(e) => handleItemHover(item.id, e)}
@@ -216,11 +223,19 @@ export const Layout: React.FC<LayoutProps> = ({
                   )}
                   style={
                     !isCollapsedState && level > 0
-                      ? { paddingLeft: `${16 + level * 20}px` }
+                      ? { 
+                          paddingLeft: sidebarPosition === "left" 
+                            ? `${16 + level * 20}px` 
+                            : "auto",
+                          paddingRight: sidebarPosition === "right" 
+                            ? `${16 + level * 20}px` 
+                            : "auto"
+                        }
                       : {}
                   }
                   onMouseEnter={(e) => handleItemHover(item.id, e)}
                   onMouseLeave={handleItemLeave}
+                  title={item.label}
                 >
                   <div className="relative">
                     {item.icon}
@@ -275,6 +290,221 @@ export const Layout: React.FC<LayoutProps> = ({
               !isCollapsedState && (
                 <div className="mt-1">
                   {renderSidebarItems(item.children, level + 1)}
+                </div>
+              )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Mobile sidebar rendering - always shows labels and doesn't check collapsed state
+  const renderMobileSidebarItems = (
+    items: SidebarItem[] = sidebarItems,
+    level: number = 0
+  ) => {
+    if (items.length === 0) {
+      return sidebar || null;
+    }
+
+    return (
+      <div className="space-y-2">
+        {items.map((item) => (
+          <div key={item.id}>
+            {/* Main Item */}
+            <div className="relative">
+              {item.href ? (
+                <a
+                  href={item.href}
+                  className={cn(
+                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors px-3 py-2 w-full",
+                    sidebarPosition === "left" ? "justify-start" : "justify-end"
+                  )}
+                  style={
+                    level > 0
+                      ? { 
+                          paddingLeft: sidebarPosition === "left" 
+                            ? `${16 + level * 20}px` 
+                            : "auto",
+                          paddingRight: sidebarPosition === "right" 
+                            ? `${16 + level * 20}px` 
+                            : "auto"
+                        }
+                      : {}
+                  }
+                >
+                  {sidebarPosition === "right" && item.children && item.children.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleItem(item.id);
+                      }}
+                      className="mr-2 p-1 rounded hover:bg-blue-100 transition-colors"
+                      aria-label={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                      title={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                    >
+                      <HiChevronRight
+                        className={cn(
+                          "w-4 h-4 text-gray-500 transition-transform duration-200",
+                          expandedItems.has(item.id) ? "rotate-90" : ""
+                        )}
+                      />
+                    </button>
+                  )}
+                  
+                  <div className="relative">
+                    {item.icon}
+                    {item.badge && (
+                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <span className={cn(
+                    "text-sm font-medium",
+                    sidebarPosition === "left" ? "ml-3" : "mr-3"
+                  )}>
+                    {item.label}
+                  </span>
+                  
+                  {/* Expand/Collapse Arrow for items with children - left sidebar */}
+                  {sidebarPosition === "left" && item.children && item.children.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleItem(item.id);
+                      }}
+                      className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
+                      aria-label={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                      title={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                    >
+                      <HiChevronRight
+                        className={cn(
+                          "w-4 h-4 text-gray-500 transition-transform duration-200",
+                          expandedItems.has(item.id) ? "rotate-90" : ""
+                        )}
+                      />
+                    </button>
+                  )}
+                </a>
+              ) : (
+                <button
+                  onClick={item.onClick}
+                  className={cn(
+                    "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors px-3 py-2 w-full",
+                    sidebarPosition === "left" ? "justify-start" : "justify-end"
+                  )}
+                  style={
+                    level > 0
+                      ? { 
+                          paddingLeft: sidebarPosition === "left" 
+                            ? `${16 + level * 20}px` 
+                            : "auto",
+                          paddingRight: sidebarPosition === "right" 
+                            ? `${16 + level * 20}px` 
+                            : "auto"
+                        }
+                      : {}
+                  }
+                  title={item.label}
+                >
+                  {sidebarPosition === "right" && item.children && item.children.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleItem(item.id);
+                      }}
+                      className="mr-2 p-1 rounded hover:bg-blue-100 transition-colors"
+                      aria-label={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                      title={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                    >
+                      <HiChevronRight
+                        className={cn(
+                          "w-4 h-4 text-gray-500 transition-transform duration-200",
+                          expandedItems.has(item.id) ? "rotate-90" : ""
+                        )}
+                      />
+                    </button>
+                  )}
+                  
+                  <div className="relative">
+                    {item.icon}
+                    {item.badge && (
+                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <span className={cn(
+                    "text-sm font-medium",
+                    sidebarPosition === "left" ? "ml-3" : "mr-3"
+                  )}>
+                    {item.label}
+                  </span>
+                  
+                  {/* Expand/Collapse Arrow for items with children - left sidebar */}
+                  {sidebarPosition === "left" && item.children && item.children.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleItem(item.id);
+                      }}
+                      className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
+                      aria-label={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                      title={
+                        expandedItems.has(item.id)
+                          ? `Collapse ${item.label}`
+                          : `Expand ${item.label}`
+                      }
+                    >
+                      <HiChevronRight
+                        className={cn(
+                          "w-4 h-4 text-gray-500 transition-transform duration-200",
+                          expandedItems.has(item.id) ? "rotate-90" : ""
+                        )}
+                      />
+                    </button>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {/* Render Children - Always show when expanded on mobile */}
+            {item.children &&
+              item.children.length > 0 &&
+              expandedItems.has(item.id) && (
+                <div className="mt-1">
+                  {renderMobileSidebarItems(item.children, level + 1)}
                 </div>
               )}
           </div>
@@ -507,7 +737,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
             {/* Mobile Sidebar Content */}
             <div className="p-4 overflow-y-auto h-full">
-              {sidebarItems.length > 0 ? renderSidebarItems() : sidebar}
+              {sidebarItems.length > 0 ? renderMobileSidebarItems() : sidebar}
             </div>
           </div>
         </div>
