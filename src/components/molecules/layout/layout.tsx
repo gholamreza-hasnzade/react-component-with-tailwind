@@ -56,45 +56,51 @@ export const Layout: React.FC<LayoutProps> = ({
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   // Helper function to check if an item is active (exact match only)
-  const isItemActive = useCallback((item: SidebarItem): boolean => {
-    if (!currentLocation) return false;
-    
-    // Check if current item is active by comparing with currentLocation
-    // For items with href, use that; for items with onClick, we need to infer the route
-    if (item.href && item.href === currentLocation) {
-      return true;
-    }
-    
-    // For items with onClick, we can't easily determine the route they navigate to
-    // So we'll return false for now - in a real app you might want to store the route
-    // that each onClick handler navigates to
-    return false;
-  }, [currentLocation]);
+  const isItemActive = useCallback(
+    (item: SidebarItem): boolean => {
+      if (!currentLocation) return false;
+
+      // Check if current item is active by comparing with currentLocation
+      // For items with href, use that; for items with onClick, we need to infer the route
+      if (item.href && item.href === currentLocation) {
+        return true;
+      }
+
+      // For items with onClick, we can't easily determine the route they navigate to
+      // So we'll return false for now - in a real app you might want to store the route
+      // that each onClick handler navigates to
+      return false;
+    },
+    [currentLocation]
+  );
 
   // Helper function to check if an item or its children should be expanded
-  const shouldExpandItem = useCallback((item: SidebarItem): boolean => {
-    if (!currentLocation) return false;
-    
-    // Check if current item is active
-    if (item.href && item.href === currentLocation) {
-      return true;
-    }
-    
-    // Check if any children are active
-    if (item.children) {
-      return item.children.some(child => shouldExpandItem(child));
-    }
-    
-    return false;
-  }, [currentLocation]);
+  const shouldExpandItem = useCallback(
+    (item: SidebarItem): boolean => {
+      if (!currentLocation) return false;
+
+      // Check if current item is active
+      if (item.href && item.href === currentLocation) {
+        return true;
+      }
+
+      // Check if any children are active
+      if (item.children) {
+        return item.children.some((child) => shouldExpandItem(child));
+      }
+
+      return false;
+    },
+    [currentLocation]
+  );
 
   // Auto-expand parent items when their children are active
   useEffect(() => {
     if (currentLocation) {
       const newExpandedItems = new Set<string>();
-      
+
       const expandActiveParents = (items: SidebarItem[]) => {
-        items.forEach(item => {
+        items.forEach((item) => {
           if (shouldExpandItem(item)) {
             newExpandedItems.add(item.id);
             if (item.children) {
@@ -103,7 +109,7 @@ export const Layout: React.FC<LayoutProps> = ({
           }
         });
       };
-      
+
       expandActiveParents(sidebarItems);
       setExpandedItems(newExpandedItems);
     }
@@ -398,7 +404,9 @@ export const Layout: React.FC<LayoutProps> = ({
                   to={item.href}
                   className={cn(
                     "flex items-center rounded-md transition-colors px-3 py-2 w-full",
-                    sidebarPosition === "left" ? "justify-start" : "justify-end",
+                    sidebarPosition === "left"
+                      ? "justify-start"
+                      : "justify-end",
                     isItemActive(item)
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
@@ -475,7 +483,9 @@ export const Layout: React.FC<LayoutProps> = ({
                   onClick={item.onClick}
                   className={cn(
                     "flex items-center rounded-md transition-colors px-3 py-2 w-full",
-                    sidebarPosition === "left" ? "justify-start" : "justify-end",
+                    sidebarPosition === "left"
+                      ? "justify-start"
+                      : "justify-end",
                     isItemActive(item)
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
@@ -607,14 +617,14 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
           <div className="py-1">
             {item.children.map((child) => (
-              <div
-                key={child.id}
-                className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
-                onClick={() => {
-                  if (child.onClick) {
-                    child.onClick();
-                  }
-                }}
+              <Link
+                to={child.href || ""}
+                className={cn(
+                  "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer",
+                  isItemActive(child)
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                )}
               >
                 {child.icon && (
                   <div className="w-4 h-4 mr-3 text-gray-500 group-hover:text-blue-600">
@@ -634,7 +644,7 @@ export const Layout: React.FC<LayoutProps> = ({
                     {child.badge}
                   </span>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         </div>
