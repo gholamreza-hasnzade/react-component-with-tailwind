@@ -572,6 +572,50 @@ export const Layout: React.FC<LayoutProps> = ({
     const item = sidebarItems.find((i) => i.id === hoveredItem);
     if (!item || !item.children || item.children.length === 0) return null;
 
+    // Recursive function to render nested children
+    const renderNestedChildren = (children: SidebarItem[], level: number = 0) => {
+      return children.map((child) => (
+        <div key={child.id}>
+          <Link
+            to={child.href || ""}
+            className={cn(
+              "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer",
+              isItemActive(child)
+                ? "bg-blue-600  hover:bg-blue-700  text-gray-700"
+                : "text-white hover:bg-blue-50 hover:text-blue-700",
+              level > 0 && "ml-4" // Indent nested items
+            )}
+          >
+            {child.icon && (
+              <div className="w-4 h-4 mr-3  group-hover:text-blue-600">
+                {child.icon}
+              </div>
+            )}
+            <span
+              className={cn(
+                "text-sm font-medium text-gray-700 group-hover:text-blue-700",
+                !child.icon && "ml-0"
+              )}
+            >
+              {child.label}
+            </span>
+            {child.badge && (
+              <span className="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center text-[10px] font-bold">
+                {child.badge}
+              </span>
+            )}
+          </Link>
+          
+          {/* Recursively render nested children */}
+          {child.children && child.children.length > 0 && (
+            <div className="ml-2 border-l border-gray-200">
+              {renderNestedChildren(child.children, level + 1)}
+            </div>
+          )}
+        </div>
+      ));
+    };
+
     const popoverContent = (
       <>
         <div
@@ -591,7 +635,7 @@ export const Layout: React.FC<LayoutProps> = ({
         />
 
         <div
-          className="fixed bg-white border border-gray-200 rounded-lg shadow-2xl p-1 min-w-[220px] max-h-[400px] overflow-y-auto"
+          className="fixed bg-white border border-gray-200 rounded-lg shadow-2xl p-1 min-w-[220px] max-h-[600px] overflow-y-auto"
           style={{
             left: popoverPosition.x,
             top: popoverPosition.y,
@@ -616,36 +660,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {item.label}
           </div>
           <div className="py-1">
-            {item.children.map((child) => (
-              <Link
-                to={child.href || ""}
-                className={cn(
-                  "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer",
-                  isItemActive(child)
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
-                )}
-              >
-                {child.icon && (
-                  <div className="w-4 h-4 mr-3 text-gray-500 group-hover:text-blue-600">
-                    {child.icon}
-                  </div>
-                )}
-                <span
-                  className={cn(
-                    "text-sm font-medium text-gray-700 group-hover:text-blue-700",
-                    !child.icon && "ml-0"
-                  )}
-                >
-                  {child.label}
-                </span>
-                {child.badge && (
-                  <span className="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center text-[10px] font-bold">
-                    {child.badge}
-                  </span>
-                )}
-              </Link>
-            ))}
+            {renderNestedChildren(item.children)}
           </div>
         </div>
       </>

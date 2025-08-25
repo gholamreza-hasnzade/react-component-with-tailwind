@@ -23,7 +23,7 @@ import {
 const LayoutContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">("right");
+  const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">("left");
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
