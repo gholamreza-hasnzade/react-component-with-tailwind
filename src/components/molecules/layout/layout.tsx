@@ -200,19 +200,20 @@ export const Layout: React.FC<LayoutProps> = ({
                     toggleItem(item.id);
                   } : undefined}
                 >
-                  <div className="relative">
+                  <div className="relative flex items-center gap-1">
                     {item.icon }
                     {item.badge && (
                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
+                    <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
                   </div>
                   {!isCollapsedState && (
                     <>
-                      <span className="ml-3 text-sm font-medium">
-                        {item.label}
-                      </span>
+                     
                       {/* Expand/Collapse Arrow for items with children - always visible */}
                       {item.children && item.children.length > 0 && (
                         <div className="ml-auto p-1">
@@ -234,7 +235,7 @@ export const Layout: React.FC<LayoutProps> = ({
                     "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
                     isCollapsedState
                       ? "justify-center p-2 w-10 h-10"
-                      : "px-3 py-2 justify-start w-full"
+                      : "px-3 py-2 justify-between w-full"
                   )}
                   style={
                     !isCollapsedState && level > 0
@@ -252,22 +253,23 @@ export const Layout: React.FC<LayoutProps> = ({
                   onMouseLeave={handleItemLeave}
                   title={item.label}
                 >
-                  <div className="relative">
+                  <div className="relative flex items-center gap-1">
                     {item.icon}
                     {item.badge && (
                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
+                     <span className="ml-3 text-sm font-medium">
+                        {item.label}
+                      </span>
                   </div>
                   {!isCollapsedState && (
                     <>
-                      <span className="ml-3 text-sm font-medium">
-                        {item.label}
-                      </span>
+                     
                       {/* Expand/Collapse Arrow for items with children - always visible */}
                       {item.children && item.children.length > 0 && (
-                        <div className="ml-auto p-1">
+                        <div className=" p-1">
                           <HiChevronRight
                             className={cn(
                               "w-4 h-4 text-gray-500 transition-transform duration-200",
@@ -590,6 +592,46 @@ export const Layout: React.FC<LayoutProps> = ({
               isCollapsedState ? "p-2 pt-16" : "p-6 pt-16"
             )}
           >
+            {/* Sidebar Header with User Info */}
+            {!isCollapsedState && (
+              <div className="mb-6 pb-4 border-b border-gray-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                    U
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold text-gray-900 truncate">
+                      User Name
+                    </h3>
+                    <p className="text-xs text-gray-500 truncate">
+                      user@example.com
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Quick Actions */}
+                <div className="mt-3 flex space-x-2">
+                  <button className="flex-1 px-3 py-2 text-xs bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors">
+                    Profile
+                  </button>
+                  <button className="flex-1 px-3 py-2 text-xs bg-gray-50 text-gray-700 rounded-md hover:bg-gray-100 transition-colors">
+                    Settings
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* Collapsed State Header */}
+            {isCollapsedState && (
+              <div className="mb-4 pb-4 border-b border-gray-200">
+                <div className="flex justify-center">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                    U
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {renderSidebarItems()}
           </div>
         </div>
@@ -680,7 +722,15 @@ export const Layout: React.FC<LayoutProps> = ({
           >
             {/* Mobile Sidebar Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Menu</h3>
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  U
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">User Name</h3>
+                  <p className="text-xs text-gray-500">user@example.com</p>
+                </div>
+              </div>
               <button
                 onClick={handleSidebarToggle}
                 className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
