@@ -140,7 +140,7 @@ const LayoutContent: React.FC = () => {
         }))}
         sidebarPosition={sidebarPosition}
         sidebarWidth={sidebarWidth}
-        collapsedWidth={64}
+        collapsedWidth={100}
         isCollapsed={isCollapsed}
         onCollapseToggle={setIsCollapsed}
         showSidebar={true}

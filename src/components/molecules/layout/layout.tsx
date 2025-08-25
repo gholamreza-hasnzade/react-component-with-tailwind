@@ -165,7 +165,7 @@ export const Layout: React.FC<LayoutProps> = ({
       let x: number;
       const popoverWidth = 220;
       const viewportWidth = window.innerWidth;
-      
+
       if (sidebarPosition === "left") {
         // For left sidebar, try to show popover to the right first
         x = sidebarRect.right + 8;
@@ -223,12 +223,19 @@ export const Layout: React.FC<LayoutProps> = ({
       <div
         className={cn(
           "space-y-2",
-          isCollapsedState ? "flex flex-col items-center" : ""
+          isCollapsedState ? "flex flex-col items-center justify-center" : ""
         )}
       >
         {items.map((item) => (
-          <div key={item.id} className={isCollapsedState ? "w-full" : ""}>
-            <div className="relative">
+          <div key={item.id} className={isCollapsedState ? "w-full " : ""}>
+            <div
+              className={cn(
+                "relative",
+                isCollapsedState
+                  ? "flex items-center justify-center"
+                  : ""
+              )}
+            >
               {item.children && item.children.length > 0 ? (
                 <button
                   onClick={() => toggleItem(item.id)}
@@ -484,7 +491,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 </Link>
               ) : (
                 <button
-                onClick={() => toggleItem(item.id)}
+                  onClick={() => toggleItem(item.id)}
                   className={cn(
                     "flex items-center rounded-md transition-colors px-3 py-2 w-full",
                     sidebarPosition === "left"
@@ -577,7 +584,10 @@ export const Layout: React.FC<LayoutProps> = ({
     if (!item || !item.children || item.children.length === 0) return null;
 
     // Recursive function to render nested children
-    const renderNestedChildren = (children: SidebarItem[], level: number = 0) => {
+    const renderNestedChildren = (
+      children: SidebarItem[],
+      level: number = 0
+    ) => {
       return children.map((child) => (
         <div key={child.id}>
           <Link
@@ -609,7 +619,7 @@ export const Layout: React.FC<LayoutProps> = ({
               </span>
             )}
           </Link>
-          
+
           {/* Recursively render nested children */}
           {child.children && child.children.length > 0 && (
             <div className="ml-2 border-l border-gray-200">
@@ -658,9 +668,7 @@ export const Layout: React.FC<LayoutProps> = ({
           <div className="px-3 py-2 text-xs font-semibold text-gray-600 border-b border-gray-100 bg-gray-50 rounded-t-lg sticky top-0">
             {item.label}
           </div>
-          <div className="py-1">
-            {renderNestedChildren(item.children)}
-          </div>
+          <div className="py-1">{renderNestedChildren(item.children)}</div>
         </div>
       </>
     );
