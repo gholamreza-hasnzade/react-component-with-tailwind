@@ -168,6 +168,10 @@ export const Layout: React.FC<LayoutProps> = ({
                   }
                   onMouseEnter={(e) => handleItemHover(item.id, e)}
                   onMouseLeave={handleItemLeave}
+                  onClick={item.children && item.children.length > 0 ? (e) => {
+                    e.preventDefault();
+                    toggleItem(item.id);
+                  } : undefined}
                 >
                   <div className="relative">
                     {item.icon }
@@ -182,39 +186,23 @@ export const Layout: React.FC<LayoutProps> = ({
                       <span className="ml-3 text-sm font-medium">
                         {item.label}
                       </span>
-                      {/* Expand/Collapse Arrow for items with children */}
+                      {/* Expand/Collapse Arrow for items with children - always visible */}
                       {item.children && item.children.length > 0 && (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleItem(item.id);
-                          }}
-                          className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                          aria-label={
-                            expandedItems.has(item.id)
-                              ? `Collapse ${item.label}`
-                              : `Expand ${item.label}`
-                          }
-                          title={
-                            expandedItems.has(item.id)
-                              ? `Collapse ${item.label}`
-                              : `Expand ${item.label}`
-                          }
-                        >
+                        <div className="ml-auto p-1">
                           <HiChevronRight
                             className={cn(
                               "w-4 h-4 text-gray-500 transition-transform duration-200",
                               expandedItems.has(item.id) ? "rotate-90" : ""
                             )}
                           />
-                        </button>
+                        </div>
                       )}
                     </>
                   )}
                 </a>
               ) : (
                 <button
-                  onClick={item.onClick}
+                  onClick={item.children && item.children.length > 0 ? () => toggleItem(item.id) : item.onClick}
                   className={cn(
                     "flex items-center text-gray-700 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors",
                     isCollapsedState
@@ -250,32 +238,16 @@ export const Layout: React.FC<LayoutProps> = ({
                       <span className="ml-3 text-sm font-medium">
                         {item.label}
                       </span>
-                      {/* Expand/Collapse Arrow for items with children */}
+                      {/* Expand/Collapse Arrow for items with children - always visible */}
                       {item.children && item.children.length > 0 && (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleItem(item.id);
-                          }}
-                          className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                          aria-label={
-                            expandedItems.has(item.id)
-                              ? `Collapse ${item.label}`
-                              : `Expand ${item.label}`
-                          }
-                          title={
-                            expandedItems.has(item.id)
-                              ? `Collapse ${item.label}`
-                              : `Expand ${item.label}`
-                          }
-                        >
+                        <div className="ml-auto p-1">
                           <HiChevronRight
                             className={cn(
                               "w-4 h-4 text-gray-500 transition-transform duration-200",
                               expandedItems.has(item.id) ? "rotate-90" : ""
                             )}
                           />
-                        </button>
+                        </div>
                       )}
                     </>
                   )}
@@ -332,32 +304,20 @@ export const Layout: React.FC<LayoutProps> = ({
                         }
                       : {}
                   }
+                  onClick={item.children && item.children.length > 0 ? (e) => {
+                    e.preventDefault();
+                    toggleItem(item.id);
+                  } : undefined}
                 >
                   {sidebarPosition === "right" && item.children && item.children.length > 0 && (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleItem(item.id);
-                      }}
-                      className="mr-2 p-1 rounded hover:bg-blue-100 transition-colors"
-                      aria-label={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                      title={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                    >
+                    <div className="mr-2 p-1">
                       <HiChevronRight
                         className={cn(
                           "w-4 h-4 text-gray-500 transition-transform duration-200",
                           expandedItems.has(item.id) ? "rotate-90" : ""
                         )}
                       />
-                    </button>
+                    </div>
                   )}
                   
                   <div className="relative">
@@ -378,30 +338,14 @@ export const Layout: React.FC<LayoutProps> = ({
                   
                   {/* Expand/Collapse Arrow for items with children - left sidebar */}
                   {sidebarPosition === "left" && item.children && item.children.length > 0 && (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleItem(item.id);
-                      }}
-                      className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                      aria-label={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                      title={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                    >
+                    <div className="ml-auto p-1">
                       <HiChevronRight
                         className={cn(
                           "w-4 h-4 text-gray-500 transition-transform duration-200",
                           expandedItems.has(item.id) ? "rotate-90" : ""
                         )}
                       />
-                    </button>
+                    </div>
                   )}
                 </a>
               ) : (
@@ -426,30 +370,14 @@ export const Layout: React.FC<LayoutProps> = ({
                   title={item.label}
                 >
                   {sidebarPosition === "right" && item.children && item.children.length > 0 && (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleItem(item.id);
-                      }}
-                      className="mr-2 p-1 rounded hover:bg-blue-100 transition-colors"
-                      aria-label={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                      title={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                    >
+                    <div className="mr-2 p-1">
                       <HiChevronRight
                         className={cn(
                           "w-4 h-4 text-gray-500 transition-transform duration-200",
                           expandedItems.has(item.id) ? "rotate-90" : ""
                         )}
                       />
-                    </button>
+                    </div>
                   )}
                   
                   <div className="relative">
@@ -470,30 +398,14 @@ export const Layout: React.FC<LayoutProps> = ({
                   
                   {/* Expand/Collapse Arrow for items with children - left sidebar */}
                   {sidebarPosition === "left" && item.children && item.children.length > 0 && (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleItem(item.id);
-                      }}
-                      className="ml-auto p-1 rounded hover:bg-blue-100 transition-colors"
-                      aria-label={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                      title={
-                        expandedItems.has(item.id)
-                          ? `Collapse ${item.label}`
-                          : `Expand ${item.label}`
-                      }
-                    >
+                    <div className="ml-auto p-1">
                       <HiChevronRight
                         className={cn(
                           "w-4 h-4 text-gray-500 transition-transform duration-200",
                           expandedItems.has(item.id) ? "rotate-90" : ""
                         )}
                       />
-                    </button>
+                    </div>
                   )}
                 </button>
               )}
