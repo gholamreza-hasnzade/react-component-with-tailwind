@@ -163,19 +163,23 @@ export const Layout: React.FC<LayoutProps> = ({
 
     if (sidebarRect) {
       let x: number;
-      if (sidebarPosition === "left") {
-        x = sidebarRect.right + 8;
-      } else {
-        x = sidebarRect.left - 8;
-      }
-
       const popoverWidth = 220;
       const viewportWidth = window.innerWidth;
-
-      if (sidebarPosition === "left" && x + popoverWidth > viewportWidth) {
-        x = sidebarRect.left - popoverWidth - 8;
-      } else if (sidebarPosition === "right" && x - popoverWidth < 0) {
+      
+      if (sidebarPosition === "left") {
+        // For left sidebar, try to show popover to the right first
         x = sidebarRect.right + 8;
+        // If it goes off-screen, show it to the left
+        if (x + popoverWidth > viewportWidth) {
+          x = sidebarRect.left - popoverWidth - 8;
+        }
+      } else {
+        // For right sidebar, always show popover to the left
+        x = sidebarRect.left - popoverWidth - 8;
+        // If it goes off-screen, show it to the right
+        if (x < 0) {
+          x = sidebarRect.right + 8;
+        }
       }
 
       setPopoverPosition({
@@ -582,7 +586,7 @@ export const Layout: React.FC<LayoutProps> = ({
               "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer",
               isItemActive(child)
                 ? "bg-blue-600  hover:bg-blue-700  text-gray-700"
-                : "text-white hover:bg-blue-50 hover:text-blue-700",
+                : " hover:bg-blue-50 hover:text-blue-700",
               level > 0 && "ml-4" // Indent nested items
             )}
           >
@@ -624,7 +628,7 @@ export const Layout: React.FC<LayoutProps> = ({
             left:
               sidebarPosition === "left"
                 ? popoverPosition.x - 20
-                : popoverPosition.x + 220,
+                : popoverPosition.x - 20,
             top: popoverPosition.y,
             width: "20px",
             height: "40px",
@@ -647,12 +651,7 @@ export const Layout: React.FC<LayoutProps> = ({
           <div
             className={cn(
               "absolute top-3 w-2 h-2 bg-white border-l border-t border-gray-200 transform rotate-45",
-              (sidebarPosition === "left" &&
-                popoverPosition.x > window.innerWidth / 2) ||
-                (sidebarPosition === "right" &&
-                  popoverPosition.x < window.innerWidth / 2)
-                ? "-right-1"
-                : "-left-1"
+              sidebarPosition === "left" ? "-left-1" : "-right-1"
             )}
           />
 
@@ -675,7 +674,7 @@ export const Layout: React.FC<LayoutProps> = ({
         <div
           className={cn(
             "relative bg-white transition-all duration-300 ease-in-out overflow-hidden shadow-lg",
-            sidebarPosition === "left"
+            sidebarPosition === "right"
               ? "order-first border-r border-gray-200"
               : "order-last border-l border-gray-200",
             "hidden lg:block",

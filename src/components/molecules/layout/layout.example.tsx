@@ -24,7 +24,7 @@ const LayoutContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">("left");
-  const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Define sidebar items as objects with proper paths
