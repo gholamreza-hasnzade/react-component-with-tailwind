@@ -21,6 +21,18 @@ export interface TooltipProps {
   showArrow?: boolean;
   /** Custom offset from the trigger element */
   offset?: number;
+  /** Custom styles for the tooltip container */
+  tooltipStyle?: React.CSSProperties;
+  /** Custom styles for the tooltip content */
+  contentStyle?: React.CSSProperties;
+  /** Custom CSS classes for the tooltip content */
+  contentClassName?: string;
+  /** Whether to allow HTML content (be careful with user input) */
+  allowHtml?: boolean;
+  /** Custom arrow styles */
+  arrowStyle?: React.CSSProperties;
+  /** Custom arrow CSS classes */
+  arrowClassName?: string;
 }
 
 interface Position {
@@ -41,66 +53,62 @@ export const Tooltip: React.FC<TooltipProps> = ({
   maxWidth = 200,
   showArrow = true,
   offset = DEFAULT_OFFSET,
+  tooltipStyle,
+  contentStyle,
+  contentClassName,
+  allowHtml = false,
+  arrowStyle,
+  arrowClassName,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState<Position>({ top: 100, left: 100 });
+  const [tooltipPosition, setTooltipPosition] = useState<Position>({ top: 0, left: 0 });
   
   const triggerRef = useRef<HTMLElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const portalRef = useRef<HTMLDivElement | null>(null);
-
-  // Create portal container
-  useEffect(() => {
-    if (!portalRef.current) {
-      portalRef.current = document.createElement('div');
-      portalRef.current.setAttribute('data-tooltip-portal', '');
-      document.body.appendChild(portalRef.current);
-    }
-
-    return () => {
-      if (portalRef.current && document.body.contains(portalRef.current)) {
-        document.body.removeChild(portalRef.current);
-      }
-    };
-  }, []);
 
   // Calculate tooltip position
   const calculatePosition = useCallback((): Position => {
     if (!triggerRef.current) {
-      return { top: 100, left: 100 };
+      return { top: 0, left: 0 };
     }
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
+    // Calculate tooltip width based on maxWidth
+    const tooltipWidth = typeof maxWidth === 'number' ? maxWidth : 
+                        typeof maxWidth === 'string' && maxWidth.includes('px') ? 
+                        parseInt(maxWidth) : 200;
+    const halfTooltipWidth = tooltipWidth / 2;
+
     let top = 0;
     let left = 0;
 
     switch (position) {
       case 'top':
-        top = triggerRect.top - 40 - offset; // Estimate tooltip height as 40px
-        left = triggerRect.left + (triggerRect.width / 2) - 100; // Center with estimated width
+        top = triggerRect.top - 40 - offset;
+        left = triggerRect.left + (triggerRect.width / 2) - halfTooltipWidth;
         break;
       case 'bottom':
         top = triggerRect.bottom + offset;
-        left = triggerRect.left + (triggerRect.width / 2) - 100;
+        left = triggerRect.left + (triggerRect.width / 2) - halfTooltipWidth;
         break;
       case 'left':
-        top = triggerRect.top + (triggerRect.height / 2) - 15; // Better vertical centering
-        left = triggerRect.left - 130 - offset; // Increased to 130px for more distance
+        top = triggerRect.top + (triggerRect.height / 2) - 15;
+        left = triggerRect.left - tooltipWidth - offset;
         break;
       case 'right':
-        top = triggerRect.top + (triggerRect.height / 2) - 15; // Better vertical centering
+        top = triggerRect.top + (triggerRect.height / 2) - 15;
         left = triggerRect.right + offset;
         break;
     }
 
     // Prevent overflow
     if (left < 8) left = 8;
-    if (left + 130 > viewportWidth - 8) {
-      left = viewportWidth - 130 - 8;
+    if (left + tooltipWidth > viewportWidth - 8) {
+      left = viewportWidth - tooltipWidth - 8;
     }
     if (top < 8) top = 8;
     if (top + 40 > viewportHeight - 8) {
@@ -108,23 +116,19 @@ export const Tooltip: React.FC<TooltipProps> = ({
     }
 
     return { top, left };
-  }, [position, offset]);
+  }, [position, offset, maxWidth]);
 
   // Show tooltip
   const showTooltip = useCallback(() => {
     if (disabled) return;
-    console.log('Show tooltip called');
-
+    
     timeoutRef.current = setTimeout(() => {
-      console.log('Setting tooltip visible');
       setIsVisible(true);
-      // Calculate position after tooltip is visible
-      setTimeout(() => {
+      // Calculate position immediately after showing
+      requestAnimationFrame(() => {
         const pos = calculatePosition();
-        console.log('Calculated position:', pos);
-        console.log('Trigger rect:', triggerRef.current?.getBoundingClientRect());
         setTooltipPosition(pos);
-      }, 50);
+      });
     }, delay);
   }, [disabled, delay, calculatePosition]);
 
@@ -192,41 +196,69 @@ export const Tooltip: React.FC<TooltipProps> = ({
       style={{
         top: tooltipPosition.top,
         left: tooltipPosition.left,
-        maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
+        ...(maxWidth && { 
+          width: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
+          maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth 
+        }),
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'scale(1)' : 'scale(0.95)',
         visibility: isVisible ? 'visible' : 'hidden',
+        // Debug styles to ensure visibility
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        color: 'white',
+        padding: '8px 12px',
+        borderRadius: '6px',
+        fontSize: '14px',
+        lineHeight: '1.4',
+        whiteSpace: maxWidth ? 'normal' : 'nowrap',
+        wordWrap: 'break-word',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        border: '1px solid rgba(55, 65, 81, 1)',
+        ...tooltipStyle,
       }}
     >
-      <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-md shadow-lg border border-gray-700">
-        {content}
-        {showArrow && (
-          <div
-            className="absolute w-0 h-0"
-            style={{
-              [position === 'top' || position === 'bottom' ? 'left' : 'top']: '50%',
-              [position === 'top' ? 'top' : position === 'bottom' ? 'bottom' : position === 'left' ? 'left' : 'right']: `-${ARROW_SIZE}px`,
-              transform: position === 'top' || position === 'bottom' ? 'translateX(-50%)' : 'translateY(-50%)',
-              borderStyle: 'solid',
-              borderWidth: `${ARROW_SIZE}px`,
-              borderColor: position === 'top' 
-                ? 'transparent transparent #1f2937 transparent'
-                : position === 'bottom'
-                ? '#1f2937 transparent transparent transparent'
-                : position === 'left'
-                ? 'transparent #1f2937 transparent transparent'
-                : 'transparent transparent transparent #1f2937',
-            }}
-          />
+      <div 
+        className={cn(
+          'tooltip-content',
+          contentClassName
         )}
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          overflowWrap: 'break-word',
+          ...contentStyle,
+        }}
+        {...(allowHtml && typeof content === 'string' ? { dangerouslySetInnerHTML: { __html: content } } : {})}
+      >
+        {!allowHtml || typeof content !== 'string' ? content : null}
       </div>
+      {showArrow && (
+        <div
+          className={cn('absolute w-0 h-0', arrowClassName)}
+          style={{
+            [position === 'top' || position === 'bottom' ? 'left' : 'top']: '50%',
+            [position === 'top' ? 'top' : position === 'bottom' ? 'bottom' : position === 'left' ? 'left' : 'right']: `-${ARROW_SIZE}px`,
+            transform: position === 'top' || position === 'bottom' ? 'translateX(-50%)' : 'translateY(-50%)',
+            borderStyle: 'solid',
+            borderWidth: `${ARROW_SIZE}px`,
+            borderColor: position === 'top' 
+              ? 'transparent transparent rgba(0, 0, 0, 0.9) transparent'
+              : position === 'bottom'
+              ? 'rgba(0, 0, 0, 0.9) transparent transparent transparent'
+              : position === 'left'
+              ? 'transparent rgba(0, 0, 0, 0.9) transparent transparent'
+              : 'transparent transparent transparent rgba(0, 0, 0, 0.9)',
+            ...arrowStyle,
+          }}
+        />
+      )}
     </div>
   );
 
   return (
     <>
       {triggerElement}
-      {isVisible && portalRef.current && createPortal(tooltipContent, portalRef.current)}
+      {isVisible && createPortal(tooltipContent, document.body)}
     </>
   );
 };
