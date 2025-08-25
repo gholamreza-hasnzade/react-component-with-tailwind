@@ -174,11 +174,11 @@ export const Layout: React.FC<LayoutProps> = ({
                     !isCollapsedState && level > 0
                       ? {
                           paddingLeft:
-                            sidebarPosition === "left"
+                            sidebarPosition !== "left"
                               ? `${16 + level * 20}px`
                               : "auto",
                           paddingRight:
-                            sidebarPosition === "right"
+                            sidebarPosition !== "right"
                               ? `${16 + level * 20}px`
                               : "auto",
                         }
