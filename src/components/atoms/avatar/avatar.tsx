@@ -121,7 +121,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   className,
   shadow = false,
   border = false,
-  // New features
   status,
   statusPosition = "bottom-right",
   badge,
