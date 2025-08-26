@@ -99,6 +99,7 @@ type ButtonProps = {
   type?: "button" | "submit" | "reset";
   size?: "sm" | "md" | "lg" | "icon";
   asChild?: boolean;
+  debounce?: number; // Debounce delay in milliseconds
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Spinner = () => (
@@ -122,6 +123,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       type = "button",
       size = "md",
       asChild = false,
+      debounce,
+      onClick,
       ...props
     },
     ref
@@ -129,6 +132,36 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || loading;
     const colorClasses = colorMap[color]?.[variant];
     const Comp: React.ElementType = asChild ? Slot : "button";
+
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+    const handleClick = React.useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (debounce && debounce > 0) {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
+          timeoutRef.current = setTimeout(() => {
+            if (onClick) {
+              onClick(event);
+            }
+          }, debounce);
+        } else {
+          if (onClick) {
+            onClick(event);
+          }
+        }
+      },
+      [debounce, onClick]
+    );
+
+    React.useEffect(() => {
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }, []);
 
     const content = loading ? (
       <Spinner />
@@ -160,6 +193,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={isDisabled}
         disabled={isDisabled}
         type={type}
+        onClick={handleClick}
         {...props}
       >
         {content}
