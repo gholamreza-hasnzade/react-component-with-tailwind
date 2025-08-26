@@ -6,6 +6,8 @@ export { MultiFileUpload } from "@/components/molecules/multiFileUpload/multiFil
 export { SingleFileUpload } from "@/components/molecules/singleFileUpload/singleFileUpload";
 export { MultiStepForm } from "@/components/molecules/multiStepForm/multiStepForm";
 export type { Step, StepProps, MultiStepFormProps } from "@/components/molecules/multiStepForm/multiStepForm";
+export { Modal } from "@/components/molecules/modal/modal";
+export type { ModalProps, ModalSize, ModalPosition } from "@/components/molecules/modal/modal";
 
 
 
