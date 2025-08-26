@@ -33,6 +33,8 @@ A comprehensive, accessible modal component with full event handling, focus mana
 | `scrollable` | `boolean` | `false` | Whether to allow content scrolling |
 | `maxHeight` | `string` | `undefined` | Maximum height of modal (e.g., "80vh", "600px") |
 | `fullscreenOnMobile` | `boolean` | `false` | Whether to make modal fullscreen on mobile |
+| `openFromButton` | `boolean` | `false` | Whether to open modal from button position on mobile |
+| `buttonRef` | `React.RefObject<HTMLElement>` | `undefined` | Button element reference for positioning (optional) |
 | `footer` | `React.ReactNode` | `undefined` | Footer content |
 | `className` | `string` | `undefined` | Additional CSS classes for modal |
 | `backdropClassName` | `string` | `undefined` | Additional CSS classes for backdrop |
@@ -153,9 +155,84 @@ const [isOpen, setIsOpen] = useState(false);
 </Modal>
 ```
 
+### Modal with Button Positioning on Mobile
+
+```tsx
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Button Position Modal"
+  size="md"
+  openFromButton={true}
+  fullscreenOnMobile={false}
+>
+  <p>This modal opens from the button position on mobile devices.</p>
+</Modal>
+```
+
+### Full-Size Modal (Entire Viewport)
+
+```tsx
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Full-Size Modal"
+  size="full"
+>
+  <div className="h-full flex flex-col">
+    <div className="flex-1 p-6">
+      <h2 className="text-2xl font-bold mb-4">Full Viewport Content</h2>
+      <p>This modal takes the entire screen space for maximum content display.</p>
+    </div>
+  </div>
+</Modal>
+```
+
 ## Responsive Design & Scrolling
 
 The Modal component is built with a mobile-first approach and handles content overflow gracefully.
+
+## Button Positioning on Mobile
+
+The Modal component can open from the button position on mobile devices, creating a more intuitive user experience.
+
+### How It Works
+
+- **Mobile Devices**: Modal opens from the top (button position) with `items-start`
+- **Desktop Devices**: Modal centers normally with `items-center`
+- **Automatic Detection**: Uses responsive breakpoints to switch behavior
+
+### Usage
+
+```tsx
+// Basic button positioning
+<Modal
+  isOpen={isOpen}
+  onClose={onClose}
+  openFromButton={true}
+>
+  <p>Modal content</p>
+</Modal>
+
+// With button reference (optional)
+const buttonRef = useRef<HTMLButtonElement>(null);
+
+<Modal
+  isOpen={isOpen}
+  onClose={onClose}
+  openFromButton={true}
+  buttonRef={buttonRef}
+>
+  <p>Modal content</p>
+</Modal>
+```
+
+### Benefits
+
+- **Better UX**: Modal appears to "grow" from the button that triggered it
+- **Natural Flow**: Follows user's mental model of where the modal should appear
+- **Touch Friendly**: Optimized for mobile touch interactions
+- **Responsive**: Automatically adapts to different screen sizes
 
 ### Responsive Features
 
@@ -173,9 +250,20 @@ The Modal component is built with a mobile-first approach and handles content ov
 
 ### Responsive Breakpoints
 
-- **Mobile (< 640px)**: Full-width with minimal margins, optional fullscreen
+- **Mobile (< 640px)**: 
+  - Button positioning: Opens from top with `w-[85vw]` and `max-h-[80vh]`
+  - Standard positioning: Full-width with minimal margins
+  - Optional fullscreen mode
 - **Tablet (640px - 1024px)**: Adaptive sizing with medium margins
 - **Desktop (> 1024px)**: Standard sizing with full margins and backdrop blur
+
+### Responsive Features
+
+- **Button Positioning**: Modal opens from button position on mobile, centers on desktop
+- **Adaptive Sizing**: Automatically adjusts width and height based on screen size
+- **Header Visibility**: Ensures header is always visible on all screen sizes
+- **Touch Optimization**: Optimized for mobile touch interactions
+- **Automatic Breakpoints**: No manual breakpoint handling required
 
 ## Footer Control
 
@@ -326,7 +414,7 @@ const [isEditing, setIsEditing] = useState(false);
 - `md`: `max-w-md` (448px) - Default
 - `lg`: `max-w-lg` (512px)
 - `xl`: `max-w-xl` (576px)
-- `full`: `max-w-full` with margins
+- `full`: `max-w-full w-full h-full max-h-full` - Takes entire viewport
 
 ### Position Variants
 

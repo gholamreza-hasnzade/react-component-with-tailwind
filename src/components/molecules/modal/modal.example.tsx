@@ -3,7 +3,13 @@ import { Modal } from "./modal";
 import { Button } from "@/components/atoms/button/button";
 import { Input } from "@/components/atoms/input/input";
 import { Badge } from "@/components/atoms/badge/badge";
-import { FaBell, FaUser, FaCog, FaInfoCircle, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaBell,
+  FaUser,
+  FaCog,
+  FaInfoCircle,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 
 export const ModalExample: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +28,9 @@ export const ModalExample: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -43,11 +49,25 @@ export const ModalExample: React.FC = () => {
               <FaInfoCircle className="h-6 w-6 text-blue-600" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Simple Information Modal
+              Full-Size Information Modal
             </h3>
             <p className="text-sm text-gray-500 mb-6">
-              This is a simple modal with just content and no footer.
+              This modal demonstrates the full-size variant that takes the entire viewport.
             </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">Full Width</h4>
+                <p className="text-sm text-blue-700">
+                  Modal spans the entire viewport width with proper margins
+                </p>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h4 className="font-medium text-green-900 mb-2">Full Height</h4>
+                <p className="text-sm text-green-700">
+                  Modal takes the full viewport height for maximum content space
+                </p>
+              </div>
+            </div>
             <Button onClick={closeModal} variant="contained">
               Got it!
             </Button>
@@ -58,7 +78,10 @@ export const ModalExample: React.FC = () => {
         return (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Name
               </label>
               <Input
@@ -72,7 +95,10 @@ export const ModalExample: React.FC = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email
               </label>
               <Input
@@ -99,7 +125,8 @@ export const ModalExample: React.FC = () => {
               Delete Account
             </h3>
             <p className="text-sm text-gray-500 mb-6">
-              Are you sure you want to delete your account? This action cannot be undone.
+              Are you sure you want to delete your account? This action cannot
+              be undone.
             </p>
           </div>
         );
@@ -124,7 +151,8 @@ export const ModalExample: React.FC = () => {
             <div className="p-4 bg-blue-50 rounded-lg">
               <h4 className="font-medium text-blue-900 mb-2">Important Note</h4>
               <p className="text-sm text-blue-700">
-                This modal demonstrates the large size variant with complex content layout.
+                This modal demonstrates the large size variant with complex
+                content layout.
               </p>
             </div>
           </div>
@@ -154,7 +182,9 @@ export const ModalExample: React.FC = () => {
             <div className="flex items-center space-x-3 p-4 bg-amber-50 rounded-lg">
               <FaBell className="h-5 w-5 text-amber-600" />
               <div>
-                <h4 className="font-medium text-amber-900">Notification Settings</h4>
+                <h4 className="font-medium text-amber-900">
+                  Notification Settings
+                </h4>
                 <p className="text-sm text-amber-700">
                   Configure your notification preferences
                 </p>
@@ -162,16 +192,26 @@ export const ModalExample: React.FC = () => {
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-700">Email notifications</span>
-                <Badge variant="success" showDot>Enabled</Badge>
+                <span className="text-sm text-gray-700">
+                  Email notifications
+                </span>
+                <Badge variant="success" showDot>
+                  Enabled
+                </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-700">Push notifications</span>
-                <Badge variant="warning" showDot>Disabled</Badge>
+                <span className="text-sm text-gray-700">
+                  Push notifications
+                </span>
+                <Badge variant="warning" showDot>
+                  Disabled
+                </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-700">SMS notifications</span>
-                <Badge variant="error" showDot>Disabled</Badge>
+                <Badge variant="error" showDot>
+                  Disabled
+                </Badge>
               </div>
             </div>
           </div>
@@ -188,30 +228,39 @@ export const ModalExample: React.FC = () => {
                 This modal demonstrates different footer visibility scenarios
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">Scenario 1: No Footer</h4>
+                <h4 className="font-medium text-blue-900 mb-2">
+                  Scenario 1: No Footer
+                </h4>
                 <p className="text-sm text-blue-700 mb-3">
-                  When no footer prop is provided, the footer section is completely hidden.
+                  When no footer prop is provided, the footer section is
+                  completely hidden.
                 </p>
                 <div className="text-xs text-blue-600">
                   <code>footer=&#123;undefined&#125;</code> or no footer prop
                 </div>
               </div>
-              
+
               <div className="p-4 bg-green-50 rounded-lg">
-                <h4 className="font-medium text-green-900 mb-2">Scenario 2: Simple Footer</h4>
+                <h4 className="font-medium text-green-900 mb-2">
+                  Scenario 2: Simple Footer
+                </h4>
                 <p className="text-sm text-green-700 mb-3">
                   Footer with basic content like a single button.
                 </p>
                 <div className="text-xs text-green-600">
-                  <code>footer=&#123;&lt;Button&gt;Close&lt;/Button&gt;&#125;</code>
+                  <code>
+                    footer=&#123;&lt;Button&gt;Close&lt;/Button&gt;&#125;
+                  </code>
                 </div>
               </div>
-              
+
               <div className="p-4 bg-purple-50 rounded-lg">
-                <h4 className="font-medium text-purple-900 mb-2">Scenario 3: Complex Footer</h4>
+                <h4 className="font-medium text-purple-900 mb-2">
+                  Scenario 3: Complex Footer
+                </h4>
                 <p className="text-sm text-purple-700 mb-3">
                   Footer with multiple actions, status info, or complex layouts.
                 </p>
@@ -219,14 +268,19 @@ export const ModalExample: React.FC = () => {
                   <code>footer=&#123;&lt;ComplexFooterContent /&gt;&#125;</code>
                 </div>
               </div>
-              
+
               <div className="p-4 bg-orange-50 rounded-lg">
-                <h4 className="font-medium text-orange-900 mb-2">Scenario 4: Conditional Footer</h4>
+                <h4 className="font-medium text-orange-900 mb-2">
+                  Scenario 4: Conditional Footer
+                </h4>
                 <p className="text-sm text-orange-700 mb-3">
                   Footer that shows/hides based on application state.
                 </p>
                 <div className="text-xs text-orange-600">
-                  <code>footer=&#123;showFooter ? &lt;FooterContent /&gt; : undefined&#125;</code>
+                  <code>
+                    footer=&#123;showFooter ? &lt;FooterContent /&gt; :
+                    undefined&#125;
+                  </code>
                 </div>
               </div>
             </div>
@@ -244,7 +298,7 @@ export const ModalExample: React.FC = () => {
                 This modal demonstrates scrolling content and responsive design
               </p>
             </div>
-            
+
             {/* Long content to demonstrate scrolling */}
             {Array.from({ length: 20 }, (_, i) => (
               <div key={i} className="p-4 bg-gray-50 rounded-lg">
@@ -252,22 +306,100 @@ export const ModalExample: React.FC = () => {
                   Section {i + 1}
                 </h4>
                 <p className="text-sm text-gray-600 mb-3">
-                  This is section {i + 1} of the scrollable content. Each section contains different information
-                  to demonstrate how the modal handles overflow content.
+                  This is section {i + 1} of the scrollable content. Each
+                  section contains different information to demonstrate how the
+                  modal handles overflow content.
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="primary" size="sm">Tag {i + 1}</Badge>
-                  <Badge variant="secondary" size="sm">Category {i + 1}</Badge>
+                  <Badge variant="primary" size="sm">
+                    Tag {i + 1}
+                  </Badge>
+                  <Badge variant="secondary" size="sm">
+                    Category {i + 1}
+                  </Badge>
                 </div>
               </div>
             ))}
-            
+
             <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
               <h4 className="font-medium text-blue-900 mb-2">Important Note</h4>
               <p className="text-sm text-blue-700">
-                This modal uses the <code>scrollable</code> prop to enable content scrolling when content exceeds the modal height.
-                It also demonstrates responsive design with mobile-first approach.
+                This modal uses the <code>scrollable</code> prop to enable
+                content scrolling when content exceeds the modal height. It also
+                demonstrates responsive design with mobile-first approach.
               </p>
+            </div>
+          </div>
+        );
+
+      case "button-position":
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Responsive Button Position Modal
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                This modal demonstrates true responsive behavior on mobile vs desktop
+              </p>
+            </div>
+
+            <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
+              <h4 className="font-medium text-green-900 mb-2">
+                📱 Mobile Experience
+              </h4>
+              <p className="text-sm text-green-700 mb-3">
+                <strong>On mobile devices:</strong> Modal opens from the top (button position) with <code>items-start</code>
+              </p>
+              <div className="text-xs text-green-600 bg-green-100 p-2 rounded">
+                <code>openFromButton=&#123;true&#125;</code> → Mobile: <code>items-start</code>, Desktop: <code>items-center</code>
+              </div>
+            </div>
+
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <h4 className="font-medium text-blue-900 mb-2">
+                🖥️ Desktop Experience
+              </h4>
+              <p className="text-sm text-blue-700">
+                <strong>On desktop devices:</strong> Modal centers normally with <code>items-center</code>
+              </p>
+            </div>
+
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <h4 className="font-medium text-purple-900 mb-2">
+                🔄 Responsive Breakpoints
+              </h4>
+              <p className="text-sm text-purple-700 mb-2">
+                The modal automatically switches behavior at the <code>sm:</code> breakpoint (640px):
+              </p>
+              <ul className="text-xs text-purple-600 space-y-1">
+                <li>• <strong>&lt; 640px:</strong> Modal opens from top (button position)</li>
+                <li>• <strong>≥ 640px:</strong> Modal centers normally</li>
+              </ul>
+            </div>
+
+            <div className="p-4 bg-amber-50 rounded-lg">
+              <h4 className="font-medium text-amber-900 mb-2">
+                🎯 Key Benefits
+              </h4>
+              <ul className="text-sm text-amber-700 space-y-1">
+                <li>• <strong>Better Mobile UX:</strong> Modal appears to "grow" from the button</li>
+                <li>• <strong>Natural Flow:</strong> Follows user's mental model</li>
+                <li>• <strong>Touch Optimized:</strong> Perfect for mobile interactions</li>
+                <li>• <strong>Automatic Adaptation:</strong> No manual breakpoint handling needed</li>
+              </ul>
+            </div>
+
+            <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-400">
+              <h4 className="font-medium text-red-900 mb-2">
+                🚨 Responsive Issues Fixed
+              </h4>
+              <ul className="text-sm text-red-700 space-y-1">
+                <li>• <strong>Header Visibility:</strong> Header now always visible on mobile</li>
+                <li>• <strong>Proper Sizing:</strong> Modal uses <code>w-[85vw]</code> on mobile for better positioning</li>
+                <li>• <strong>Height Management:</strong> Mobile height limited to <code>max-h-[80vh]</code> to prevent overflow</li>
+                <li>• <strong>Positioning:</strong> Modal opens from button position on mobile, centers on desktop</li>
+              </ul>
             </div>
           </div>
         );
@@ -336,7 +468,7 @@ export const ModalExample: React.FC = () => {
         return {
           ...baseProps,
           title: "Information",
-          size: "sm" as const,
+          size: "full" as const,
         };
 
       case "form":
@@ -401,9 +533,7 @@ export const ModalExample: React.FC = () => {
           fullscreenOnMobile: true,
           footer: (
             <div className="flex items-center justify-between w-full">
-              <div className="text-sm text-gray-500">
-                Total sections: 20
-              </div>
+              <div className="text-sm text-gray-500">Total sections: 20</div>
               <div className="flex gap-2">
                 <Button variant="outlined" size="sm" onClick={closeModal}>
                   Cancel
@@ -416,6 +546,17 @@ export const ModalExample: React.FC = () => {
           ),
         };
 
+      case "button-position":
+        return {
+          ...baseProps,
+          title: "Button Position Modal",
+          size: "md" as const,
+          openFromButton: true,
+          fullscreenOnMobile: false,
+          scrollable: true,
+
+        };
+
       default:
         return baseProps;
     }
@@ -424,21 +565,23 @@ export const ModalExample: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Modal Component Examples</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Modal Component Examples
+        </h2>
         <p className="text-gray-600">
           Click the buttons below to see different modal variants and features
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Button
-          variant="contained"
-          onClick={() => openModal("simple")}
-          className="h-20 flex flex-col items-center justify-center space-y-2"
-        >
-          <FaInfoCircle className="h-5 w-5" />
-          <span>Simple Modal</span>
-        </Button>
+                 <Button
+           variant="contained"
+           onClick={() => openModal("simple")}
+           className="h-20 flex flex-col items-center justify-center space-y-2"
+         >
+           <FaInfoCircle className="h-5 w-5" />
+           <span>Full-Size Modal</span>
+         </Button>
 
         <Button
           variant="outlined"
@@ -506,16 +649,26 @@ export const ModalExample: React.FC = () => {
           <FaCog className="h-5 w-5" />
           <span>Scrollable Modal</span>
         </Button>
+
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={() => openModal("button-position")}
+          className="h-20 flex flex-col items-center justify-center space-y-2"
+        >
+          <FaCog className="h-5 w-5" />
+          <span>Button Position</span>
+        </Button>
       </div>
 
       {/* Modal */}
-      <Modal {...getModalProps()}>
-        {renderModalContent()}
-      </Modal>
+      <Modal {...getModalProps()}>{renderModalContent()}</Modal>
 
       {/* Usage Instructions */}
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-        <h3 className="font-medium text-gray-900 mb-2">Features Demonstrated:</h3>
+        <h3 className="font-medium text-gray-900 mb-2">
+          Features Demonstrated:
+        </h3>
         <ul className="text-sm text-gray-600 space-y-1">
           <li>• Different sizes: sm, md, lg, xl</li>
           <li>• Form handling with controlled inputs</li>
@@ -523,6 +676,7 @@ export const ModalExample: React.FC = () => {
           <li>• Footer visibility control (show/hide)</li>
           <li>• Content scrolling for overflow</li>
           <li>• Responsive design (mobile-first)</li>
+          <li>• Button positioning on mobile</li>
           <li>• Escape key handling</li>
           <li>• Focus management and accessibility</li>
           <li>• Body scroll prevention</li>

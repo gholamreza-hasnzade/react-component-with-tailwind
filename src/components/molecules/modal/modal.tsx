@@ -16,8 +16,6 @@ export interface ModalProps {
   children: React.ReactNode;
   /** Size of the modal */
   size?: ModalSize;
-  /** Position of the modal */
-  position?: ModalPosition;
   /** Whether to show close button */
   showCloseButton?: boolean;
   /** Whether to close on backdrop click */
@@ -36,6 +34,10 @@ export interface ModalProps {
   maxHeight?: string;
   /** Whether to make modal fullscreen on mobile */
   fullscreenOnMobile?: boolean;
+  /** Whether to open modal from button position on mobile */
+  openFromButton?: boolean;
+  /** Button element reference for positioning (optional) */
+  buttonRef?: React.RefObject<HTMLElement>;
   /** Additional CSS classes for the modal */
   className?: string;
   /** Additional CSS classes for the backdrop */
@@ -60,7 +62,6 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   size = "md",
-  position = "center",
   showCloseButton = true,
   closeOnBackdropClick = true,
   closeOnEscape = true,
@@ -70,6 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
   scrollable = false,
   maxHeight,
   fullscreenOnMobile = false,
+  openFromButton = false,
   className,
   backdropClassName,
   contentClassName,
@@ -192,7 +194,22 @@ export const Modal: React.FC<ModalProps> = ({
     md: "max-w-md w-[95vw] sm:w-auto",
     lg: "max-w-lg w-[95vw] sm:w-auto",
     xl: "max-w-xl w-[95vw] sm:w-auto",
-    full: "max-w-full w-[95vw] mx-4"
+    full: "max-w-full w-full h-full max-h-full mx-4"
+  };
+
+  // Enhanced responsive size classes for mobile
+  const getResponsiveSize = () => {
+    if (openFromButton) {
+      // When opening from button, use smaller sizes on mobile for better positioning
+      return {
+        sm: "max-w-sm w-[85vw] sm:w-auto",
+        md: "max-w-md w-[85vw] sm:w-auto",
+        lg: "max-w-lg w-[85vw] sm:w-auto",
+        xl: "max-w-xl w-[85vw] sm:w-auto",
+        full: "max-w-full w-full h-full max-h-full mx-2 sm:mx-4"
+      };
+    }
+    return sizeClasses;
   };
 
   // Responsive classes
@@ -203,15 +220,30 @@ export const Modal: React.FC<ModalProps> = ({
     "mx-2 sm:mx-4",
     // Fixed height for scrollable modals to ensure header/footer visibility
     scrollable && "h-[90vh] sm:h-[85vh]",
-    maxHeight && `max-h-[${maxHeight}]`
+    maxHeight && `max-h-[${maxHeight}]`,
+    // Mobile-specific adjustments for button positioning
+    openFromButton && "sm:max-h-none max-h-[80vh]",
+    // Full size should take full height
+    size === "full" && "h-full max-h-full"
   );
 
-  // Position classes with responsive design
-  const positionClasses = {
-    center: "items-center",
-    top: "items-start pt-4 sm:pt-16",
-    bottom: "items-end pb-4 sm:pb-16"
-  };
+  // Mobile-specific positioning for button modals (now handled inline)
+  // const mobilePositionClasses = clsx(
+  //   // When opening from button on mobile, add top padding and adjust positioning
+  //   openFromButton && "pt-4 sm:pt-0",
+  //   // Ensure proper mobile positioning
+  //   openFromButton && "sm:justify-center justify-start"
+  // );
+
+  // Get the correct size classes based on button positioning
+  const currentSizeClasses = getResponsiveSize();
+
+  // Position classes with responsive design (kept for future use)
+  // const positionClasses = {
+  //   center: "items-center",
+  //   top: "items-start pt-4 sm:pt-16",
+  //   bottom: "items-end pb-4 sm:pb-16"
+  // };
 
   // Animation classes
   const animationClasses = animate
@@ -237,8 +269,11 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal */}
       <div
         className={clsx(
-          "fixed inset-0 z-50 flex justify-center h-screen",
-          positionClasses[position],
+          "fixed inset-0 z-50 flex h-screen",
+          // Responsive positioning and justification
+          openFromButton 
+            ? "justify-center sm:items-center items-start pt-4 sm:pt-0" 
+            : "justify-center items-center",
           fullscreenOnMobile && "sm:items-center items-stretch",
           className
         )}
@@ -247,21 +282,25 @@ export const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? "modal-title" : undefined}
         aria-describedby="modal-content"
       >
-        <div
-          ref={modalRef}
-          className={clsx(
-            "relative bg-white rounded-lg shadow-xl border border-gray-200 w-full flex flex-col",
-            sizeClasses[size],
-            responsiveClasses,
-            animationClasses,
-            contentClassName
-          )}
-          style={scrollable ? { 
-            height: '90vh',
-            maxHeight: '90vh'
-          } : undefined}
-          {...props}
-        >
+                 <div
+           ref={modalRef}
+           className={clsx(
+             "relative bg-white rounded-lg shadow-xl border border-gray-200 w-full flex flex-col",
+             currentSizeClasses[size],
+             responsiveClasses,
+             animationClasses,
+             // Ensure proper mobile sizing
+             openFromButton && "sm:max-h-none",
+             // Full size should take full viewport
+             size === "full" && "h-screen max-h-screen",
+             contentClassName
+           )}
+           style={scrollable ? { 
+             height: '90vh',
+             maxHeight: '90vh'
+           } : undefined}
+           {...props}
+         >
           {/* Header */}
           {(title || showCloseButton) && (
             <div
@@ -291,21 +330,23 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
           )}
 
-          {/* Body */}
-          <div
-            id="modal-content"
-            className={clsx(
-              "p-6 flex-1",
-              scrollable && "overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100",
-              bodyClassName
-            )}
-            style={scrollable ? { 
-              maxHeight: 'calc(90vh - 120px)', // Subtract header + footer height
-              minHeight: 0 
-            } : undefined}
-          >
-            {children}
-          </div>
+                     {/* Body */}
+           <div
+             id="modal-content"
+             className={clsx(
+               "p-6 flex-1",
+               scrollable && "overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100",
+               // Ensure body is responsive
+               openFromButton && "sm:max-h-none",
+               bodyClassName
+             )}
+             style={scrollable ? { 
+               maxHeight: 'calc(90vh - 120px)', // Subtract header + footer height
+               minHeight: 0 
+             } : undefined}
+           >
+             {children}
+           </div>
 
           {/* Footer */}
           {footer && (
