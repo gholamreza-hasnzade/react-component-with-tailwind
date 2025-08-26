@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { FaTimes } from "react-icons/fa";
 
 export type BadgeVariant = 
   | "primary" 
@@ -27,8 +28,14 @@ export interface BadgeProps {
   showDot?: boolean;
   /** Whether the badge should be dismissible */
   dismissible?: boolean;
+  /** Icon component to display before the text */
+  icon?: React.ReactNode;
+  /** Position of the icon relative to text */
+  iconPosition?: "left" | "right";
   /** Callback when badge is dismissed */
   onDismiss?: () => void;
+  /** Click handler for clickable badges */
+  onClick?: (e: React.MouseEvent) => void;
   /** Additional CSS classes */
   className?: string;
   /** Additional HTML attributes */
@@ -43,34 +50,38 @@ export const Badge: React.FC<BadgeProps> = ({
   clickable = false,
   showDot = false,
   dismissible = false,
+  icon,
+  iconPosition = "left",
   onDismiss,
+  onClick,
   className,
   ...props
 }) => {
   const baseClasses = clsx(
     // Base styles
-    "inline-flex items-center font-medium transition-colors duration-200",
+    "inline-flex items-center font-semibold transition-all duration-200",
     "focus:outline-none focus:ring-2 focus:ring-offset-2",
+    "shadow-sm border",
     
     // Size variants
-    size === "sm" && "px-2 py-0.5 text-xs",
-    size === "md" && "px-2.5 py-1 text-sm",
-    size === "lg" && "px-3 py-1.5 text-base",
+    size === "sm" && "px-2.5 py-1 text-xs leading-4",
+    size === "md" && "px-3 py-1.5 text-sm leading-5",
+    size === "lg" && "px-4 py-2 text-base leading-6",
     
     // Rounded variants
-    rounded ? "rounded-full" : "rounded-md",
+    rounded ? "rounded-full" : "rounded-lg",
     
-    // Variant styles
-    variant === "primary" && "bg-blue-100 text-blue-800 focus:ring-blue-500",
-    variant === "secondary" && "bg-gray-100 text-gray-800 focus:ring-gray-500",
-    variant === "success" && "bg-green-100 text-green-800 focus:ring-green-500",
-    variant === "error" && "bg-red-100 text-red-800 focus:ring-red-500",
-    variant === "warning" && "bg-yellow-100 text-yellow-800 focus:ring-yellow-500",
-    variant === "info" && "bg-cyan-100 text-cyan-800 focus:ring-cyan-500",
-    variant === "outline" && "bg-transparent border border-gray-300 text-gray-700 focus:ring-gray-500",
+    // Variant styles with better contrast and modern design
+    variant === "primary" && "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 focus:ring-blue-500",
+    variant === "secondary" && "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 focus:ring-gray-500",
+    variant === "success" && "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 focus:ring-emerald-500",
+    variant === "error" && "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 focus:ring-red-500",
+    variant === "warning" && "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 focus:ring-amber-500",
+    variant === "info" && "bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100 focus:ring-sky-500",
+    variant === "outline" && "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 focus:ring-gray-500",
     
-    // Interactive states
-    clickable && "cursor-pointer hover:opacity-80 active:opacity-60",
+    // Interactive states with better hover effects
+    clickable && "cursor-pointer hover:scale-105 hover:shadow-md active:scale-95",
     
     // Dismissible styles
     dismissible && "pr-1",
@@ -79,20 +90,36 @@ export const Badge: React.FC<BadgeProps> = ({
   );
 
   const dotClasses = clsx(
-    "w-2 h-2 rounded-full mr-1.5",
-    variant === "primary" && "bg-blue-400",
-    variant === "secondary" && "bg-gray-400",
-    variant === "success" && "bg-green-400",
-    variant === "error" && "bg-red-400",
-    variant === "warning" && "bg-yellow-400",
-    variant === "info" && "bg-cyan-400",
-    variant === "outline" && "bg-gray-400"
+    "w-2.5 h-2.5 rounded-full mr-2 shadow-sm",
+    variant === "primary" && "bg-blue-500",
+    variant === "secondary" && "bg-gray-500",
+    variant === "success" && "bg-emerald-500",
+    variant === "error" && "bg-red-500",
+    variant === "warning" && "bg-amber-500",
+    variant === "info" && "bg-sky-500",
+    variant === "outline" && "bg-gray-500"
   );
 
   const dismissButtonClasses = clsx(
-    "ml-1.5 p-0.5 rounded-full transition-colors duration-200",
-    "hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1",
-    "text-gray-500 hover:text-gray-700"
+    "ml-2 p-1 rounded-full transition-all duration-200",
+    "hover:bg-gray-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1",
+    "text-gray-500 hover:text-gray-700 active:scale-95"
+  );
+
+  const iconClasses = clsx(
+    "flex-shrink-0 [&>*]:text-inherit",
+    size === "sm" && "w-3.5 h-3.5",
+    size === "md" && "w-4 h-4",
+    size === "lg" && "w-5 h-5",
+    iconPosition === "left" ? "mr-2" : "ml-2",
+    // Icon colors based on variant
+    variant === "primary" && "text-blue-600",
+    variant === "secondary" && "text-gray-600",
+    variant === "success" && "text-emerald-600",
+    variant === "error" && "text-red-600",
+    variant === "warning" && "text-amber-600",
+    variant === "info" && "text-sky-600",
+    variant === "outline" && "text-gray-600"
   );
 
   const handleDismiss = (e: React.MouseEvent) => {
@@ -111,10 +138,21 @@ export const Badge: React.FC<BadgeProps> = ({
     <span
       className={baseClasses}
       {...(clickable && { role: "button", tabIndex: 0 })}
+      onClick={onClick}
       {...props}
     >
       {showDot && <span className={dotClasses} aria-hidden="true" />}
+      {icon && iconPosition === "left" && (
+        <span className={iconClasses} aria-hidden="true">
+          {icon}
+        </span>
+      )}
       <span className="flex-1">{children}</span>
+      {icon && iconPosition === "right" && (
+        <span className={iconClasses} aria-hidden="true">
+          {icon}
+        </span>
+      )}
       {dismissible && (
         <button
           type="button"
@@ -124,18 +162,7 @@ export const Badge: React.FC<BadgeProps> = ({
           aria-label="Remove badge"
           tabIndex={0}
         >
-          <svg
-            className="w-3 h-3"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <FaTimes className="w-3.5 h-3.5" />
         </button>
       )}
     </span>

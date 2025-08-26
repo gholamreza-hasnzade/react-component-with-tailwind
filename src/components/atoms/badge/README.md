@@ -26,6 +26,8 @@ A flexible and accessible Badge component built with React, TypeScript, and Tail
 | `clickable` | `boolean` | `false` | Whether the badge is clickable |
 | `showDot` | `boolean` | `false` | Whether to show a status dot |
 | `dismissible` | `boolean` | `false` | Whether the badge can be dismissed |
+| `icon` | `React.ReactNode` | `undefined` | Icon component to display |
+| `iconPosition` | `"left" \| "right"` | `"left"` | Position of the icon relative to text |
 | `onDismiss` | `() => void` | `undefined` | Callback when badge is dismissed |
 | `className` | `string` | `undefined` | Additional CSS classes |
 | `onClick` | `(e: React.MouseEvent) => void` | `undefined` | Click handler for clickable badges |
@@ -82,6 +84,22 @@ import { Badge } from "@/components/atoms/badge";
 <Badge variant="success" showDot>Online</Badge>
 <Badge variant="error" showDot>Offline</Badge>
 <Badge variant="warning" showDot>Away</Badge>
+```
+
+### With Icons
+
+```tsx
+import { FaBell, FaCheck, FaTimes } from "react-icons/fa";
+
+// Left icons (default)
+<Badge variant="primary" icon={<FaBell />}>Notifications</Badge>
+<Badge variant="success" icon={<FaCheck />}>Completed</Badge>
+
+// Right icons
+<Badge variant="error" icon={<FaTimes />} iconPosition="right">Remove</Badge>
+
+// Combined with other features
+<Badge variant="warning" icon={<FaExclamationTriangle />} showDot>Warning</Badge>
 ```
 
 ### Clickable Badges
@@ -160,6 +178,17 @@ const [showBadge, setShowBadge] = useState(true);
 <div className="flex items-center gap-2">
   <span>Messages</span>
   <Badge variant="error" size="sm">5</Badge>
+</div>
+
+### System Status with Icons
+
+```tsx
+import { FaCheck, FaTimes, FaExclamationTriangle } from "react-icons/fa";
+
+<div className="flex gap-2">
+  <Badge variant="success" size="sm" icon={<FaCheck />}>Connected</Badge>
+  <Badge variant="error" size="sm" icon={<FaTimes />}>Disconnected</Badge>
+  <Badge variant="warning" size="sm" icon={<FaExclamationTriangle />}>Maintenance</Badge>
 </div>
 ```
 

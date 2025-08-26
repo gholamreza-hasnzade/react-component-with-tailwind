@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Badge } from "./badge";
+import { FaBell, FaCheck, FaExclamationTriangle, FaInfoCircle, FaTimes } from "react-icons/fa";
 
 export const BadgeExample: React.FC = () => {
   const [dismissedBadges, setDismissedBadges] = useState<Set<string>>(new Set());
@@ -73,6 +74,42 @@ export const BadgeExample: React.FC = () => {
               <Badge variant="error" showDot>Offline</Badge>
               <Badge variant="warning" showDot>Away</Badge>
               <Badge variant="info" showDot>Busy</Badge>
+            </div>
+          </div>
+        </section>
+
+        {/* With Icons */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">With Icons</h2>
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium text-gray-900 mb-3">Left Icons (Default)</h3>
+                <div className="flex flex-wrap gap-3 items-center">
+                  <Badge variant="primary" icon={<FaBell />}>Notifications</Badge>
+                  <Badge variant="success" icon={<FaCheck />}>Completed</Badge>
+                  <Badge variant="warning" icon={<FaExclamationTriangle />}>Warning</Badge>
+                  <Badge variant="info" icon={<FaInfoCircle />}>Info</Badge>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-gray-900 mb-3">Right Icons</h3>
+                <div className="flex flex-wrap gap-3 items-center">
+                  <Badge variant="primary" icon={<FaTimes />} iconPosition="right">Close</Badge>
+                  <Badge variant="success" icon={<FaCheck />} iconPosition="right">Done</Badge>
+                  <Badge variant="error" icon={<FaTimes />} iconPosition="right">Remove</Badge>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-medium text-gray-900 mb-3">Combined Features</h3>
+                <div className="flex flex-wrap gap-3 items-center">
+                  <Badge variant="primary" icon={<FaBell />} showDot size="sm">New</Badge>
+                  <Badge variant="success" icon={<FaCheck />} rounded>Verified</Badge>
+                  <Badge variant="warning" icon={<FaExclamationTriangle />} clickable onClick={() => handleClick("Warning badge clicked!")}>Clickable</Badge>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -181,9 +218,17 @@ export const BadgeExample: React.FC = () => {
             {/* Notification Count */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">Notifications:</span>
-              <Badge variant="error" size="sm">3</Badge>
-              <Badge variant="warning" size="sm">5</Badge>
-              <Badge variant="info" size="sm">12</Badge>
+              <Badge variant="error" size="sm" icon={<FaBell />}>3</Badge>
+              <Badge variant="warning" size="sm" icon={<FaBell />}>5</Badge>
+              <Badge variant="info" size="sm" icon={<FaBell />}>12</Badge>
+            </div>
+
+            {/* Status with Icons */}
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">System Status:</span>
+              <Badge variant="success" size="sm" icon={<FaCheck />}>Connected</Badge>
+              <Badge variant="error" size="sm" icon={<FaTimes />}>Disconnected</Badge>
+              <Badge variant="warning" size="sm" icon={<FaExclamationTriangle />}>Maintenance</Badge>
             </div>
           </div>
         </section>
