@@ -1,191 +1,311 @@
-# CDMS Frontend
+# 🚀 React Component Library with Tailwind CSS
 
-This is the frontend for the CDMS project, built with React, TypeScript, and Vite.
+A modern, comprehensive React component library built with TypeScript, Tailwind CSS, and following atomic design principles. This project provides a robust foundation for building scalable web applications with pre-built, accessible UI components.
 
-## Getting Started
+## ✨ Features
+
+- **🎨 30+ Atomic Components** - Button, Input, Dialog, Toast, and more
+- **🧬 Molecular Components** - DataTable, MultiStepForm, FileUpload, and more
+- **🎯 TypeScript First** - Full type safety and excellent developer experience
+- **🎨 Tailwind CSS v4** - Latest utility-first CSS framework
+- **♿ Accessibility** - Built with Radix UI primitives for screen reader support
+- **🌍 Internationalization** - Built-in i18n support with Persian language
+- **📱 Responsive Design** - Mobile-first approach with modern UI patterns
+- **🧪 Testing Ready** - Vitest, React Testing Library, and Storybook integration
+- **📚 Documentation** - Comprehensive Storybook documentation
+- **⚡ Performance** - Vite build tool for fast development and builds
+
+## 🏗️ Architecture
+
+This project follows the **Atomic Design** methodology, organizing components into logical hierarchies:
+
+```
+src/components/
+├── atoms/          # Basic building blocks (Button, Input, etc.)
+├── molecules/      # Component combinations (FormField, DataTable, etc.)
+├── organisms/      # Complex UI sections (Header, Sidebar, etc.)
+├── templates/      # Page layouts
+└── pages/          # Complete pages
+```
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or newer recommended)
-- [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
+
+- **Node.js** 18+ 
+- **npm** or **yarn**
 
 ### Installation
 
-Clone the repository and install dependencies:
-
 ```bash
-yarn install
-# or
+# Clone the repository
+git clone <your-repo-url>
+cd react-component-with-tailwind
+
+# Install dependencies
 npm install
+# or
+yarn install
 ```
 
 ### Development
 
-Start the development server:
-
 ```bash
-yarn dev
-# or
+# Start development server
 npm run dev
+# or
+yarn dev
 ```
 
-The app will be available at [http://localhost:3000](http://localhost:3000).
+The app will be available at [http://localhost:3010](http://localhost:3010).
 
-### Building for Production
+## 📦 Available Components
 
-To build the app for production:
+### 🧪 Atoms (Basic Components)
+
+| Component | Description | Status |
+|-----------|-------------|---------|
+| **Button** | Versatile button with variants | ✅ Ready |
+| **Input** | Text input with validation | ✅ Ready |
+| **Dialog** | Modal dialogs and alerts | ✅ Ready |
+| **Toast** | Notification system | ✅ Ready |
+| **Select** | Dropdown selection | ✅ Ready |
+| **Checkbox** | Checkbox with states | ✅ Ready |
+| **Radio Group** | Radio button groups | ✅ Ready |
+| **Avatar** | User profile images | ✅ Ready |
+| **Badge** | Status indicators | ✅ Ready |
+| **Tabs** | Tabbed content | ✅ Ready |
+| **Accordion** | Collapsible content | ✅ Ready |
+| **Drawer** | Slide-out panels | ✅ Ready |
+| **Tooltip** | Hover information | ✅ Ready |
+| **Skeleton** | Loading placeholders | ✅ Ready |
+| **Progress Bar** | Progress indicators | ✅ Ready |
+| **Stepper** | Multi-step navigation | ✅ Ready |
+| **Tree** | Hierarchical data display | ✅ Ready |
+| **Time Picker** | Time selection | ✅ Ready |
+| **Persian Date Picker** | Persian calendar input | ✅ Ready |
+| **Tags Input** | Tag management | ✅ Ready |
+| **Textarea** | Multi-line text input | ✅ Ready |
+| **Password** | Secure password input | ✅ Ready |
+| **Actions Dropdown** | Action menus | ✅ Ready |
+| **Barcodes** | Barcode/QR code generation | ✅ Ready |
+
+### 🧬 Molecules (Composite Components)
+
+| Component | Description | Status |
+|-----------|-------------|---------|
+| **DataTable** | Advanced data table with filtering | ✅ Ready |
+| **MultiStepForm** | Multi-step form wizard | ✅ Ready |
+| **File Upload** | Single and multi-file upload | ✅ Ready |
+| **Meter Group** | Progress meter collections | ✅ Ready |
+| **Layout** | Page layout components | ✅ Ready |
+
+## 🛠️ Development Tools
+
+### Testing
 
 ```bash
-yarn build
-# or
-npm run build
-```
-
-### Linting
-
-To run ESLint:
-
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-### Preview Production Build
-
-To preview the production build locally:
-
-```bash
-yarn preview
-# or
-npm run preview
-```
-
-## Project Structure
-
-- `src/` - Main source code (React components, styles, assets)
-- `public/` - Static assets
-- `vite.config.ts` - Vite configuration
-- `tsconfig*.json` - TypeScript configuration
-
-## Atomic Design Folder Structure
-
-The project uses the [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/) methodology for organizing UI components. The structure is as follows:
-
-```
-src/
-  components/
-    atoms/       # Smallest, reusable UI elements (e.g., Button, Input)
-    molecules/   # Groups of atoms functioning together (e.g., FormField)
-    organisms/   # Complex UI components composed of molecules/atoms (e.g., Header, Card)
-    templates/   # Page-level layouts with placeholder content
-    pages/       # Full pages composed of templates and organisms
-```
-
-- **atoms/**: Basic building blocks, such as buttons, inputs, icons.
-- **molecules/**: Combinations of atoms, like a search bar (input + button).
-- **organisms/**: Relatively complex components, like navigation bars or cards.
-- **templates/**: Layouts that define the structure of a page without real content.
-- **pages/**: Actual pages, composed of templates and real content/data.
-
-## Styling with Tailwind CSS
-
-This project uses the following packages for utility-first styling:
-- 🎨 `tailwindcss`
-- ⚡ `@tailwindcss/vite`
-- 🧩 `tailwind-merge`
-- 🟦 `shadcn/ui` (for ready-to-use, accessible UI components)
-
-Tailwind CSS is already configured in the project. You can use Tailwind utility classes directly in your React components.
-
-For more information, see the [Tailwind CSS documentation](https://tailwindcss.com/docs/installation).
-
-## Key Libraries Used
-
-Some important libraries in this project:
-- ⚛️ `react`, `react-dom` — Core React libraries
-- 🔄 `@tanstack/react-query`, `@tanstack/react-query-devtools` — Data fetching, caching, and devtools
-- 🌐 `axios` — Promise-based HTTP client
-- 🌍 `i18next`, `react-i18next` — Internationalization (i18n) support
-- 🧪 `@hookform/resolvers` — Integrates validation libraries with React Hook Form
-- 🧰 `clsx` — Utility for conditionally joining classNames
-- 📝 `yup` — JavaScript schema validation
-- 🎨 `tailwindcss` — Utility-first CSS framework
-- ⚡ `@tailwindcss/vite` — Vite plugin for Tailwind CSS
-- 🧩 `tailwind-merge` — Utility for intelligently merging Tailwind CSS classes
-- 🟦 `shadcn/ui` — Accessible and customizable UI components built on top of Radix UI and Tailwind CSS
-- 🧪 `vitest` — Blazing fast unit test framework
-- 🧪 `@testing-library/react`, `@testing-library/jest-dom` — React component testing utilities and matchers
-- 🧪 `jsdom` — JavaScript implementation of the DOM for testing
-- 📚 `storybook`, `@storybook/react-vite` — UI component explorer and documentation
-- 🦺 `eslint`, `typescript`, `typescript-eslint` — Linting and static type checking
-- 🦾 `@radix-ui/react-slot` — Primitive for advanced composition patterns
-- 🏗️ `@vitejs/plugin-react`, `vite` — Vite build tool and React plugin
-- 🧪 `@vitest/coverage-v8` — Code coverage for Vitest
-- 🧪 `@vitest/browser` — Browser-based testing with Vitest
-- 🧪 `playwright` — End-to-end browser testing
-
-## License
-
-This project is licensed under the MIT License.
-
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for unit and component testing.
-
-### Running Tests
-
-```bash
-yarn test
-# or
+# Run tests
 npm run test
-```
 
-### Interactive Test UI
-
-```bash
-yarn test:ui
-# or
+# Interactive test UI
 npm run test:ui
-```
 
-### Coverage Report
-
-To generate a code coverage report:
-
-```bash
-yarn coverage
-# or
+# Coverage report
 npm run coverage
 ```
 
-The coverage report will be available in the `coverage/` directory (which is git-ignored).
-
-## Storybook
-
-Storybook is used for developing and testing UI components in isolation.
-
-### Start Storybook
+### Storybook
 
 ```bash
-yarn storybook
-# or
+# Start Storybook
 npm run storybook
-```
 
-Storybook will be available at [http://localhost:6006](http://localhost:6006).
-
-### Build Storybook Static Site
-
-```bash
-yarn build-storybook
-# or
+# Build static Storybook
 npm run build-storybook
 ```
 
-The static build will be output to the `storybook-static/` directory.
+### Code Quality
 
-## Additional Notes
+```bash
+# Linting
+npm run lint
 
-- **Testing**: All test files should be named with `.test.ts(x)` or `.spec.ts(x)` and placed alongside the components in the `src/` directory.
-- **Coverage**: The project uses [@testing-library/jest-dom](https://github.com/testing-library/jest-dom) for improved assertions in tests.
-- **Atomic Design**: Follow the atomic design methodology for organizing components.
+# Type checking
+npm run build
+```
+
+## 🎨 Styling & Theming
+
+This project uses **Tailwind CSS v4** with custom configurations:
+
+- **Utility-first CSS** approach
+- **Custom color palette** and design tokens
+- **Responsive breakpoints** for mobile-first design
+- **Dark mode support** (configurable)
+- **Custom animations** and transitions
+
+### CSS Architecture
+
+```css
+/* Example component styling */
+.button {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply hover:shadow-md active:scale-95;
+}
+```
+
+## 🌍 Internationalization
+
+Built-in support for multiple languages:
+
+- **English** (en) - Default language
+- **Persian** (fa) - RTL support with custom fonts
+- **Extensible** - Easy to add new languages
+
+### Usage Example
+
+```tsx
+import { useTranslation } from 'react-i18next';
+
+function MyComponent() {
+  const { t } = useTranslation();
+  
+  return <h1>{t('welcome.title')}</h1>;
+}
+```
+
+## 📱 Responsive Design
+
+All components are built with mobile-first responsive design:
+
+- **Mobile** (320px+) - Primary design target
+- **Tablet** (768px+) - Enhanced layouts
+- **Desktop** (1024px+) - Full feature set
+- **Large** (1280px+) - Optimized spacing
+
+## ♿ Accessibility Features
+
+- **ARIA labels** and roles
+- **Keyboard navigation** support
+- **Screen reader** compatibility
+- **Focus management** for modals
+- **Color contrast** compliance
+- **Semantic HTML** structure
+
+## 🔧 Configuration
+
+### Environment Setup
+
+```bash
+# Development
+NODE_ENV=development
+
+# Production
+NODE_ENV=production
+```
+
+### Build Configuration
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: { port: 3010 },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@/components": path.resolve(__dirname, "./src/components"),
+    }
+  }
+});
+```
+
+## 📚 API Reference
+
+### Component Usage
+
+```tsx
+import { Button, Input, Dialog } from '@/components/atoms';
+
+function MyForm() {
+  return (
+    <Dialog>
+      <Input placeholder="Enter text" />
+      <Button variant="primary">Submit</Button>
+    </Dialog>
+  );
+}
+```
+
+### TypeScript Support
+
+```tsx
+import type { ButtonProps, InputProps } from '@/components/atoms';
+
+interface CustomButtonProps extends ButtonProps {
+  customProp?: string;
+}
+```
+
+## 🚀 Performance
+
+- **Tree shaking** for optimal bundle size
+- **Lazy loading** for heavy components
+- **Memoization** for expensive operations
+- **Bundle analysis** tools included
+- **Code splitting** by component category
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our contributing guidelines:
+
+1. **Fork** the repository
+2. **Create** a feature branch
+3. **Make** your changes
+4. **Add** tests for new functionality
+5. **Ensure** all tests pass
+6. **Submit** a pull request
+
+### Development Standards
+
+- **TypeScript** for all new code
+- **ESLint** for code quality
+- **Prettier** for formatting
+- **Conventional commits** for commit messages
+- **100% test coverage** for new components
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Radix UI** for accessible primitives
+- **Tailwind CSS** for utility-first styling
+- **Vite** for fast build tooling
+- **React Testing Library** for testing utilities
+- **Storybook** for component documentation
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/your-username/react-component-with-tailwind/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/react-component-with-tailwind/discussions)
+- **Documentation**: [Storybook](http://localhost:6006)
+
+---
+
+<div align="center">
+  <p>Built with ❤️ using React, TypeScript, and Tailwind CSS</p>
+  <p>
+    <a href="https://github.com/your-username/react-component-with-tailwind">
+      <img src="https://img.shields.io/badge/GitHub-View%20on%20GitHub-blue?logo=github" alt="View on GitHub" />
+    </a>
+    <a href="https://npmjs.com/package/your-package-name">
+      <img src="https://img.shields.io/npm/v/your-package-name" alt="npm version" />
+    </a>
+    <a href="https://github.com/your-username/react-component-with-tailwind/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" />
+    </a>
+  </p>
+</div>
