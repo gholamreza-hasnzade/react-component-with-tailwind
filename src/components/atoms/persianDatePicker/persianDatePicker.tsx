@@ -8,10 +8,14 @@ import gregorian from "react-date-object/calendars/gregorian";
 import clsx from "clsx";
 import { FiCalendar } from "react-icons/fi";
 
-export type PersianDateFormat = "YYYY/MM/DD" | "YYYY-MM-DD" | "DD/MM/YYYY" | "DD-MM-YYYY";
+export type PersianDateFormat =
+  | "YYYY/MM/DD"
+  | "YYYY-MM-DD"
+  | "DD/MM/YYYY"
+  | "DD-MM-YYYY";
 
 export type PersianDateInputProps = {
-  value?: Date | null; 
+  value?: Date | null;
   onChange?: (value: Date | null) => void;
   label?: string;
   placeholder?: string;
@@ -29,45 +33,33 @@ export type PersianDateInputProps = {
 
 const colorMap = {
   primary: {
-    contained:
-      "bg-blue-50 border-blue-600 text-blue-700",
-    outlined:
-      "border border-blue-600 text-blue-600 bg-white",
+    contained: "bg-blue-50 border-blue-600 text-blue-700",
+    outlined: "border border-blue-600 text-blue-600 bg-white",
     text: "text-blue-600 bg-transparent border-none",
   },
   secondary: {
-    contained:
-      "bg-gray-50 border-gray-600 text-gray-700",
-    outlined:
-      "border border-gray-600 text-gray-600 bg-white",
+    contained: "bg-gray-50 border-gray-600 text-gray-700",
+    outlined: "border border-gray-600 text-gray-600 bg-white",
     text: "text-gray-600 bg-transparent border-none",
   },
   success: {
-    contained:
-      "bg-green-50 border-green-600 text-green-700",
-    outlined:
-      "border border-green-600 text-green-600 bg-white",
+    contained: "bg-green-50 border-green-600 text-green-700",
+    outlined: "border border-green-600 text-green-600 bg-white",
     text: "text-green-600 bg-transparent border-none",
   },
   error: {
-    contained:
-      "bg-red-50 border-red-600 text-red-700",
-    outlined:
-      "border border-red-600 text-red-600 bg-white",
+    contained: "bg-red-50 border-red-600 text-red-700",
+    outlined: "border border-red-600 text-red-600 bg-white",
     text: "text-red-600 bg-transparent border-none",
   },
   warning: {
-    contained:
-      "bg-yellow-50 border-yellow-500 text-yellow-700",
-    outlined:
-      "border border-yellow-500 text-yellow-600 bg-white",
+    contained: "bg-yellow-50 border-yellow-500 text-yellow-700",
+    outlined: "border border-yellow-500 text-yellow-600 bg-white",
     text: "text-yellow-600 bg-transparent border-none",
   },
   info: {
-    contained:
-      "bg-sky-50 border-sky-500 text-sky-700",
-    outlined:
-      "border border-sky-500 text-sky-500 bg-white",
+    contained: "bg-sky-50 border-sky-500 text-sky-700",
+    outlined: "border border-sky-500 text-sky-500 bg-white",
     text: "text-sky-500 bg-transparent border-none",
   },
 };
@@ -140,7 +132,7 @@ export const PersianDateInput: FC<PersianDateInputProps> = ({
   const regex = getRegexForFormat(format);
 
   const toEnglishDigits = (str: string) =>
-    str.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString());
+    str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString());
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const originalVal = e.target.value;
@@ -154,8 +146,9 @@ export const PersianDateInput: FC<PersianDateInputProps> = ({
     setInputError(null);
     if (regex && regex.test(val)) {
       try {
-        let sepIdx = format.indexOf("/") > -1 ? format.indexOf("/") : format.indexOf("-");
-        if (sepIdx === -1) sepIdx = 4; 
+        let sepIdx =
+          format.indexOf("/") > -1 ? format.indexOf("/") : format.indexOf("-");
+        if (sepIdx === -1) sepIdx = 4;
         const sep = val[sepIdx];
         const dynamicFormat = format.replace(/[/-]/g, sep);
         const dateObj = new DateObject({
@@ -170,7 +163,12 @@ export const PersianDateInput: FC<PersianDateInputProps> = ({
         setInputError("فرمت تاریخ معتبر نیست");
       }
     } else {
-      setInputError(`فرمت تاریخ باید ${format.replace(/Y/g, 'Y').replace(/M/g, 'M').replace(/D/g, 'D')} باشد`);
+      setInputError(
+        `فرمت تاریخ باید ${format
+          .replace(/Y/g, "Y")
+          .replace(/M/g, "M")
+          .replace(/D/g, "D")} باشد`
+      );
     }
   };
 
@@ -232,7 +230,6 @@ export const PersianDateInput: FC<PersianDateInputProps> = ({
               }}
               disabled={disabled}
               inputMode="numeric"
-              pattern="[0-9/\-]*"
             />
             <FiCalendar className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
           </div>
@@ -265,4 +262,3 @@ export const PersianDateInput: FC<PersianDateInputProps> = ({
     </div>
   );
 };
-
