@@ -1,5 +1,5 @@
 
-import { TimePickerExample } from "./components/atoms/timepicker/timePicker.example";
+import { ProgressBarExample } from "./components/atoms/progressbar/progressbar.example";
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
 
 
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
-      <TimePickerExample />  
+      <ProgressBarExample />  
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
