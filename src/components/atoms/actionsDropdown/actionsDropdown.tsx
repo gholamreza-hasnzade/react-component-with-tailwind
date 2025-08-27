@@ -24,11 +24,14 @@ interface ActionSeparator {
 
 type ActionItem<T> = Action<T> | ActionSeparator;
 
+type DropdownPosition = 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top' | 'bottom' | 'left' | 'right';
+
 interface ActionsDropdownProps<T> {
   actions: ActionItem<T>[];
   row?: T;
   trigger?: React.ReactNode;
   triggerClassName?: string;
+  position?: DropdownPosition;
 }
 
 export function ActionsDropdown<T>({
@@ -36,6 +39,7 @@ export function ActionsDropdown<T>({
   row,
   trigger,
   triggerClassName,
+  position = 'bottom-right',
 }: ActionsDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -79,6 +83,43 @@ export function ActionsDropdown<T>({
     return !isSeparator(item);
   };
 
+  const getPositionClasses = (): string => {
+    const baseClasses = "absolute bg-white border border-gray-200 rounded-lg shadow-lg z-30";
+    
+    switch (position) {
+      case 'top-left':
+        return clsx(baseClasses, "bottom-full right-0 mb-1");
+      case 'top-right':
+        return clsx(baseClasses, "bottom-full left-0 mb-1");
+      case 'top-center':
+        return clsx(baseClasses, "bottom-full left-1/2 transform -translate-x-1/2 mb-1");
+      case 'bottom-left':
+        return clsx(baseClasses, "top-full right-0 mt-1");
+      case 'bottom-right':
+        return clsx(baseClasses, "top-full left-0 mt-1");
+      case 'bottom-center':
+        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
+      case 'top':
+        return clsx(baseClasses, "bottom-full left-1/2 transform -translate-x-1/2 mb-1");
+      case 'bottom':
+        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
+      case 'left':
+        return clsx(baseClasses, "right-full top-1/2 transform -translate-y-1/2 mr-1");
+      case 'right':
+        return clsx(baseClasses, "left-full top-1/2 transform -translate-y-1/2 ml-1");
+      default:
+        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
+    }
+  };
+
+  const getDropdownWidth = (): string => {
+    // Adjust width based on position to prevent overflow
+    if (position === 'left' || position === 'right') {
+      return "w-36 sm:w-40";
+    }
+    return "w-36 sm:w-40";
+  };
+
   return (
     <div className="flex justify-end items-center" ref={ref}>
       <div className="relative">
@@ -104,9 +145,7 @@ export function ActionsDropdown<T>({
         )}
         
         {open && (
-          <div 
-            className="absolute top-6 -right-16 translate-x-1/2 mt-1 w-36 sm:w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-30"
-          >
+          <div className={clsx(getPositionClasses(), getDropdownWidth())}>
             <div className="sr-only">
               <button
                 onClick={() => setOpen(false)}

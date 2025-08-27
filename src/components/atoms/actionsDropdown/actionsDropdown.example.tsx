@@ -92,7 +92,7 @@ export const ActionsDropdownExample: React.FC = () => {
           <div className="flex justify-center space-x-8">
             <div className="text-center">
               <h3 className="text-sm font-medium text-gray-800 mb-2">Default Trigger</h3>
-              <ActionsDropdown actions={getBasicActions()} />
+              <ActionsDropdown actions={getBasicActions()}  position="bottom"/>
             </div>
             <div className="text-center">
               <h3 className="text-sm font-medium text-gray-800 mb-2">Custom Button</h3>
@@ -142,7 +142,7 @@ export const ActionsDropdownExample: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <ActionsDropdown actions={getUserActions(user)} row={user} />
+                      <ActionsDropdown actions={getUserActions(user)} row={user} position="top-left" />
                     </td>
                   </tr>
                 ))}

@@ -16,13 +16,14 @@ import { InputOTPExample } from "./components/atoms/inputOTP";
 import { NotificationsExample } from "./components/atoms/notifications";
 import { PasswordExample } from "./components/atoms/password/password.example";
 import RatingExample from "./components/atoms/rating/rating.example";
+import ActionsDropdownExample from "./components/atoms/actionsDropdown/actionsDropdown.example";
 
 function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
         {/* <BadgeExample /> */}
-        <RatingExample />
+        <ActionsDropdownExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

@@ -276,4 +276,268 @@ export const AllFeatures: Story = {
       </div>
     );
   },
+};
+
+export const PositionTop: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <ActionsDropdown actions={actions} row={{}} position="top" />
+          <span className="text-sm text-gray-500">Dropdown appears above</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionBottomCenter: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <span className="text-sm text-gray-500">Dropdown appears below (centered)</span>
+          <ActionsDropdown actions={actions} row={{}} position="bottom-center" />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionLeft: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex items-center gap-8">
+          <ActionsDropdown actions={actions} row={{}} position="left" />
+          <span className="text-sm text-gray-500">Dropdown appears to the left</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionRight: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex items-center gap-8">
+          <span className="text-sm text-gray-500">Dropdown appears to the right</span>
+          <ActionsDropdown actions={actions} row={{}} position="right" />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionTopLeft: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <ActionsDropdown actions={actions} row={{}} position="top-left" />
+          <span className="text-sm text-gray-500">Dropdown appears above, aligned left</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionTopRight: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <ActionsDropdown actions={actions} row={{}} position="top-right" />
+          <span className="text-sm text-gray-500">Dropdown appears above, aligned right</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionBottomLeft: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <span className="text-sm text-gray-500">Dropdown appears below, aligned left</span>
+          <ActionsDropdown actions={actions} row={{}} position="bottom-left" />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionBottomRight: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="flex flex-col items-center gap-8">
+          <span className="text-sm text-gray-500">Dropdown appears below, aligned right</span>
+          <ActionsDropdown actions={actions} row={{}} position="bottom-right" />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const PositionComparison: Story = {
+  render: () => {
+    const actions = [
+      {
+        label: "Edit",
+        onClick: () => alert("Edit clicked"),
+        icon: <FaEdit />,
+      },
+      {
+        label: "Delete",
+        onClick: () => alert("Delete clicked"),
+        icon: <FaTrash />,
+      },
+    ];
+    
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+        <div className="grid grid-cols-3 gap-8 items-center">
+          {/* Top row */}
+          <div className="flex flex-col items-center gap-4">
+            <ActionsDropdown actions={actions} row={{}} position="top-left" />
+            <span className="text-xs text-gray-500">top-left</span>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <ActionsDropdown actions={actions} row={{}} position="top-center" />
+            <span className="text-xs text-gray-500">top-center</span>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <ActionsDropdown actions={actions} row={{}} position="top-right" />
+            <span className="text-xs text-gray-500">top-right</span>
+          </div>
+          
+          {/* Middle row - triggers */}
+          <div className="flex flex-col items-center gap-4">
+            <ActionsDropdown actions={actions} row={{}} position="left" />
+            <span className="text-xs text-gray-500">left</span>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs text-gray-500">center</span>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <ActionsDropdown actions={actions} row={{}} position="right" />
+            <span className="text-xs text-gray-500">right</span>
+          </div>
+          
+          {/* Bottom row */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs text-gray-500">bottom-left</span>
+            <ActionsDropdown actions={actions} row={{}} position="bottom-left" />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs text-gray-500">bottom-center</span>
+            <ActionsDropdown actions={actions} row={{}} position="bottom-center" />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs text-gray-500">bottom-right</span>
+            <ActionsDropdown actions={actions} row={{}} position="bottom-right" />
+          </div>
+        </div>
+      </div>
+    );
+  },
 }; 
