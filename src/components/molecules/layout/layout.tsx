@@ -35,7 +35,7 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
   sidebar,
   sidebarItems = [],
-  sidebarPosition = "right",
+  sidebarPosition = "left",
   sidebarWidth = 280,
   collapsedWidth = 64,
   isCollapsed = false,
@@ -47,6 +47,8 @@ export const Layout: React.FC<LayoutProps> = ({
   contentClassName,
   currentLocation = "/", // Default to root path
 }) => {
+  // Debug logging for sidebar position
+  console.log("Layout render - sidebarPosition:", sidebarPosition);
   const [isSidebarOpen, setIsSidebarOpen] = useState(showSidebar);
   const [isCollapsedState, setIsCollapsedState] = useState(isCollapsed);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -254,11 +256,11 @@ export const Layout: React.FC<LayoutProps> = ({
                           paddingLeft:
                             sidebarPosition === "left"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                           paddingRight:
                             sidebarPosition === "right"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                         }
                       : {}
                   }
@@ -312,11 +314,11 @@ export const Layout: React.FC<LayoutProps> = ({
                           paddingLeft:
                             sidebarPosition === "left"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                           paddingRight:
                             sidebarPosition === "right"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                         }
                       : {}
                   }
@@ -355,11 +357,11 @@ export const Layout: React.FC<LayoutProps> = ({
                           paddingLeft:
                             sidebarPosition === "left"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                           paddingRight:
                             sidebarPosition === "right"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                         }
                       : {}
                   }
@@ -428,11 +430,11 @@ export const Layout: React.FC<LayoutProps> = ({
                           paddingLeft:
                             sidebarPosition === "left"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                           paddingRight:
                             sidebarPosition === "right"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                         }
                       : {}
                   }
@@ -448,7 +450,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   {sidebarPosition === "right" &&
                     item.children &&
                     item.children.length > 0 && (
-                      <div className="mr-2 p-1">
+                      <div className="ml-2 p-1">
                         <HiChevronRight
                           className={cn(
                             "w-4 h-4 text-gray-500 transition-transform duration-200",
@@ -470,7 +472,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   <span
                     className={cn(
                       "text-sm font-medium",
-                      sidebarPosition === "left" ? "ml-3" : "mr-3"
+                      sidebarPosition === "left" ? "ml-3" : "ml-3"
                     )}
                   >
                     {item.label}
@@ -507,11 +509,11 @@ export const Layout: React.FC<LayoutProps> = ({
                           paddingLeft:
                             sidebarPosition === "left"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                           paddingRight:
                             sidebarPosition === "right"
                               ? `${16 + level * 20}px`
-                              : "auto",
+                              : "12px",
                         }
                       : {}
                   }
@@ -520,7 +522,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   {sidebarPosition === "right" &&
                     item.children &&
                     item.children.length > 0 && (
-                      <div className="mr-2 p-1">
+                      <div className="ml-2 p-1">
                         <HiChevronRight
                           className={cn(
                             "w-4 h-4 text-gray-500 transition-transform duration-200",
@@ -542,7 +544,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   <span
                     className={cn(
                       "text-sm font-medium",
-                      sidebarPosition === "left" ? "ml-3" : "mr-3"
+                      sidebarPosition === "left" ? "ml-3" : "ml-3"
                     )}
                   >
                     {item.label}
@@ -583,6 +585,9 @@ export const Layout: React.FC<LayoutProps> = ({
     const item = sidebarItems.find((i) => i.id === hoveredItem);
     if (!item || !item.children || item.children.length === 0) return null;
 
+    // Safety check for popover position
+    if (!popoverPosition.x || !popoverPosition.y) return null;
+
     // Recursive function to render nested children
     const renderNestedChildren = (
       children: SidebarItem[],
@@ -593,7 +598,7 @@ export const Layout: React.FC<LayoutProps> = ({
           <Link
             to={child.href || ""}
             className={cn(
-              "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer",
+              "flex items-center px-3 py-2 rounded-md hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset",
               isItemActive(child)
                 ? "bg-blue-600  hover:bg-blue-700  text-gray-700"
                 : " hover:bg-blue-50 hover:text-blue-700",
@@ -635,12 +640,9 @@ export const Layout: React.FC<LayoutProps> = ({
         <div
           className="fixed"
           style={{
-            left:
-              sidebarPosition === "left"
-                ? popoverPosition.x - 20
-                : popoverPosition.x - 20,
+            left: popoverPosition.x - 30,
             top: popoverPosition.y,
-            width: "20px",
+            width: "30px",
             height: "40px",
             zIndex: 99998,
           }}
@@ -657,6 +659,8 @@ export const Layout: React.FC<LayoutProps> = ({
           }}
           onMouseEnter={handlePopoverEnter}
           onMouseLeave={handlePopoverLeave}
+          role="dialog"
+          aria-label={`${item.label} submenu`}
         >
           <div
             className={cn(
@@ -677,14 +681,14 @@ export const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <div className={cn("flex h-screen bg-gray-50", className)}>
+    <div className={cn("flex h-screen bg-gray-50 transition-all duration-300", className)}>
       {(sidebar || sidebarItems.length > 0) && (
         <div
           className={cn(
             "relative bg-white transition-all duration-300 ease-in-out overflow-hidden shadow-lg",
             sidebarPosition === "right"
-              ? "order-first border-r border-gray-200"
-              : "order-last border-l border-gray-200",
+              ? "order-last border-r border-gray-200"
+              : "order-first border-l border-gray-200",
             "hidden lg:block",
             sidebarClassName
           )}
@@ -697,7 +701,7 @@ export const Layout: React.FC<LayoutProps> = ({
             onClick={handleCollapseToggle}
             className={cn(
               "absolute top-4 z-20 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 shadow-sm transition-all duration-200 transform hover:scale-105",
-              sidebarPosition === "left" ? "right-2" : "left-2"
+              sidebarPosition === "left" ? "left-2" : "right-2"
             )}
             aria-label={
               isCollapsedState ? "Expand sidebar" : "Collapse sidebar"
@@ -708,11 +712,11 @@ export const Layout: React.FC<LayoutProps> = ({
                 "w-4 h-4 transition-transform duration-200",
                 sidebarPosition === "left"
                   ? isCollapsedState
-                    ? "rotate-180"
-                    : ""
+                    ? ""
+                    : "rotate-180"
                   : isCollapsedState
-                  ? ""
-                  : "rotate-180"
+                  ? "rotate-180"
+                  : ""
               )}
             />
           </button>
@@ -738,6 +742,9 @@ export const Layout: React.FC<LayoutProps> = ({
                     </p>
                   </div>
                 </div>
+                <div className="mt-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                  {sidebarPosition == "left" ? "← Left Sidebar" : "Right Sidebar →"}
+                </div>
 
                 <div className="mt-3 flex space-x-2">
                   <button className="flex-1 px-3 py-2 text-xs bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors">
@@ -757,6 +764,11 @@ export const Layout: React.FC<LayoutProps> = ({
                     U
                   </div>
                 </div>
+                <div className="mt-2 text-center">
+                  <div className="text-xs text-gray-500 bg-gray-100 px-1 py-0.5 rounded mx-2">
+                    {sidebarPosition === "left" ? "←" : "→"}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -766,7 +778,11 @@ export const Layout: React.FC<LayoutProps> = ({
       )}
 
       <div
-        className={cn("flex-1 flex flex-col overflow-hidden", contentClassName)}
+        className={cn(
+          "flex-1 flex flex-col overflow-hidden",
+          sidebarPosition === "right" ? "order-first" : "order-last",
+          contentClassName
+        )}
       >
         <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 shadow-sm">
           <div className="flex items-center justify-between">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "./layout";
 import type { SidebarItem } from "./layout";
@@ -26,6 +26,11 @@ const LayoutContent: React.FC = () => {
   const [sidebarPosition, setSidebarPosition] = useState<"left" | "right">("left");
   const [sidebarWidth, setSidebarWidth] = useState(300);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Debug logging for sidebar position changes
+  useEffect(() => {
+    console.log("Sidebar position changed to:", sidebarPosition);
+  }, [sidebarPosition]);
 
   // Define sidebar items as objects with proper paths
   const sidebarItems: SidebarItem[] = [
@@ -209,7 +214,10 @@ const LayoutContent: React.FC = () => {
                 </h3>
                 <div className="flex space-x-3">
                   <button
-                    onClick={() => setSidebarPosition("left")}
+                    onClick={() => {
+                      console.log("Setting sidebar position to: left");
+                      setSidebarPosition("left");
+                    }}
                     className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                       sidebarPosition === "left"
                         ? "bg-blue-600 text-white shadow-lg transform scale-105"
@@ -219,7 +227,10 @@ const LayoutContent: React.FC = () => {
                     Left Side
                   </button>
                   <button
-                    onClick={() => setSidebarPosition("right")}
+                    onClick={() => {
+                      console.log("Setting sidebar position to: right");
+                      setSidebarPosition("right");
+                    }}
                     className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                       sidebarPosition === "right"
                         ? "bg-blue-600 text-white shadow-lg transform scale-105"
@@ -233,6 +244,9 @@ const LayoutContent: React.FC = () => {
                   The sidebar will automatically adjust its position and
                   collapse button.
                 </p>
+                <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+                  <strong>Current Position:</strong> {sidebarPosition === "left" ? "Left Side" : "Right Side"}
+                </div>
               </div>
 
               <div>
