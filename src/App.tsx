@@ -1,12 +1,12 @@
 
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
-import { SeparatorExample } from "./components/atoms/separator/separator.example";
+import InputOTPExample from "./components/atoms/inputOTP/inputOTP.example";
 
 function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
-      <SeparatorExample />
+      <InputOTPExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

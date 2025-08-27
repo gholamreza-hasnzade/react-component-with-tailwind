@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 body {
-  direction: rtl;
-  text-align: right;
+/*   direction: rtl;
+  text-align: right; */
   height: 100vh;
   font-family: "YekanBakh", sans-serif;
   /*  font-feature-settings: "ss01"; */
