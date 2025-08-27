@@ -1,12 +1,12 @@
 /* import { BadgeExample } from "./components/atoms/badge";
- */import { ToastContainer } from "./components/atoms/toast/ToastContainer";
-import { ModalExample } from "./components/molecules/modal";
+ */ import { SpeedDialExamples } from "./components/atoms/speedDial/speedDial.example";
+import { ToastContainer } from "./components/atoms/toast/ToastContainer";
 
 function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
-        <ModalExample />
+        <SpeedDialExamples />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

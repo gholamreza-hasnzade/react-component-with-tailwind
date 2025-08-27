@@ -50,3 +50,6 @@ export type { TreeNode, TreeProps } from "@/components/atoms/tree/tree";
 
 export { Tooltip } from "@/components/atoms/tooltip/tooltip";
 export type { TooltipProps } from "@/components/atoms/tooltip/tooltip";
+
+export { SpeedDial } from "@/components/atoms/speedDial/speedDial";
+export type { SpeedDialProps, SpeedDialAction } from "@/components/atoms/speedDial/speedDial";
