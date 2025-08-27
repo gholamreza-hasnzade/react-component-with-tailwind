@@ -1,4 +1,3 @@
-import React from "react";
 import { NotificationSystem } from "./notifications";
 import { useNotifications } from "./useNotifications";
 
