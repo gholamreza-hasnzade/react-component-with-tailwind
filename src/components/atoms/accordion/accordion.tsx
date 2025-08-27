@@ -84,7 +84,7 @@ export const Accordion: AccordionComponent = ({
         className={clsx(
           'w-full',
           {
-            'space-y-1': variant === 'separated',
+            'space-y-3': variant === 'separated',
             'divide-y divide-gray-200': variant === 'bordered',
           },
           className
@@ -139,11 +139,11 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
   return (
     <div
       className={clsx(
-        'group transition-all duration-200',
+        'group transition-all duration-300 ease-out',
         {
-          'border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm': variant === 'bordered',
-          'border-b border-gray-200 last:border-b-0 hover:bg-gray-50': variant === 'default',
-          'p-4 hover:bg-gray-50 rounded-lg': variant === 'separated',
+          'border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100/50 bg-white': variant === 'bordered',
+          'border-b border-gray-200 last:border-b-0 hover:bg-gray-50/80 py-2': variant === 'default',
+          'p-5 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 rounded-xl shadow-sm hover:shadow-md': variant === 'separated',
           'opacity-50 cursor-not-allowed': disabled,
         },
         className
@@ -205,26 +205,27 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
   };
 
   const sizeClasses = {
-    sm: 'py-2 px-3 text-sm',
-    md: 'py-3 px-4 text-base',
-    lg: 'py-4 px-5 text-lg',
+    sm: 'py-3 px-4 text-sm',
+    md: 'py-4 px-5 text-base',
+    lg: 'py-5 px-6 text-lg',
   };
 
   const defaultIcon = (
     <svg
       className={clsx(
         'transition-all duration-300 ease-in-out',
-        isOpen ? 'rotate-180 text-blue-600' : 'rotate-0 text-gray-500',
-        'group-hover:text-blue-600 group-hover:scale-110'
+        isOpen ? 'rotate-180 text-blue-600' : 'rotate-0 text-gray-400',
+        'group-hover:text-blue-600 group-hover:scale-110',
+        size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-5 h-5' : 'w-6 h-6'
       )}
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M4 6L8 10L12 6"
+        d="M6 8L10 12L14 8"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
@@ -236,10 +237,10 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
   return (
     <div
       className={clsx(
-        'flex items-center justify-between w-full text-left transition-all duration-200 ease-in-out',
+        'flex items-center justify-between w-full text-left transition-all duration-300 ease-out',
         sizeClasses[size],
         {
-          'cursor-pointer rounded-lg hover:bg-gray-100 hover:shadow-sm focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:shadow-md active:bg-gray-200': !disabled,
+          'cursor-pointer rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-md focus:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:shadow-lg active:bg-blue-100': !disabled,
           'cursor-not-allowed opacity-60': disabled,
         },
         className
@@ -250,10 +251,10 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
       onKeyDown={handleKeyDown}
     >
       <div className="flex items-center gap-3 flex-1">
-        <span className="font-medium text-gray-900 transition-colors duration-200 group-hover:text-gray-700">{children}</span>
+        <span className="font-semibold text-gray-800 transition-colors duration-300 group-hover:text-blue-700">{children}</span>
       </div>
       <div className={clsx(
-        'transition-all duration-200',
+        'transition-all duration-300 ease-out',
         {
           'group-hover:scale-110 group-hover:text-blue-600': !disabled,
         }
@@ -282,25 +283,26 @@ export const AccordionContent: React.FC<AccordionContentProps> = ({
   const { size } = useAccordionContext();
 
   const sizeClasses = {
-    sm: 'px-3 pb-2',
-    md: 'px-4 pb-3',
-    lg: 'px-5 pb-4',
+    sm: 'px-4 pb-3',
+    md: 'px-5 pb-4',
+    lg: 'px-6 pb-5',
   };
 
   if (animated) {
     return (
       <div
         className={clsx(
-          'overflow-hidden transition-all duration-200 ease-in-out',
+          'overflow-hidden transition-all duration-300 ease-out',
           sizeClasses[size],
           className
         )}
         style={{
           maxHeight: isOpen ? '1000px' : '0px',
           opacity: isOpen ? 1 : 0,
+          transform: isOpen ? 'translateY(0)' : 'translateY(-10px)',
         }}
       >
-        <div className="text-gray-600">{children}</div>
+        <div className="text-gray-600 leading-relaxed">{children}</div>
       </div>
     );
   }
@@ -311,7 +313,7 @@ export const AccordionContent: React.FC<AccordionContentProps> = ({
     <div
       className={clsx(
         sizeClasses[size],
-        'text-gray-600',
+        'text-gray-600 leading-relaxed',
         className
       )}
     >

@@ -3,22 +3,9 @@ import { Accordion } from './accordion';
 
 export const AccordionExample: React.FC = () => {
   const [controlledOpenItems, setControlledOpenItems] = useState<Set<string>>(new Set(['item-1']));
-  const [controlledOpenItems2, setControlledOpenItems2] = useState<Set<string>>(new Set());
 
   const handleControlledToggle = (id: string, isOpen: boolean) => {
     setControlledOpenItems(prev => {
-      const newSet = new Set(prev);
-      if (isOpen) {
-        newSet.add(id);
-      } else {
-        newSet.delete(id);
-      }
-      return newSet;
-    });
-  };
-
-  const handleControlledToggle2 = (id: string, isOpen: boolean) => {
-    setControlledOpenItems2(prev => {
       const newSet = new Set(prev);
       if (isOpen) {
         newSet.add(id);
@@ -421,16 +408,16 @@ export const AccordionExample: React.FC = () => {
         <Accordion variant="bordered" size="md" allowMultiple={false}>
           <Accordion.Item id="non-animated-1">
             <Accordion.Trigger>Instant Show/Hide</Accordion.Trigger>
-            <AccordionContent animated={false}>
+            <Accordion.Content animated={false}>
               <p>This content appears and disappears instantly without animation.</p>
-            </AccordionContent>
+            </Accordion.Content>
           </Accordion.Item>
 
           <Accordion.Item id="non-animated-2">
             <Accordion.Trigger>Animated Content</Accordion.Trigger>
-            <AccordionContent animated={true}>
+            <Accordion.Content animated={true}>
               <p>This content has smooth animation when opening and closing.</p>
-            </AccordionContent>
+            </Accordion.Content>
           </Accordion.Item>
         </Accordion>
       </div>
