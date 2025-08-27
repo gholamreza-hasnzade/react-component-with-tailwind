@@ -1,4 +1,3 @@
-import React from "react";
 import { Dialog, ConfirmDialog, AlertDialog } from "./dialog";
 import { useDialog } from "./useDialog";
 

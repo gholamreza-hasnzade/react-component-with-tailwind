@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Barcode } from "./barcodes";
 
 export const BarcodeExamples = () => {
@@ -11,7 +11,9 @@ export const BarcodeExamples = () => {
 
   return (
     <div className="p-8 space-y-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Barcode Component Examples</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        Barcode Component Examples
+      </h1>
 
       {/* Controls */}
       <section className="space-y-4">
@@ -29,7 +31,7 @@ export const BarcodeExamples = () => {
               placeholder="Enter barcode value"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Width
@@ -45,7 +47,7 @@ export const BarcodeExamples = () => {
               aria-label="Barcode width in pixels"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Height
@@ -61,7 +63,7 @@ export const BarcodeExamples = () => {
               aria-label="Barcode height in pixels"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Foreground Color
@@ -75,7 +77,7 @@ export const BarcodeExamples = () => {
               aria-label="Foreground color picker"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Background Color
@@ -89,7 +91,7 @@ export const BarcodeExamples = () => {
               aria-label="Background color picker"
             />
           </div>
-          
+
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -98,7 +100,10 @@ export const BarcodeExamples = () => {
               onChange={(e) => setShowText(e.target.checked)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <label htmlFor="showText" className="ml-2 block text-sm text-gray-700">
+            <label
+              htmlFor="showText"
+              className="ml-2 block text-sm text-gray-700"
+            >
               Show Text
             </label>
           </div>
@@ -122,56 +127,44 @@ export const BarcodeExamples = () => {
 
       {/* Different Sizes */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Different Sizes</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Different Sizes
+        </h2>
         <div className="flex flex-wrap gap-4 justify-center">
           <div className="text-center">
             <h3 className="text-sm font-medium text-gray-600 mb-2">Small</h3>
-            <Barcode
-              value="12345"
-              size="sm"
-              width={200}
-              height={80}
-            />
+            <Barcode value="12345" size="sm" width={200} height={80} />
           </div>
-          
+
           <div className="text-center">
             <h3 className="text-sm font-medium text-gray-600 mb-2">Medium</h3>
-            <Barcode
-              value="12345"
-              size="md"
-              width={250}
-              height={100}
-            />
+            <Barcode value="12345" size="md" width={250} height={100} />
           </div>
-          
+
           <div className="text-center">
             <h3 className="text-sm font-medium text-gray-600 mb-2">Large</h3>
-            <Barcode
-              value="12345"
-              size="lg"
-              width={300}
-              height={120}
-            />
+            <Barcode value="12345" size="lg" width={300} height={120} />
           </div>
-          
+
           <div className="text-center">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Extra Large</h3>
-            <Barcode
-              value="12345"
-              size="xl"
-              width={350}
-              height={140}
-            />
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Extra Large
+            </h3>
+            <Barcode value="12345" size="xl" width={350} height={140} />
           </div>
         </div>
       </section>
 
       {/* Sample Barcodes */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Sample Barcodes</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Sample Barcodes
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="text-center p-4 border border-gray-200 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Product Code</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Product Code
+            </h3>
             <Barcode
               value="1234567890123"
               width={250}
@@ -180,9 +173,11 @@ export const BarcodeExamples = () => {
               backgroundColor="#f9fafb"
             />
           </div>
-          
+
           <div className="text-center p-4 border border-gray-200 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Serial Number</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Serial Number
+            </h3>
             <Barcode
               value="SN2024001"
               width={250}
@@ -191,7 +186,7 @@ export const BarcodeExamples = () => {
               backgroundColor="#ecfdf5"
             />
           </div>
-          
+
           <div className="text-center p-4 border border-gray-200 rounded-lg">
             <h3 className="text-sm font-medium text-gray-600 mb-2">Order ID</h3>
             <Barcode
@@ -202,7 +197,7 @@ export const BarcodeExamples = () => {
               backgroundColor="#fef2f2"
             />
           </div>
-          
+
           <div className="text-center p-4 border border-gray-200 rounded-lg">
             <h3 className="text-sm font-medium text-gray-600 mb-2">ISBN</h3>
             <Barcode
@@ -213,9 +208,11 @@ export const BarcodeExamples = () => {
               backgroundColor="#f3f4f6"
             />
           </div>
-          
+
           <div className="text-center p-4 border border-gray-200 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Tracking Number</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Tracking Number
+            </h3>
             <Barcode
               value="TRK123456789"
               width={250}
@@ -224,9 +221,11 @@ export const BarcodeExamples = () => {
               backgroundColor="#fff7ed"
             />
           </div>
-          
+
           <div className="text-center p-4 border border-gray-200 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Customer ID</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Customer ID
+            </h3>
             <Barcode
               value="CUST001"
               width={250}
@@ -240,10 +239,14 @@ export const BarcodeExamples = () => {
 
       {/* Custom Colors */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Custom Color Schemes</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Custom Color Schemes
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="text-center">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Dark Theme</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Dark Theme
+            </h3>
             <Barcode
               value="DARK123"
               width={250}
@@ -252,9 +255,11 @@ export const BarcodeExamples = () => {
               backgroundColor="#1f2937"
             />
           </div>
-          
+
           <div className="text-center">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Blue Theme</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Blue Theme
+            </h3>
             <Barcode
               value="BLUE456"
               width={250}
@@ -263,9 +268,11 @@ export const BarcodeExamples = () => {
               backgroundColor="#dbeafe"
             />
           </div>
-          
+
           <div className="text-center">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Green Theme</h3>
+            <h3 className="text-sm font-medium text-gray-600 mb-2">
+              Green Theme
+            </h3>
             <Barcode
               value="GREEN789"
               width={250}
@@ -279,7 +286,9 @@ export const BarcodeExamples = () => {
 
       {/* No Text Examples */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Without Text Labels</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Without Text Labels
+        </h2>
         <div className="flex flex-wrap gap-4 justify-center">
           <Barcode
             value="NO-TEXT-123"

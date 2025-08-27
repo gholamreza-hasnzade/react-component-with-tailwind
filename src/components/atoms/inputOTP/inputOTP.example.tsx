@@ -13,8 +13,8 @@ export const InputOTPExample: React.FC = () => {
 
   const handleAutoSubmit = (value: string) => {
     console.log('Auto-submitted OTP:', value)
-    alert(`Auto-submitted OTP: ${value}`)
-  }
+/*     alert(`Auto-submitted OTP: ${value}`)
+ */  }
 
   return (
     <div className="p-6 space-y-8 max-w-4xl mx-auto">
