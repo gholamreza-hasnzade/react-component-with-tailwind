@@ -109,6 +109,16 @@ export interface AvatarProps {
   onLoad?: () => void;
   onError?: () => void;
   fallbackIcon?: React.ReactNode;
+  // Group functionality
+  group?: boolean;
+  groupVariant?: "stack" | "grid" | "list";
+  groupSpacing?: "tight" | "normal" | "loose";
+  groupIndex?: number;
+  groupTotal?: number;
+  groupMax?: number;
+  showGroupMore?: boolean;
+  groupMoreLabel?: string;
+  onGroupMoreClick?: () => void;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
@@ -133,7 +143,16 @@ export const Avatar: React.FC<AvatarProps> = ({
   onLoad,
   onError,
   fallbackIcon,
-
+  // Group functionality
+  group = false,
+  groupVariant = "stack",
+  groupSpacing = "normal",
+  groupIndex = 0,
+  groupTotal = 1,
+  groupMax,
+  showGroupMore = true,
+  groupMoreLabel,
+  onGroupMoreClick,
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -149,9 +168,37 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   const shouldShowFallback = !src || imageError || loading;
+  
+  // Group logic
+  const isStackMode = group && groupVariant === "stack";
+  const isGridMode = group && groupVariant === "grid";
+  const isListMode = group && groupVariant === "list";
+  
+  const shouldShowMore = group && groupMax && groupTotal > groupMax && showGroupMore && groupIndex === groupMax - 1;
+  const hiddenCount = group && groupMax ? groupTotal - groupMax : 0;
+
+  // Group spacing classes
+  const groupSpacingClass = isStackMode && groupIndex > 0 ? {
+    "tight": "-ml-2",
+    "normal": "-ml-3", 
+    "loose": "-ml-4"
+  }[groupSpacing] : "";
+
+  // Z-index for stacking
+  const zIndex = isStackMode ? groupTotal - groupIndex : undefined;
+  
+  // Grid positioning
+  const gridPosition = isGridMode ? {
+    "col-start-1": groupIndex % 3 === 0,
+    "col-start-2": groupIndex % 3 === 1,
+    "col-start-3": groupIndex % 3 === 2,
+  } : {};
 
   return (
-    <div className="relative inline-block">
+    <div className={clsx(
+      "relative inline-block",
+      groupSpacingClass
+    )}>
       <span
         className={clsx(
           "inline-flex items-center justify-center overflow-hidden select-none relative",
@@ -162,6 +209,10 @@ export const Avatar: React.FC<AvatarProps> = ({
           src && border && `ring-2 ${ringColorMap[color]}`,
           clickable && "cursor-pointer",
           hoverEffectMap[hoverEffect],
+          isStackMode && "ring-2 ring-white",
+          isGridMode && "w-full h-full",
+          isListMode && "w-full",
+          gridPosition,
           className
         )}
         role="img"
@@ -169,6 +220,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         onClick={clickable ? onClick : undefined}
         tabIndex={clickable ? 0 : undefined}
         onKeyDown={clickable ? (e) => e.key === 'Enter' && onClick?.() : undefined}
+        style={{ zIndex }}
       >
         {shouldShowFallback ? (
           <>
@@ -197,6 +249,23 @@ export const Avatar: React.FC<AvatarProps> = ({
           />
         )}
       </span>
+
+      {/* Show More Button for Groups */}
+      {shouldShowMore && (
+        <button
+          className={clsx(
+            "absolute inset-0 flex items-center justify-center overflow-hidden select-none cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium transition-all duration-200 rounded-full hover:-translate-y-1 hover:shadow-md",
+            sizeMap[size]
+          )}
+          onClick={onGroupMoreClick}
+          aria-label={`Show ${hiddenCount} more avatars`}
+          title={`Click to see ${hiddenCount} more avatars`}
+        >
+          <span className="text-xs font-semibold">
+            {groupMoreLabel || `+${hiddenCount}`}
+          </span>
+        </button>
+      )}
 
       {/* Status Indicator */}
       {status && (
