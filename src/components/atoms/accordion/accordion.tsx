@@ -1,10 +1,16 @@
-import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDownIcon, ChevronRightIcon, PlusIcon, MinusIcon, Loader2Icon } from "lucide-react"
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  PlusIcon,
+  MinusIcon,
+  Loader2Icon,
+} from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import "./accordion.css";
 
-// Icon variants for different accordion styles
 const iconVariants = {
   chevron: {
     closed: ChevronRightIcon,
@@ -18,125 +24,126 @@ const iconVariants = {
     closed: ChevronRightIcon,
     open: ChevronDownIcon,
   },
-} as const
+} as const;
 
 // Size variants
-const sizeVariants = {
-  sm: "py-2 px-3 text-xs",
-  md: "py-4 px-4 text-sm",
-  lg: "py-6 px-6 text-base",
-  xl: "py-8 px-8 text-lg",
-} as const
+type SizeVariants = {
+  sm: "py-2 px-3 text-xs";
+  md: "py-4 px-4 text-sm";
+  lg: "py-6 px-6 text-base";
+  xl: "py-8 px-8 text-lg";
+};
 
-// Rounded variants
-const roundedVariants = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  xl: "rounded-xl",
-  "2xl": "rounded-2xl",
-  full: "rounded-full",
-} as const
+type RoundedVariants = {
+  none: "rounded-none";
+  sm: "rounded-sm";
+  md: "rounded-md";
+  lg: "rounded-lg";
+  xl: "rounded-xl";
+  "2xl": "rounded-2xl";
+  full: "rounded-full";
+};
 
-// Color variants
-const colorVariants = {
+type ColorVariants = {
   default: {
-    trigger: "text-foreground hover:bg-muted/80 focus-visible:bg-muted/80 data-[state=open]:bg-muted/50",
-    content: "text-foreground",
-    icon: "text-muted-foreground",
-  },
+    trigger: "text-foreground hover:bg-muted/80 focus-visible:bg-muted/80 data-[state=open]:bg-muted/50";
+    content: "text-foreground";
+    icon: "text-muted-foreground";
+  };
   primary: {
-    trigger: "text-primary hover:bg-primary/10 focus-visible:bg-primary/10 data-[state=open]:bg-primary/5",
-    content: "text-primary/90",
-    icon: "text-primary",
-  },
+    trigger: "text-primary hover:bg-primary/10 focus-visible:bg-primary/10 data-[state=open]:bg-primary/5";
+    content: "text-primary/90";
+    icon: "text-primary";
+  };
   secondary: {
-    trigger: "text-secondary-foreground hover:bg-secondary/80 focus-visible:bg-secondary/80 data-[state=open]:bg-secondary/50",
-    content: "text-secondary-foreground",
-    icon: "text-secondary-foreground",
-  },
+    trigger: "text-secondary-foreground hover:bg-secondary/80 focus-visible:bg-secondary/80 data-[state=open]:bg-secondary/50";
+    content: "text-secondary-foreground";
+    icon: "text-secondary-foreground";
+  };
   success: {
-    trigger: "text-green-600 hover:bg-green-50 focus-visible:bg-green-50 data-[state=open]:bg-green-50",
-    content: "text-green-700",
-    icon: "text-green-600",
-  },
+    trigger: "text-green-600 hover:bg-green-50 focus-visible:bg-green-50 data-[state=open]:bg-green-50";
+    content: "text-green-700";
+    icon: "text-green-600";
+  };
   warning: {
-    trigger: "text-yellow-600 hover:bg-yellow-50 focus-visible:bg-yellow-50 data-[state=open]:bg-yellow-50",
-    content: "text-yellow-700",
-    icon: "text-yellow-600",
-  },
+    trigger: "text-yellow-600 hover:bg-yellow-50 focus-visible:bg-yellow-50 data-[state=open]:bg-yellow-50";
+    content: "text-yellow-700";
+    icon: "text-yellow-600";
+  };
   danger: {
-    trigger: "text-red-600 hover:bg-red-50 focus-visible:bg-red-50 data-[state=open]:bg-red-50",
-    content: "text-red-700",
-    icon: "text-red-600",
-  },
-} as const
+    trigger: "text-red-600 hover:bg-red-50 focus-visible:bg-red-50 data-[state=open]:bg-red-50";
+    content: "text-red-700";
+    icon: "text-red-600";
+  };
+};
 
-type IconVariant = keyof typeof iconVariants
-type SizeVariant = keyof typeof sizeVariants
-type RoundedVariant = keyof typeof roundedVariants
-type ColorVariant = keyof typeof colorVariants
+type IconVariant = keyof typeof iconVariants;
+type SizeVariant = keyof SizeVariants;
+type RoundedVariant = keyof RoundedVariants;
+type ColorVariant = keyof ColorVariants;
 
 interface AccordionProps {
-  type?: "single" | "multiple"
-  collapsible?: boolean
-  defaultValue?: string | string[]
-  className?: string
-  children?: React.ReactNode
-  variant?: "default" | "bordered" | "card" | "ghost"
-  rounded?: RoundedVariant
-  fullWidth?: boolean
-  disabled?: boolean
-  dir?: "ltr" | "rtl" | "auto"
+  type?: "single" | "multiple";
+  collapsible?: boolean;
+  defaultValue?: string | string[];
+  className?: string;
+  children?: React.ReactNode;
+  variant?: "default" | "bordered" | "card" | "ghost";
+  rounded?: RoundedVariant;
+  fullWidth?: boolean;
+  disabled?: boolean;
+  dir?: "ltr" | "rtl" | "auto";
+  animationDuration?: number;
+  onValueChange?: (value: string | string[]) => void;
 }
 
 interface AccordionItemProps {
-  value: string
-  className?: string
-  disabled?: boolean
-  children?: React.ReactNode
+  value: string;
+  className?: string;
+  disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 interface AccordionTriggerProps {
-  iconVariant?: IconVariant
-  showIcon?: boolean
-  iconClassName?: string
-  children: React.ReactNode
-  className?: string
-  disabled?: boolean
-  loading?: boolean
-  size?: SizeVariant
-  color?: ColorVariant
+  iconVariant?: IconVariant;
+  showIcon?: boolean;
+  iconClassName?: string;
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+  loading?: boolean;
+  size?: SizeVariant;
+  color?: ColorVariant;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 interface AccordionContentProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
+  transition?: "slide" | "fade" | "none";
 }
 
-// Hook to detect text direction
 function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr")
+  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
+    "ltr"
+  );
 
   React.useEffect(() => {
     if (dir === "auto") {
-      // Auto-detect from document or parent element
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl"
-      const bodyDir = document.body.dir as "ltr" | "rtl"
-      const detectedDir = htmlDir || bodyDir || "ltr"
-      setTextDirection(detectedDir)
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      const detectedDir = htmlDir || bodyDir || "ltr";
+      setTextDirection(detectedDir);
     } else if (dir) {
-      setTextDirection(dir)
+      setTextDirection(dir);
     } else {
-      // Fallback to document direction
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl"
-      const bodyDir = document.body.dir as "ltr" | "rtl"
-      setTextDirection(htmlDir || bodyDir || "ltr")
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      setTextDirection(htmlDir || bodyDir || "ltr");
     }
-  }, [dir])
+  }, [dir]);
 
-  return textDirection
+  return textDirection;
 }
 
 function Accordion({
@@ -150,20 +157,40 @@ function Accordion({
   fullWidth = false,
   disabled = false,
   dir,
+  animationDuration = 200,
+  onValueChange,
   ...props
 }: AccordionProps) {
-  const textDirection = useTextDirection(dir)
-  
-  const rootProps = type === "single" 
-    ? { type: "single" as const, collapsible, defaultValue: defaultValue as string | undefined }
-    : { type: "multiple" as const, defaultValue: defaultValue as string[] | undefined }
+  const textDirection = useTextDirection(dir);
 
-  const variantClasses = {
-    default: "border-b border-border last:border-b-0",
-    bordered: "border border-border rounded-lg",
-    card: "bg-card border border-border shadow-sm rounded-lg",
-    ghost: "hover:bg-muted/50 rounded-lg",
-  }
+  const rootProps =
+    type === "single"
+      ? {
+          type: "single" as const,
+          collapsible,
+          defaultValue: defaultValue as string | undefined,
+        }
+      : {
+          type: "multiple" as const,
+          defaultValue: defaultValue as string[] | undefined,
+        };
+
+  React.useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .accordion-content[data-state="closed"] {
+        animation-duration: ${animationDuration}ms !important;
+      }
+      .accordion-content[data-state="open"] {
+        animation-duration: ${animationDuration}ms !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, [animationDuration]);
 
   return (
     <AccordionPrimitive.Root
@@ -171,24 +198,27 @@ function Accordion({
       data-slot="accordion"
       dir={textDirection}
       className={cn(
-        fullWidth ? "w-full" : "w-auto",
-        variantClasses[variant],
-        roundedVariants[rounded],
-        disabled && "opacity-50 pointer-events-none",
+        "accordion",
+        fullWidth ? "accordion-full-width" : "accordion-auto-width",
+        `accordion-variant-${variant}`,
+        `accordion-rounded-${rounded}`,
+        disabled && "accordion-disabled",
         textDirection === "rtl" && "rtl",
         className
       )}
+      onValueChange={onValueChange}
       {...props}
     >
       {children}
     </AccordionPrimitive.Root>
-  )
+  );
 }
 
 function AccordionItem({
   className,
   value,
   disabled = false,
+  children,
   ...props
 }: AccordionItemProps) {
   return (
@@ -196,14 +226,15 @@ function AccordionItem({
       value={value}
       data-slot="accordion-item"
       className={cn(
-        "transition-colors",
-        "hover:bg-muted/50 focus-within:bg-muted/50",
-        disabled && "opacity-50 pointer-events-none",
+        "accordion-item",
+        disabled && "accordion-item-disabled",
         className
       )}
       {...props}
-    />
-  )
+    >
+      {children}
+    </AccordionPrimitive.Item>
+  );
 }
 
 function AccordionTrigger({
@@ -216,133 +247,148 @@ function AccordionTrigger({
   loading = false,
   size = "md",
   color = "default",
+  onClick,
   ...props
 }: AccordionTriggerProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr")
-  
-  const IconComponent = iconVariants[iconVariant]
-  
-  // Detect text direction from parent accordion or document
+  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
+    "ltr"
+  );
+
+  const IconComponent = iconVariants[iconVariant];
+
   React.useEffect(() => {
-    const accordionRoot = document.querySelector('[data-slot="accordion"]')
+    const accordionRoot = document.querySelector('[data-slot="accordion"]');
     if (accordionRoot) {
-      const dir = accordionRoot.getAttribute('dir') as "ltr" | "rtl"
-      setTextDirection(dir || "ltr")
+      const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
+      setTextDirection(dir || "ltr");
     } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl"
-      const bodyDir = document.body.dir as "ltr" | "rtl"
-      setTextDirection(htmlDir || bodyDir || "ltr")
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      setTextDirection(htmlDir || bodyDir || "ltr");
     }
-  }, [])
-  
+  }, []);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(event);
+    }
+  };
+
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "group flex flex-1 items-center justify-between gap-4 text-left font-medium transition-all duration-200",
-          "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-          "disabled:pointer-events-none disabled:opacity-50",
-          sizeVariants[size],
-          colorVariants[color].trigger,
-          disabled && "opacity-50 pointer-events-none",
+          "accordion-trigger group",
+          `accordion-size-${size}`,
+          `accordion-color-${color}`,
           textDirection === "rtl" && "rtl text-right",
+          disabled && "accordion-trigger-disabled",
           className
         )}
-        onPointerDown={() => setIsOpen(!isOpen)}
+        onClick={handleClick}
         disabled={disabled || loading}
         {...props}
       >
-        <span className={cn(
-          "flex-1 flex items-center gap-2",
-          textDirection === "rtl" && "flex-row-reverse"
-        )}>
-          {loading && <Loader2Icon className="size-4 animate-spin" />}
+        <span
+          className={cn(
+            "flex-1 flex items-center gap-2",
+            textDirection === "rtl" && "flex-row-reverse"
+          )}
+        >
+          {loading && <Loader2Icon className="accordion-loading" />}
           {children}
         </span>
         {showIcon && !loading && (
-          <div className={cn(
-            "flex items-center justify-center",
-            textDirection === "rtl" && "order-first"
-          )}>
+          <div
+            className={cn(
+              "accordion-icon-container",
+              textDirection === "rtl" && "order-first"
+            )}
+          >
             <IconComponent.closed
               className={cn(
-                "size-4 shrink-0 transition-transform duration-200",
+                "accordion-icon",
                 "group-data-[state=open]:hidden",
-                colorVariants[color].icon,
                 textDirection === "rtl" && "rotate-180",
                 iconClassName
               )}
             />
             <IconComponent.open
               className={cn(
-                "size-4 shrink-0 transition-transform duration-200",
+                "accordion-icon",
                 "hidden group-data-[state=open]:block",
-                colorVariants[color].icon,
-                textDirection === "rtl" && "rotate-180",
+                textDirection === "rtl" && "-rotate-90",
                 iconClassName
               )}
             />
           </div>
         )}
         {loading && (
-          <div className={cn(
-            "flex items-center justify-center",
-            textDirection === "rtl" && "order-first"
-          )}>
-            <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
+          <div
+            className={cn(
+              "accordion-icon-container",
+              textDirection === "rtl" && "order-first"
+            )}
+          >
+            <Loader2Icon className="accordion-loading" />
           </div>
         )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
-  )
+  );
 }
 
 function AccordionContent({
   className,
   children,
+  transition = "slide",
   ...props
 }: AccordionContentProps) {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr")
-  
-  // Detect text direction from parent accordion or document
+  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
+    "ltr"
+  );
+
   React.useEffect(() => {
-    const accordionRoot = document.querySelector('[data-slot="accordion"]')
+    const accordionRoot = document.querySelector('[data-slot="accordion"]');
     if (accordionRoot) {
-      const dir = accordionRoot.getAttribute('dir') as "ltr" | "rtl"
-      setTextDirection(dir || "ltr")
+      const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
+      setTextDirection(dir || "ltr");
     } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl"
-      const bodyDir = document.body.dir as "ltr" | "rtl"
-      setTextDirection(htmlDir || bodyDir || "ltr")
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      setTextDirection(htmlDir || bodyDir || "ltr");
     }
-  }, [])
-  
+  }, []);
+
+  const transitionClasses = {
+    slide:
+      "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
+    fade: "data-[state=closed]:opacity-0 data-[state=open]:opacity-100 transition-opacity",
+    none: "",
+  };
+
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
       className={cn(
-        "overflow-hidden text-sm transition-all duration-200",
-        "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        "accordion-content",
+        transitionClasses[transition],
+        className
       )}
       {...props}
     >
-      <div className={cn(
-        "px-4 pb-4 pt-0",
-        textDirection === "rtl" && "text-right",
-        className
-      )}>
+      <div className={cn(textDirection === "rtl" && "text-right", className)}>
         {children}
       </div>
     </AccordionPrimitive.Content>
-  )
+  );
 }
 
-export { 
-  Accordion, 
-  AccordionItem, 
-  AccordionTrigger, 
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
   AccordionContent,
   type AccordionProps,
   type AccordionItemProps,
@@ -352,4 +398,4 @@ export {
   type SizeVariant,
   type RoundedVariant,
   type ColorVariant,
-}
+};

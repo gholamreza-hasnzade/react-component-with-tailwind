@@ -1,4 +1,3 @@
-import React from "react"
 import {
   Accordion,
   AccordionContent,
@@ -45,9 +44,9 @@ export function AccordionExample() {
 
       {/* Multiple Accordion */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">Multiple Accordion (Multiple items open)</h2>
-        <Accordion type="multiple" className="border rounded-lg">
-          <AccordionItem value="item-1">
+        <h2 className="text-xl font-semibold text-foreground">Multiple Accordion Example</h2>
+        <Accordion type="multiple" defaultValue={["frontend", "backend"]} className="border rounded-lg">
+          <AccordionItem value="frontend">
             <AccordionTrigger>Frontend Technologies</AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-2">
@@ -58,7 +57,7 @@ export function AccordionExample() {
               </ul>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2">
+          <AccordionItem value="backend">
             <AccordionTrigger>Backend Technologies</AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-2">
@@ -69,7 +68,7 @@ export function AccordionExample() {
               </ul>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-3">
+          <AccordionItem value="database">
             <AccordionTrigger>Database Technologies</AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-2">
@@ -133,33 +132,63 @@ export function AccordionExample() {
         </div>
       </div>
 
-      {/* Custom Styling */}
+      {/* Custom Styling Examples */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">Custom Styling</h2>
-        <Accordion type="single" collapsible className="border-2 border-primary/20 rounded-xl bg-gradient-to-r from-primary/5 to-secondary/5">
-          <AccordionItem value="custom-1" className="border-primary/20">
-            <AccordionTrigger 
-              className="text-primary font-semibold hover:bg-primary/10 focus-visible:ring-primary/50"
-              iconClassName="text-primary"
-            >
-              Custom Styled Accordion
-            </AccordionTrigger>
-            <AccordionContent className="text-primary/80">
-              This accordion has custom styling with primary colors, gradients, and enhanced hover effects.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="custom-2" className="border-primary/20">
-            <AccordionTrigger 
-              className="text-primary font-semibold hover:bg-primary/10 focus-visible:ring-primary/50"
-              iconClassName="text-primary"
-            >
-              Enhanced User Experience
-            </AccordionTrigger>
-            <AccordionContent className="text-primary/80">
-              Features include smooth animations, focus states, hover effects, and accessible keyboard navigation.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <h2 className="text-xl font-semibold text-foreground">Custom Styling Examples</h2>
+        
+        {/* Primary Theme Example */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Primary Theme</h3>
+          <Accordion type="single" collapsible className="border-2 border-primary/20 rounded-xl bg-gradient-to-r from-primary/5 to-secondary/5">
+            <AccordionItem value="primary-1" className="border-primary/20">
+              <AccordionTrigger 
+                className="text-primary font-semibold hover:bg-primary/10 focus-visible:ring-primary/50"
+                iconClassName="text-primary"
+              >
+                Primary Styled Accordion
+              </AccordionTrigger>
+              <AccordionContent className="text-primary/80">
+                This accordion uses primary colors with gradients and enhanced hover effects.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Success Theme Example */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Success Theme</h3>
+          <Accordion type="single" collapsible className="border-2 border-green-200 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50">
+            <AccordionItem value="success-1" className="border-green-200">
+              <AccordionTrigger 
+                className="text-green-700 font-semibold hover:bg-green-100 focus-visible:ring-green-300"
+                iconClassName="text-green-600"
+              >
+                Success Styled Accordion
+              </AccordionTrigger>
+              <AccordionContent className="text-green-800">
+                This accordion uses success colors with green gradients and enhanced styling.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Dark Theme Example */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Dark Theme</h3>
+          <Accordion type="single" collapsible className="border-2 border-gray-600 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+            <AccordionItem value="dark-1" className="border-gray-600">
+              <AccordionTrigger 
+                className="text-white font-semibold hover:bg-gray-700 focus-visible:ring-gray-500"
+                iconClassName="text-gray-300"
+              >
+                Dark Styled Accordion
+              </AccordionTrigger>
+              <AccordionContent className="text-gray-200">
+                This accordion uses dark colors with gray gradients for a modern look.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
 
       {/* No Icons */}
