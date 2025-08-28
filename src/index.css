@@ -211,3 +211,60 @@ input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* RTL Support for Accordion */
+[dir="rtl"] .accordion-trigger {
+  text-align: right;
+}
+
+[dir="rtl"] .accordion-content {
+  text-align: right;
+}
+
+/* RTL Icon positioning */
+[dir="rtl"] .accordion-trigger .accordion-icon {
+  order: -1;
+}
+
+/* RTL Animation adjustments */
+[dir="rtl"] .accordion-trigger[data-state="open"] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+/* RTL Spacing adjustments */
+[dir="rtl"] .accordion-trigger {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .accordion-content {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

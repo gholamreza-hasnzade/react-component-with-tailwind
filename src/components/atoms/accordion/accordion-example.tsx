@@ -1,0 +1,214 @@
+import React from "react"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./accordion"
+
+export function AccordionExample() {
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Enhanced Accordion Component
+        </h1>
+        <p className="text-muted-foreground">
+          A flexible accordion component with multiple icon variants and best practices
+        </p>
+      </div>
+
+      {/* Basic Accordion */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Basic Accordion</h2>
+        <Accordion type="single" collapsible className="border rounded-lg">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>What is React?</AccordionTrigger>
+            <AccordionContent>
+              React is a JavaScript library for building user interfaces. It was developed by Facebook and is used to create interactive web applications with reusable components.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>What is Tailwind CSS?</AccordionTrigger>
+            <AccordionContent>
+              Tailwind CSS is a utility-first CSS framework that allows you to build custom designs without leaving your HTML. It provides low-level utility classes that let you build completely custom designs.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>What is TypeScript?</AccordionTrigger>
+            <AccordionContent>
+              TypeScript is a superset of JavaScript that adds static typing to the language. It helps catch errors during development and provides better tooling support.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      {/* Multiple Accordion */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Multiple Accordion (Multiple items open)</h2>
+        <Accordion type="multiple" className="border rounded-lg">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Frontend Technologies</AccordionTrigger>
+            <AccordionContent>
+              <ul className="space-y-2">
+                <li>• React - UI library</li>
+                <li>• Vue.js - Progressive framework</li>
+                <li>• Angular - Full-featured framework</li>
+                <li>• Svelte - Compile-time framework</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Backend Technologies</AccordionTrigger>
+            <AccordionContent>
+              <ul className="space-y-2">
+                <li>• Node.js - JavaScript runtime</li>
+                <li>• Python - Django, Flask</li>
+                <li>• Java - Spring Boot</li>
+                <li>• C# - .NET Core</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>Database Technologies</AccordionTrigger>
+            <AccordionContent>
+              <ul className="space-y-2">
+                <li>• PostgreSQL - Relational database</li>
+                <li>• MongoDB - NoSQL database</li>
+                <li>• Redis - In-memory database</li>
+                <li>• MySQL - Relational database</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      {/* Different Icon Variants */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Different Icon Variants</h2>
+        
+        {/* Chevron Icons */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Chevron Icons (Default)</h3>
+          <Accordion type="single" collapsible className="border rounded-lg">
+            <AccordionItem value="chevron-1">
+              <AccordionTrigger iconVariant="chevron">
+                Chevron Icons Example
+              </AccordionTrigger>
+              <AccordionContent>
+                This accordion uses the default chevron icons that rotate and change direction.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Plus/Minus Icons */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Plus/Minus Icons</h3>
+          <Accordion type="single" collapsible className="border rounded-lg">
+            <AccordionItem value="plus-1">
+              <AccordionTrigger iconVariant="plus">
+                Plus/Minus Icons Example
+              </AccordionTrigger>
+              <AccordionContent>
+                This accordion uses plus and minus icons that show/hide based on state.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Arrow Icons */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-foreground">Arrow Icons</h3>
+          <Accordion type="single" collapsible className="border rounded-lg">
+            <AccordionItem value="arrow-1">
+              <AccordionTrigger iconVariant="arrow">
+                Arrow Icons Example
+              </AccordionTrigger>
+              <AccordionContent>
+                This accordion uses arrow icons that point in different directions.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </div>
+
+      {/* Custom Styling */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Custom Styling</h2>
+        <Accordion type="single" collapsible className="border-2 border-primary/20 rounded-xl bg-gradient-to-r from-primary/5 to-secondary/5">
+          <AccordionItem value="custom-1" className="border-primary/20">
+            <AccordionTrigger 
+              className="text-primary font-semibold hover:bg-primary/10 focus-visible:ring-primary/50"
+              iconClassName="text-primary"
+            >
+              Custom Styled Accordion
+            </AccordionTrigger>
+            <AccordionContent className="text-primary/80">
+              This accordion has custom styling with primary colors, gradients, and enhanced hover effects.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="custom-2" className="border-primary/20">
+            <AccordionTrigger 
+              className="text-primary font-semibold hover:bg-primary/10 focus-visible:ring-primary/50"
+              iconClassName="text-primary"
+            >
+              Enhanced User Experience
+            </AccordionTrigger>
+            <AccordionContent className="text-primary/80">
+              Features include smooth animations, focus states, hover effects, and accessible keyboard navigation.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      {/* No Icons */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">No Icons</h2>
+        <Accordion type="single" collapsible className="border rounded-lg">
+          <AccordionItem value="no-icon-1">
+            <AccordionTrigger showIcon={false}>
+              Accordion Without Icons
+            </AccordionTrigger>
+            <AccordionContent>
+              This accordion doesn't show any icons, just the text content.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      {/* FAQ Style */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">FAQ Style</h2>
+        <Accordion type="single" collapsible className="space-y-2">
+          <AccordionItem value="faq-1" className="border rounded-lg bg-card shadow-sm">
+            <AccordionTrigger className="px-6 py-4 text-left">
+              How do I install the dependencies?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-4">
+              Run <code className="bg-muted px-2 py-1 rounded text-sm">npm install</code> or <code className="bg-muted px-2 py-1 rounded text-sm">yarn install</code> in your project directory.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="faq-2" className="border rounded-lg bg-card shadow-sm">
+            <AccordionTrigger className="px-6 py-4 text-left">
+              How do I customize the accordion?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-4">
+              You can customize the accordion by passing different props like <code className="bg-muted px-2 py-1 rounded text-sm">iconVariant</code>, <code className="bg-muted px-2 py-1 rounded text-sm">className</code>, and <code className="bg-muted px-2 py-1 rounded text-sm">showIcon</code>.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="faq-3" className="border rounded-lg bg-card shadow-sm">
+            <AccordionTrigger className="px-6 py-4 text-left">
+              Is it accessible?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-4">
+              Yes! The accordion is built on top of Radix UI primitives which provide full accessibility features including keyboard navigation, ARIA attributes, and screen reader support.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </div>
+  )
+}
+
+export default AccordionExample 
