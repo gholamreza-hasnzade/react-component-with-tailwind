@@ -268,3 +268,20 @@ input[type="number"] {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Ensure proper text direction for RTL */
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] h6,
+[dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] div {
+  direction: rtl;
+  text-align: right;
+}
