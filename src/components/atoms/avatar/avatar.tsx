@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import clsx from "clsx";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
@@ -119,6 +120,8 @@ export interface AvatarProps {
   showGroupMore?: boolean;
   groupMoreLabel?: string;
   onGroupMoreClick?: () => void;
+  // Radix UI props
+  fallbackDelayMs?: number;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
@@ -153,6 +156,8 @@ export const Avatar: React.FC<AvatarProps> = ({
   showGroupMore = true,
   groupMoreLabel,
   onGroupMoreClick,
+  // Radix UI props
+  fallbackDelayMs,
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -199,9 +204,9 @@ export const Avatar: React.FC<AvatarProps> = ({
       "relative inline-block",
       groupSpacingClass
     )}>
-      <span
+      <AvatarPrimitive.Root
         className={clsx(
-          "inline-flex items-center justify-center overflow-hidden select-none relative",
+          "relative inline-flex items-center justify-center overflow-hidden select-none",
           sizeMap[size],
           colorMap[color],
           variantMap[variant],
@@ -215,28 +220,16 @@ export const Avatar: React.FC<AvatarProps> = ({
           gridPosition,
           className
         )}
-        role="img"
-        aria-label={alt}
+        style={{ zIndex }}
+        data-slot="avatar"
         onClick={clickable ? onClick : undefined}
         tabIndex={clickable ? 0 : undefined}
         onKeyDown={clickable ? (e) => e.key === 'Enter' && onClick?.() : undefined}
-        style={{ zIndex }}
+        role={clickable ? "button" : "img"}
+        aria-label={alt}
       >
-        {shouldShowFallback ? (
-          <>
-            {loading && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="animate-spin rounded-full border-2 border-current border-t-transparent w-1/2 h-1/2"></div>
-              </div>
-            )}
-            {!loading && (
-              <span className="font-medium">
-                {fallbackIcon || children}
-              </span>
-            )}
-          </>
-        ) : (
-          <img
+        {src && !imageError && !loading && (
+          <AvatarPrimitive.Image
             src={src}
             alt={alt}
             className={clsx(
@@ -246,9 +239,29 @@ export const Avatar: React.FC<AvatarProps> = ({
             )}
             onLoad={handleImageLoad}
             onError={handleImageError}
+            data-slot="avatar-image"
           />
         )}
-      </span>
+        
+        <AvatarPrimitive.Fallback
+          className={clsx(
+            "w-full h-full flex items-center justify-center font-medium",
+            shouldShowFallback ? "opacity-100" : "opacity-0"
+          )}
+          delayMs={fallbackDelayMs}
+          data-slot="avatar-fallback"
+        >
+          {loading ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-spin rounded-full border-2 border-current border-t-transparent w-1/2 h-1/2"></div>
+            </div>
+          ) : (
+            <span className="font-medium">
+              {fallbackIcon || children}
+            </span>
+          )}
+        </AvatarPrimitive.Fallback>
+      </AvatarPrimitive.Root>
 
       {/* Show More Button for Groups */}
       {shouldShowMore && (
@@ -294,3 +307,8 @@ export const Avatar: React.FC<AvatarProps> = ({
     </div>
   );
 };
+
+// Export individual components for advanced usage
+export const AvatarImage = AvatarPrimitive.Image;
+export const AvatarFallback = AvatarPrimitive.Fallback;
+export const AvatarRoot = AvatarPrimitive.Root;

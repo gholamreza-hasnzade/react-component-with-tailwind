@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import  { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -366,7 +366,7 @@ export const States: Story = {
       </div>
       
       <div>
-        <h3 className="text-lg font-semibold mb-2">Loading State</AccordionTrigger>
+        <h3 className="text-lg font-semibold mb-2">Loading State</h3>
         <Accordion className="border rounded-lg">
           <AccordionItem value="loading">
             <AccordionTrigger loading>Loading Accordion</AccordionTrigger>
@@ -432,8 +432,8 @@ export const Interactive: Story = {
         
         <Accordion 
           type="multiple" 
-          value={openItems}
-          onValueChange={setOpenItems}
+          defaultValue={openItems}
+          onValueChange={(value) => setOpenItems(Array.isArray(value) ? value : [value])}
           className="border rounded-lg"
         >
           <AccordionItem value="interactive-1">
