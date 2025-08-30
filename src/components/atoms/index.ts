@@ -28,7 +28,6 @@ export {
 export { Input } from "@/components/atoms/input/input";
 export { Label } from "@/components/atoms/label/label";
 export { Password } from "@/components/atoms/password/password";
-export { PersianDateInput } from "@/components/atoms/persianDatePicker/persianDatePicker";
 export {
   RadioGroup,
   RadioGroupItem,

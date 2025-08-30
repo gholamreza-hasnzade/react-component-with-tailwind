@@ -1,5 +1,40 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "react-day-picker/dist/style.css";
+
+/* Calendar component custom styles */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: hsl(var(--primary));
+  --rdp-background-color: hsl(var(--background));
+  --rdp-accent-color-dark: hsl(var(--primary));
+  --rdp-background-color-dark: hsl(var(--background));
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
+  margin: 1em;
+}
+
+.rdp-day_selected,
+.rdp-day_selected:focus-visible,
+.rdp-day_selected:hover {
+  color: hsl(var(--primary-foreground));
+  opacity: 1;
+  background-color: var(--rdp-accent-color);
+}
+
+.rdp-day_today {
+  font-weight: bold;
+  color: hsl(var(--primary));
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: hsl(var(--accent));
+}
+
+.rdp-button:focus-visible:not([disabled]) {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
 
 @custom-variant dark (&:is(.dark *));
 
