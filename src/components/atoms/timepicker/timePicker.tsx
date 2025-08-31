@@ -247,15 +247,23 @@ export const TimePicker: React.FC<TimePickerProps> = ({
     const max = type === "hours" ? (format === "12h" ? 12 : 24) : 60;
     const start = type === "hours" && format === "24h" ? 0 : 1;
     
-    return Array.from({ length: max - start + 1 }, (_, i) => {
-      const value = start + i;
-      // Fix: 24-hour format should go from 0-23, not 0-24
-      if (type === "hours" && format === "24h" && value === 24) return 0;
-      // Fix: minutes and seconds should go from 0-59, not 0-60
-      if (type === "minutes" && value === 60) return 0;
-      if (type === "seconds" && value === 60) return 0;
-      return value;
-    });
+    const options: number[] = [];
+    
+    for (let i = start; i <= max; i++) {
+      let value = i;
+      
+      // Handle edge cases without creating duplicates
+      if (type === "hours" && format === "24h" && value === 24) {
+        value = 0;
+      }
+      
+      // Only add if not already in the array (prevents duplicates)
+      if (!options.includes(value)) {
+        options.push(value);
+      }
+    }
+    
+    return options;
   };
 
   const baseClasses = `
