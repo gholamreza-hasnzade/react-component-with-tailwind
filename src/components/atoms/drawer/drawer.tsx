@@ -2,7 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
-export type DrawerPosition = "top" | "right" | "bottom" | "left" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "top-center" | "bottom-center" | "center";
+export type DrawerPosition =
+  | "top"
+  | "right"
+  | "bottom"
+  | "left"
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "top-center"
+  | "bottom-center"
+  | "center";
 
 export interface DrawerProps {
   open: boolean;
@@ -110,25 +121,45 @@ export const Drawer: React.FC<DrawerProps> = ({
         ? `all ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
         : "none",
       minWidth:
-        position === "left" || position === "right" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
+        position === "left" ||
+        position === "right" ||
+        position === "top-left" ||
+        position === "top-right" ||
+        position === "bottom-left" ||
+        position === "bottom-right"
           ? isMobile
             ? "85vw"
             : "280px"
           : "auto",
       minHeight:
-        position === "top" || position === "bottom" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
+        position === "top" ||
+        position === "bottom" ||
+        position === "top-left" ||
+        position === "top-right" ||
+        position === "bottom-left" ||
+        position === "bottom-right"
           ? isMobile
             ? "50vh"
             : "200px"
           : "auto",
       maxWidth:
-        position === "left" || position === "right" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
+        position === "left" ||
+        position === "right" ||
+        position === "top-left" ||
+        position === "top-right" ||
+        position === "bottom-left" ||
+        position === "bottom-right"
           ? isMobile
             ? "95vw"
             : "90vw"
           : "auto",
       maxHeight:
-        position === "top" || position === "bottom" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
+        position === "top" ||
+        position === "bottom" ||
+        position === "top-left" ||
+        position === "top-right" ||
+        position === "bottom-left" ||
+        position === "bottom-right"
           ? isMobile
             ? "90vh"
             : "90vh"
@@ -144,9 +175,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           right: 0,
           height:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
-          transform: open
-            ? "translateY(0)"
-            : "translateY(-100%)",
+          transform: open ? "translateY(0)" : "translateY(-100%)",
           opacity: open ? 1 : 0,
         };
       case "bottom":
@@ -157,9 +186,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           right: 0,
           height:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
-          transform: open
-            ? "translateY(0)"
-            : "translateY(100%)",
+          transform: open ? "translateY(0)" : "translateY(100%)",
           opacity: open ? 1 : 0,
         };
       case "left":
@@ -170,9 +197,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           bottom: 0,
           width:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
-          transform: open
-            ? "translateX(0)"
-            : "translateX(-100%)",
+          transform: open ? "translateX(0)" : "translateX(-100%)",
           opacity: open ? 1 : 0,
         };
       case "right":
@@ -183,9 +208,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           bottom: 0,
           width:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
-          transform: open
-            ? "translateX(0)"
-            : "translateX(100%)",
+          transform: open ? "translateX(0)" : "translateX(100%)",
           opacity: open ? 1 : 0,
         };
       case "top-left":
