@@ -5,7 +5,7 @@ import { FaTimes, FaExclamationTriangle, FaInfoCircle, FaCheckCircle, FaExclamat
 
 type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 type DialogVariant = "default" | "success" | "warning" | "error" | "info";
-type DialogPosition = "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+type DialogPosition = "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center-left" | "center-right";
 
 interface DialogProps {
   isOpen: boolean;
@@ -45,12 +45,14 @@ const positionClasses: Record<DialogPosition, string> = {
   center: "items-center justify-center",
   top: "items-start justify-center pt-8 sm:pt-16",
   bottom: "items-end justify-center pb-8 sm:pb-16",
-  left: "items-center justify-end pl-4 sm:pl-16",
-  right: "items-center justify-start pr-4 sm:pr-16",
-  "top-left": "items-start justify-end pt-8 pl-4 sm:pt-16 sm:pl-16",
-  "top-right": "items-start justify-start pt-8 pr-4 sm:pt-16 sm:pr-16",
-  "bottom-left": "items-end justify-end pb-8 pl-4 sm:pb-16 sm:pl-16",
-  "bottom-right": "items-end justify-start pb-8 pr-4 sm:pb-16 sm:pr-16",
+  left: "items-center justify-start pl-4 sm:pl-16",
+  right: "items-center justify-end pr-4 sm:pr-16",
+  "top-left": "items-start justify-start pt-8 pl-4 sm:pt-16 sm:pl-16",
+  "top-right": "items-start justify-end pt-8 pr-4 sm:pt-16 sm:pr-16",
+  "bottom-left": "items-end justify-start pb-8 pl-4 sm:pb-16 sm:pl-16",
+  "bottom-right": "items-end justify-end pb-8 pr-4 sm:pb-16 sm:pr-16",
+  "center-left": "items-center justify-start pl-4 sm:pl-16",
+  "center-right": "items-center justify-end pr-4 sm:pr-16",
 };
 
 const variantConfigs = {
