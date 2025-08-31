@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Select } from './select';
+import React, { useState } from "react";
+import { Select } from "./select";
 
 export const SelectExample = () => {
   const [selections, setSelections] = useState({
@@ -24,9 +24,9 @@ export const SelectExample = () => {
   });
 
   const handleSelectionChange = (key: string, value: any) => {
-    setSelections(prev => ({
+    setSelections((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
@@ -49,7 +49,7 @@ export const SelectExample = () => {
         { id: "f1", name: "Apple", type: "fruit", color: "red" },
         { id: "f2", name: "Banana", type: "fruit", color: "yellow" },
         { id: "f3", name: "Orange", type: "fruit", color: "orange" },
-      ]
+      ],
     },
     {
       label: "Vegetables",
@@ -57,7 +57,7 @@ export const SelectExample = () => {
         { id: "v1", name: "Carrot", type: "vegetable", color: "orange" },
         { id: "v2", name: "Broccoli", type: "vegetable", color: "green" },
         { id: "v3", name: "Spinach", type: "vegetable", color: "green" },
-      ]
+      ],
     },
     {
       label: "Grains",
@@ -65,8 +65,8 @@ export const SelectExample = () => {
         { id: "g1", name: "Rice", type: "grain", color: "white" },
         { id: "g2", name: "Wheat", type: "grain", color: "brown" },
         { id: "g3", name: "Oats", type: "grain", color: "beige" },
-      ]
-    }
+      ],
+    },
   ];
 
   const countries = [
@@ -85,7 +85,9 @@ export const SelectExample = () => {
       <div>
         <h2 className="text-2xl font-bold mb-4">Select Component Examples</h2>
         <p className="text-gray-600 mb-6">
-          This demonstrates various configurations and states of the Select component with different colors, variants, sizes, and advanced features.
+          This demonstrates various configurations and states of the Select
+          component with different colors, variants, sizes, and advanced
+          features.
         </p>
       </div>
 
@@ -93,16 +95,18 @@ export const SelectExample = () => {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Basic Select</h3>
         <Select
-          titleKey="name"
+          apiUrl="https://dummyjson.com/products"
+          titleKey="title"
           valueKey="id"
-          value={selections.basic}
-          onChange={(value) => handleSelectionChange('basic', value)}
-          options={sampleOptions}
+          variant="outlined"
           placeholder="Select an option"
           label="Basic Select"
+          multiple
+          fullWidth
         />
         <p className="text-xs text-gray-500 mt-1">
-          Selected: {selections.basic ? JSON.stringify(selections.basic) : 'None'}
+          Selected:{" "}
+          {selections.basic ? JSON.stringify(selections.basic) : "None"}
         </p>
       </div>
 
@@ -111,56 +115,67 @@ export const SelectExample = () => {
         <h3 className="text-lg font-semibold">Color Variants</h3>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Primary Color (Contained)</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              Primary Color (Contained)
+            </h4>
             <Select
               titleKey="name"
               valueKey="id"
               color="primary"
               variant="contained"
               value={selections.primary}
-              onChange={(value) => handleSelectionChange('primary', value)}
+              onChange={(value) => handleSelectionChange("primary", value)}
               options={sampleOptions}
               placeholder="Select primary option"
               label="Primary Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.primary ? JSON.stringify(selections.primary) : 'None'}
+              Selected:{" "}
+              {selections.primary ? JSON.stringify(selections.primary) : "None"}
             </p>
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Secondary Color (Outlined)</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              Secondary Color (Outlined)
+            </h4>
             <Select
               titleKey="name"
               valueKey="id"
               color="secondary"
               variant="outlined"
               value={selections.secondary}
-              onChange={(value) => handleSelectionChange('secondary', value)}
+              onChange={(value) => handleSelectionChange("secondary", value)}
               options={sampleOptions}
               placeholder="Select secondary option"
               label="Secondary Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.secondary ? JSON.stringify(selections.secondary) : 'None'}
+              Selected:{" "}
+              {selections.secondary
+                ? JSON.stringify(selections.secondary)
+                : "None"}
             </p>
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Success Color (Text)</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              Success Color (Text)
+            </h4>
             <Select
               titleKey="name"
               valueKey="id"
               color="success"
               variant="text"
               value={selections.success}
-              onChange={(value) => handleSelectionChange('success', value)}
+              onChange={(value) => handleSelectionChange("success", value)}
               options={sampleOptions}
               placeholder="Select success option"
               label="Success Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.success ? JSON.stringify(selections.success) : 'None'}
+              Selected:{" "}
+              {selections.success ? JSON.stringify(selections.success) : "None"}
             </p>
           </div>
 
@@ -171,14 +186,15 @@ export const SelectExample = () => {
               valueKey="id"
               color="error"
               value={selections.error}
-              onChange={(value) => handleSelectionChange('error', value)}
+              onChange={(value) => handleSelectionChange("error", value)}
               options={sampleOptions}
               placeholder="Select error option"
               label="Error Select"
               error="This field has an error"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.error ? JSON.stringify(selections.error) : 'None'}
+              Selected:{" "}
+              {selections.error ? JSON.stringify(selections.error) : "None"}
             </p>
           </div>
 
@@ -189,13 +205,14 @@ export const SelectExample = () => {
               valueKey="id"
               color="warning"
               value={selections.warning}
-              onChange={(value) => handleSelectionChange('warning', value)}
+              onChange={(value) => handleSelectionChange("warning", value)}
               options={sampleOptions}
               placeholder="Select warning option"
               label="Warning Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.warning ? JSON.stringify(selections.warning) : 'None'}
+              Selected:{" "}
+              {selections.warning ? JSON.stringify(selections.warning) : "None"}
             </p>
           </div>
 
@@ -206,14 +223,15 @@ export const SelectExample = () => {
               valueKey="id"
               color="info"
               value={selections.info}
-              onChange={(value) => handleSelectionChange('info', value)}
+              onChange={(value) => handleSelectionChange("info", value)}
               options={sampleOptions}
               placeholder="Select info option"
               label="Info Select"
               multiple
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.info ? JSON.stringify(selections.info) : 'None'}
+              Selected:{" "}
+              {selections.info ? JSON.stringify(selections.info) : "None"}
             </p>
           </div>
         </div>
@@ -230,30 +248,34 @@ export const SelectExample = () => {
               valueKey="id"
               size="sm"
               value={selections.small}
-              onChange={(value) => handleSelectionChange('small', value)}
+              onChange={(value) => handleSelectionChange("small", value)}
               options={sampleOptions}
               placeholder="Small select"
               label="Small Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.small ? JSON.stringify(selections.small) : 'None'}
+              Selected:{" "}
+              {selections.small ? JSON.stringify(selections.small) : "None"}
             </p>
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Medium Size (Default)</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              Medium Size (Default)
+            </h4>
             <Select
               titleKey="name"
               valueKey="id"
               size="md"
               value={selections.basic}
-              onChange={(value) => handleSelectionChange('basic', value)}
+              onChange={(value) => handleSelectionChange("basic", value)}
               options={sampleOptions}
               placeholder="Medium select"
               label="Medium Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.basic ? JSON.stringify(selections.basic) : 'None'}
+              Selected:{" "}
+              {selections.basic ? JSON.stringify(selections.basic) : "None"}
             </p>
           </div>
 
@@ -264,13 +286,14 @@ export const SelectExample = () => {
               valueKey="id"
               size="lg"
               value={selections.large}
-              onChange={(value) => handleSelectionChange('large', value)}
+              onChange={(value) => handleSelectionChange("large", value)}
               options={sampleOptions}
               placeholder="Large select"
               label="Large Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.large ? JSON.stringify(selections.large) : 'None'}
+              Selected:{" "}
+              {selections.large ? JSON.stringify(selections.large) : "None"}
             </p>
           </div>
         </div>
@@ -287,13 +310,16 @@ export const SelectExample = () => {
               valueKey="id"
               disabled
               value={selections.disabled}
-              onChange={(value) => handleSelectionChange('disabled', value)}
+              onChange={(value) => handleSelectionChange("disabled", value)}
               options={sampleOptions}
               placeholder="Disabled select"
               label="Disabled Select"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.disabled ? JSON.stringify(selections.disabled) : 'None'}
+              Selected:{" "}
+              {selections.disabled
+                ? JSON.stringify(selections.disabled)
+                : "None"}
             </p>
           </div>
 
@@ -304,14 +330,17 @@ export const SelectExample = () => {
               valueKey="id"
               required
               value={selections.required}
-              onChange={(value) => handleSelectionChange('required', value)}
+              onChange={(value) => handleSelectionChange("required", value)}
               options={sampleOptions}
               placeholder="Required select"
               label="Required Select"
               helperText="This field is required"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Selected: {selections.required ? JSON.stringify(selections.required) : 'None'}
+              Selected:{" "}
+              {selections.required
+                ? JSON.stringify(selections.required)
+                : "None"}
             </p>
           </div>
         </div>
@@ -325,14 +354,15 @@ export const SelectExample = () => {
           valueKey="id"
           multiple
           value={selections.multiple}
-          onChange={(value) => handleSelectionChange('multiple', value)}
+          onChange={(value) => handleSelectionChange("multiple", value)}
           options={sampleOptions}
           placeholder="Select multiple options"
           label="Multiple Select"
           helperText="You can select multiple items"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Selected: {selections.multiple ? JSON.stringify(selections.multiple) : 'None'}
+          Selected:{" "}
+          {selections.multiple ? JSON.stringify(selections.multiple) : "None"}
         </p>
       </div>
 
@@ -344,14 +374,17 @@ export const SelectExample = () => {
           valueKey="id"
           searchable
           value={selections.searchable}
-          onChange={(value) => handleSelectionChange('searchable', value)}
+          onChange={(value) => handleSelectionChange("searchable", value)}
           options={countries}
           placeholder="Search countries..."
           label="Searchable Country Select"
           helperText="Type to search through countries"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Selected: {selections.searchable ? JSON.stringify(selections.searchable) : 'None'}
+          Selected:{" "}
+          {selections.searchable
+            ? JSON.stringify(selections.searchable)
+            : "None"}
         </p>
       </div>
 
@@ -363,13 +396,14 @@ export const SelectExample = () => {
           valueKey="id"
           groupedOptions={groupedOptions}
           value={selections.grouped}
-          onChange={(value) => handleSelectionChange('grouped', value)}
+          onChange={(value) => handleSelectionChange("grouped", value)}
           placeholder="Select from grouped options"
           label="Grouped Options Select"
           helperText="Options are organized by categories"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Selected: {selections.grouped ? JSON.stringify(selections.grouped) : 'None'}
+          Selected:{" "}
+          {selections.grouped ? JSON.stringify(selections.grouped) : "None"}
         </p>
       </div>
 
@@ -380,7 +414,7 @@ export const SelectExample = () => {
           titleKey="name"
           valueKey="id"
           value={selections.customRender}
-          onChange={(value) => handleSelectionChange('customRender', value)}
+          onChange={(value) => handleSelectionChange("customRender", value)}
           options={sampleOptions}
           placeholder="Select with custom rendering"
           label="Custom Render Select"
@@ -403,7 +437,10 @@ export const SelectExample = () => {
           )}
         />
         <p className="text-xs text-gray-500 mt-1">
-          Selected: {selections.customRender ? JSON.stringify(selections.customRender) : 'None'}
+          Selected:{" "}
+          {selections.customRender
+            ? JSON.stringify(selections.customRender)
+            : "None"}
         </p>
       </div>
 
@@ -418,7 +455,7 @@ export const SelectExample = () => {
               valueKey="id"
               fullWidth
               value={selections.basic}
-              onChange={(value) => handleSelectionChange('basic', value)}
+              onChange={(value) => handleSelectionChange("basic", value)}
               options={sampleOptions}
               placeholder="Full width select"
               label="Full Width Select"
@@ -426,13 +463,15 @@ export const SelectExample = () => {
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Custom Width (300px)</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              Custom Width (300px)
+            </h4>
             <Select
               titleKey="name"
               valueKey="id"
               width={300}
               value={selections.basic}
-              onChange={(value) => handleSelectionChange('basic', value)}
+              onChange={(value) => handleSelectionChange("basic", value)}
               options={sampleOptions}
               placeholder="Custom width select"
               label="Custom Width Select"
@@ -446,16 +485,34 @@ export const SelectExample = () => {
         <h3 className="text-lg font-semibold">Interactive Demo</h3>
         <div className="p-4 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600 mb-3">
-            Current selections: {Object.entries(selections).filter(([_, value]) => value).map(([key]) => key).join(', ') || 'None selected'}
+            Current selections:{" "}
+            {Object.entries(selections)
+              .filter(([_, value]) => value)
+              .map(([key]) => key)
+              .join(", ") || "None selected"}
           </p>
           <button
-            onClick={() => setSelections(prev => Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: sampleOptions[0] }), {}))}
+            onClick={() =>
+              setSelections((prev) =>
+                Object.keys(prev).reduce(
+                  (acc, key) => ({ ...acc, [key]: sampleOptions[0] }),
+                  {}
+                )
+              )
+            }
             className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
           >
             Select All First Options
           </button>
           <button
-            onClick={() => setSelections(prev => Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: undefined }), {}))}
+            onClick={() =>
+              setSelections((prev) =>
+                Object.keys(prev).reduce(
+                  (acc, key) => ({ ...acc, [key]: undefined }),
+                  {}
+                )
+              )
+            }
             className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
           >
             Clear All
@@ -473,7 +530,7 @@ export const SelectExample = () => {
               titleKey="name"
               valueKey="id"
               value={selections.formExample}
-              onChange={(value) => handleSelectionChange('formExample', value)}
+              onChange={(value) => handleSelectionChange("formExample", value)}
               options={countries}
               placeholder="Select your country"
               label="Country"
@@ -484,18 +541,32 @@ export const SelectExample = () => {
               Country selection in a registration form
             </p>
           </div>
-          
+
           <div className="p-4 bg-green-50 rounded-lg">
             <h4 className="font-medium text-green-900 mb-2">Settings Panel</h4>
             <Select
               titleKey="name"
               valueKey="id"
               value={selections.settingsExample}
-              onChange={(value) => handleSelectionChange('settingsExample', value)}
+              onChange={(value) =>
+                handleSelectionChange("settingsExample", value)
+              }
               options={[
-                { id: "light", name: "Light Theme", description: "Clean and bright interface" },
-                { id: "dark", name: "Dark Theme", description: "Easy on the eyes" },
-                { id: "auto", name: "Auto (System)", description: "Follows system preference" },
+                {
+                  id: "light",
+                  name: "Light Theme",
+                  description: "Clean and bright interface",
+                },
+                {
+                  id: "dark",
+                  name: "Dark Theme",
+                  description: "Easy on the eyes",
+                },
+                {
+                  id: "auto",
+                  name: "Auto (System)",
+                  description: "Follows system preference",
+                },
               ]}
               placeholder="Choose theme"
               label="Theme Selection"
@@ -523,13 +594,15 @@ export const SelectExample = () => {
               options={sampleOptions}
               placeholder="Select or add new"
               label="Add New Demo"
-              onAddNew={() => alert('Add new functionality triggered!')}
+              onAddNew={() => alert("Add new functionality triggered!")}
               addNewLabel="Add New Item"
             />
           </div>
-          
+
           <div className="p-4 bg-pink-50 rounded-lg">
-            <h4 className="font-medium text-pink-900 mb-2">Custom Dropdown Header</h4>
+            <h4 className="font-medium text-pink-900 mb-2">
+              Custom Dropdown Header
+            </h4>
             <p className="text-xs text-pink-700 mb-2">
               Custom header with additional information
             </p>
@@ -542,7 +615,9 @@ export const SelectExample = () => {
               dropdownHeader={
                 <div className="text-sm text-gray-600">
                   <div className="font-medium">Available Options</div>
-                  <div className="text-xs">Total: {sampleOptions.length} items</div>
+                  <div className="text-xs">
+                    Total: {sampleOptions.length} items
+                  </div>
                 </div>
               }
             />
@@ -554,9 +629,14 @@ export const SelectExample = () => {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Technical Information</h3>
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium text-gray-900 mb-2">Component Features:</h4>
+          <h4 className="font-medium text-gray-900 mb-2">
+            Component Features:
+          </h4>
           <ul className="text-xs text-gray-700 space-y-1 ml-4">
-            <li>• 6 color variants: primary, secondary, success, error, warning, info</li>
+            <li>
+              • 6 color variants: primary, secondary, success, error, warning,
+              info
+            </li>
             <li>• 3 style variants: contained, outlined, text</li>
             <li>• 3 size options: small, medium, large</li>
             <li>• Single and multiple selection modes</li>
