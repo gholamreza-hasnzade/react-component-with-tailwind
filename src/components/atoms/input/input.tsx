@@ -9,11 +9,11 @@ type Variant = "contained" | "outlined" | "text";
 type Color = "primary" | "secondary" | "success" | "error" | "warning" | "info";
 
 export type FormatPattern =
-  | "bank-account" 
-  | "credit-card" 
-  | "national-id" 
-  | "postal-code" 
-  | "custom"; 
+  | "bank-account"
+  | "credit-card"
+  | "national-id"
+  | "postal-code"
+  | "custom";
 
 interface FormatConfig {
   pattern: string;
@@ -70,45 +70,45 @@ const formatConfigs: Record<FormatPattern, FormatConfig> = {
 const colorMap: Record<Color, Record<Variant, string>> = {
   primary: {
     contained:
-      "bg-blue-600 text-white border-blue-600 placeholder:text-blue-100 focus:ring-2 focus:ring-blue-300",
+      "bg-blue-50 text-blue-900 border-blue-300 placeholder:text-blue-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
     outlined:
-      "border border-blue-600 text-blue-600 placeholder:text-blue-300 focus:ring-2 focus:ring-blue-300",
-    text: "text-blue-600 border-none placeholder:text-blue-300 focus:ring-2 focus:ring-blue-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-blue-500",
   },
   secondary: {
     contained:
-      "bg-gray-600 text-white border-gray-600 placeholder:text-gray-100 focus:ring-2 focus:ring-gray-300",
+      "bg-gray-50 text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500",
     outlined:
-      "border border-gray-600 text-gray-600 placeholder:text-gray-300 focus:ring-2 focus:ring-gray-300",
-    text: "text-gray-600 border-none placeholder:text-gray-300 focus:ring-2 focus:ring-gray-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-gray-500",
   },
   success: {
     contained:
-      "bg-green-600 text-white border-green-600 placeholder:text-green-100 focus:ring-2 focus:ring-green-300",
+      "bg-green-50 text-green-900 border-green-300 placeholder:text-green-400 focus:border-green-500 focus:ring-1 focus:ring-green-500",
     outlined:
-      "border border-green-600 text-green-600 placeholder:text-green-300 focus:ring-2 focus:ring-green-300",
-    text: "text-green-600 border-none placeholder:text-green-300 focus:ring-2 focus:ring-green-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-green-500 focus:ring-1 focus:ring-green-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-green-500",
   },
   error: {
     contained:
-      "bg-red-600 text-white border-red-600 placeholder:text-red-100 focus:ring-2 focus:ring-red-300",
+      "bg-red-50 text-red-900 border-red-300 placeholder:text-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-500",
     outlined:
-      "border border-red-600 text-red-600 placeholder:text-red-300 focus:ring-2 focus:ring-red-300",
-    text: "text-red-600 border-none placeholder:text-red-300 focus:ring-2 focus:ring-red-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-red-500 focus:ring-1 focus:ring-red-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-red-500",
   },
   warning: {
     contained:
-      "bg-yellow-500 text-black border-yellow-500 placeholder:text-yellow-100 focus:ring-2 focus:ring-yellow-300",
+      "bg-yellow-50 text-yellow-900 border-yellow-300 placeholder:text-yellow-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500",
     outlined:
-      "border border-yellow-500 text-yellow-600 placeholder:text-yellow-300 focus:ring-2 focus:ring-yellow-300",
-    text: "text-yellow-600 border-none placeholder:text-yellow-300 focus:ring-2 focus:ring-yellow-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-yellow-500",
   },
   info: {
     contained:
-      "bg-sky-500 text-white border-sky-500 placeholder:text-sky-100 focus:ring-2 focus:ring-sky-300",
+      "bg-sky-50 text-sky-900 border-sky-300 placeholder:text-sky-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500",
     outlined:
-      "border border-sky-500 text-sky-500 placeholder:text-sky-300 focus:ring-2 focus:ring-sky-300",
-    text: "text-sky-500 border-none placeholder:text-sky-300 focus:ring-2 focus:ring-sky-300",
+      "bg-white text-gray-900 border-gray-300 placeholder:text-gray-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500",
+    text: "bg-transparent text-gray-900 border-none placeholder:text-gray-400 focus:ring-1 focus:ring-sky-500",
   },
 };
 
@@ -183,7 +183,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const [isFocused, setIsFocused] = useState(false);
     const [displayValue, setDisplayValue] = useState(value);
     const [validationError, setValidationError] = useState<string>("");
 
@@ -412,8 +411,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       formatPattern,
     ]);
 
-    
-
     useEffect(() => {
       if (type === "number" && formatPattern === "custom") {
         if (!value) {
@@ -430,27 +427,24 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       }
     }, [type, formatPattern, value, formatConfig, formatValue]);
 
-    const errorClasses = error ? "border-red-500 text-red-500" : "";
-    const focusClasses = isFocused
-      ? "border-blue-500 ring-1 ring-blue-200"
-      : "border-gray-300";
+    const errorClasses = error ? "border-red-500" : "";
 
     const sizeClasses = {
-      sm: "text-sm px-2 py-1",
-      md: "text-base px-3 py-2",
-      lg: "text-lg px-4 py-3",
+      sm: "h-8 px-3 text-sm",
+      md: "h-10 px-3 text-base",
+      lg: "h-12 px-4 text-lg",
     };
 
     const widthClass = fullWidth ? "w-full" : "";
 
     const inputPaddingClasses = [
-      iconLeft ? "pl-10" : "pl-5",
-      iconRight ? "pr-10" : "pr-5",
+      iconLeft ? "pl-10" : "pl-3",
+      iconRight ? "pr-10" : "pr-3",
       sizeClasses[size],
     ].join(" ");
 
     const readOnlyClasses = readOnly
-      ? "bg-gray-200 cursor-not-allowed text-gray-500"
+      ? "bg-gray-50 cursor-not-allowed text-gray-500"
       : "";
 
     const colorClasses = colorMap[color][variant];
@@ -464,7 +458,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={clsx("relative", widthClass)}>
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
           {label}
           {required && <span className="text-red-500 ml-0.5">*</span>}
         </label>
@@ -473,7 +467,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {iconLeft && (
             <span
               onClick={onIconLeftClick}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10 text-gray-400"
             >
               {iconLeft}
             </span>
@@ -486,9 +480,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             name={id}
             value={inputValue}
             onChange={handleChange}
-            onFocus={() => setIsFocused(true)}
             onBlur={(e) => {
-              setIsFocused(false);
               const patternError = validatePattern(e.target.value);
               setValidationError(patternError);
             }}
@@ -497,10 +489,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             inputMode={type === "number" ? "numeric" : undefined}
             autoComplete={type === "number" ? "off" : undefined}
             className={clsx(
-              "mt-1 block w-full rounded-md focus:outline-none placeholder:text-gray-400",
+              "block w-full rounded-md border transition-all duration-200 ease-in-out",
+              "focus:outline-none",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
               inputPaddingClasses,
               colorClasses,
-              focusClasses,
               errorClasses,
               readOnlyClasses,
               className
@@ -530,7 +523,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {iconRight && (
             <span
               onClick={onIconRightClick}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10 text-gray-400"
             >
               {iconRight}
             </span>
@@ -538,13 +531,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {(error || validationError) && (
-          <p className="mt-1 text-xs text-red-500 flex items-center">
+          <p className="mt-1 text-sm text-red-600 flex items-center">
             {error || validationError}
           </p>
         )}
 
         {helperText && !error && !validationError && (
-          <p className="mt-1 text-xs text-gray-500">{helperText}</p>
+          <p className="mt-1 text-sm text-gray-500">{helperText}</p>
         )}
 
         {type === "number" && formatConfig && (

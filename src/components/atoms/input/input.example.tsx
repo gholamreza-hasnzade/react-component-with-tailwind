@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { Input } from "./input";
-import { HiEye, HiEyeOff, HiSearch, HiMail, HiPhone, HiCreditCard, HiCurrencyDollar, HiIdentification, HiLocationMarker } from "react-icons/hi";
+import {
+  HiEye,
+  HiEyeOff,
+  HiSearch,
+  HiMail,
+  HiPhone,
+  HiCreditCard,
+  HiCurrencyDollar,
+  HiIdentification,
+  HiLocationMarker,
+} from "react-icons/hi";
 
 export const InputExample: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -19,12 +29,13 @@ export const InputExample: React.FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-  };
+  const handleChange =
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
 
   const handleIconClick = (field: string) => () => {
     console.log(`${field} icon clicked!`);
@@ -39,7 +50,8 @@ export const InputExample: React.FC = () => {
             Input Component Examples
           </h1>
           <p className="text-lg text-gray-600">
-            A comprehensive showcase of the Input component with all its features
+            A comprehensive showcase of the Input component with all its
+            features
           </p>
         </div>
 
@@ -51,7 +63,8 @@ export const InputExample: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               id="name"
-              label="Full Name"
+              variant="outlined"
+              label="Full assafName"
               value={formData.name}
               onChange={handleChange("name")}
               placeholder="Enter your full name"
@@ -62,6 +75,7 @@ export const InputExample: React.FC = () => {
             <Input
               id="email"
               label="Email Address"
+              variant="contained"
               value={formData.email}
               onChange={handleChange("email")}
               placeholder="Enter your email"
@@ -81,7 +95,9 @@ export const InputExample: React.FC = () => {
           </h2>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Primary Variants</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                Primary Variants
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Input
                   id="primary-contained"
@@ -114,7 +130,9 @@ export const InputExample: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Color Variants</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                Color Variants
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Input
                   id="success"
@@ -399,9 +417,7 @@ export const InputExample: React.FC = () => {
 
         {/* Form Preview */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-          <h2 className="text-xl font-semibold mb-4">
-            📋 Form Data Preview
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">📋 Form Data Preview</h2>
           <div className="bg-white/20 rounded-lg p-4">
             <pre className="text-sm overflow-x-auto">
               {JSON.stringify(formData, null, 2)}
@@ -411,14 +427,12 @@ export const InputExample: React.FC = () => {
 
         {/* Usage Instructions */}
         <div className="bg-gray-900 rounded-lg shadow-lg p-6 text-white">
-          <h2 className="text-xl font-semibold mb-4">
-            💻 Usage Instructions
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">💻 Usage Instructions</h2>
           <div className="space-y-4 text-sm">
             <div>
               <h3 className="font-medium text-blue-300 mb-2">Basic Usage:</h3>
               <pre className="bg-gray-800 p-3 rounded overflow-x-auto">
-{`<Input
+                {`<Input
   id="example"
   label="Example Label"
   value={value}
@@ -429,9 +443,11 @@ export const InputExample: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="font-medium text-green-300 mb-2">With Numeric Formatting:</h3>
+              <h3 className="font-medium text-green-300 mb-2">
+                With Numeric Formatting:
+              </h3>
               <pre className="bg-gray-800 p-3 rounded overflow-x-auto">
-{`<Input
+                {`<Input
   id="creditCard"
   label="Credit Card"
   value={creditCard}
@@ -443,9 +459,11 @@ export const InputExample: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="font-medium text-yellow-300 mb-2">With Custom Format:</h3>
+              <h3 className="font-medium text-yellow-300 mb-2">
+                With Custom Format:
+              </h3>
               <pre className="bg-gray-800 p-3 rounded overflow-x-auto">
-{`<Input
+                {`<Input
   id="phone"
   label="Phone Number"
   value={phone}
@@ -458,9 +476,11 @@ export const InputExample: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="font-medium text-purple-300 mb-2">With Pattern Validation:</h3>
+              <h3 className="font-medium text-purple-300 mb-2">
+                With Pattern Validation:
+              </h3>
               <pre className="bg-gray-800 p-3 rounded overflow-x-auto">
-{`<Input
+                {`<Input
   id="email"
   label="Email"
   value={email}
