@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaChevronUp, FaChevronDown, FaClock } from 'react-icons/fa';
+import { HiChevronUp, HiChevronDown, HiClock } from 'react-icons/hi';
 
 type Size = "sm" | "md" | "lg";
 type Variant = "contained" | "outlined" | "text";
@@ -251,6 +251,9 @@ export const TimePicker: React.FC<TimePickerProps> = ({
       const value = start + i;
       // Fix: 24-hour format should go from 0-23, not 0-24
       if (type === "hours" && format === "24h" && value === 24) return 0;
+      // Fix: minutes and seconds should go from 0-59, not 0-60
+      if (type === "minutes" && value === 60) return 0;
+      if (type === "seconds" && value === 60) return 0;
       return value;
     });
   };
@@ -292,7 +295,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
         />
         
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-          <FaClock className="h-5 w-5 text-gray-400" />
+          <HiClock className="h-5 w-5 text-gray-400" />
         </div>
         
         <button
@@ -302,9 +305,9 @@ export const TimePicker: React.FC<TimePickerProps> = ({
           className="absolute inset-y-0 right-8 flex items-center pr-2"
         >
           {isOpen ? (
-            <FaChevronUp className="h-4 w-4 text-gray-400" />
+            <HiChevronUp className="h-4 w-4 text-gray-400" />
           ) : (
-            <FaChevronDown className="h-4 w-4 text-gray-400" />
+            <HiChevronDown className="h-4 w-4 text-gray-400" />
           )}
         </button>
       </div>
