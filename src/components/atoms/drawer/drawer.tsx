@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
-export type DrawerPosition = "top" | "right" | "bottom" | "left";
+export type DrawerPosition = "top" | "right" | "bottom" | "left" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "top-center" | "bottom-center" | "center";
 
 export interface DrawerProps {
   open: boolean;
@@ -37,7 +37,6 @@ export const Drawer: React.FC<DrawerProps> = ({
   lockBodyScroll = true,
   mobileOptimized = true,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -91,22 +90,6 @@ export const Drawer: React.FC<DrawerProps> = ({
     };
   }, [open, lockBodyScroll, mobileOptimized, isMobile]);
 
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-    } else {
-      if (animate) {
-        const timer = setTimeout(() => {
-          setIsVisible(false);
-        }, animationDuration);
-        return () => clearTimeout(timer);
-      } else {
-        setIsVisible(false);
-      }
-    }
-  }, [open, animate, animationDuration]);
-
-  // Handle backdrop click
   const handleBackdropClick = (event: React.MouseEvent) => {
     if (closeOnBackdropClick && event.target === backdropRef.current) {
       onClose();
@@ -127,25 +110,25 @@ export const Drawer: React.FC<DrawerProps> = ({
         ? `all ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
         : "none",
       minWidth:
-        position === "left" || position === "right"
+        position === "left" || position === "right" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
           ? isMobile
             ? "85vw"
             : "280px"
           : "auto",
       minHeight:
-        position === "top" || position === "bottom"
+        position === "top" || position === "bottom" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
           ? isMobile
             ? "50vh"
             : "200px"
           : "auto",
       maxWidth:
-        position === "left" || position === "right"
+        position === "left" || position === "right" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
           ? isMobile
             ? "95vw"
             : "90vw"
           : "auto",
       maxHeight:
-        position === "top" || position === "bottom"
+        position === "top" || position === "bottom" || position === "top-left" || position === "top-right" || position === "bottom-left" || position === "bottom-right"
           ? isMobile
             ? "90vh"
             : "90vh"
@@ -162,8 +145,8 @@ export const Drawer: React.FC<DrawerProps> = ({
           height:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
           transform: open
-            ? "translateY(0) scale(1)"
-            : "translateY(-100%) scale(0.95)",
+            ? "translateY(0)"
+            : "translateY(-100%)",
           opacity: open ? 1 : 0,
         };
       case "bottom":
@@ -175,8 +158,8 @@ export const Drawer: React.FC<DrawerProps> = ({
           height:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
           transform: open
-            ? "translateY(0) scale(1)"
-            : "translateY(100%) scale(0.95)",
+            ? "translateY(0)"
+            : "translateY(100%)",
           opacity: open ? 1 : 0,
         };
       case "left":
@@ -188,8 +171,8 @@ export const Drawer: React.FC<DrawerProps> = ({
           width:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
           transform: open
-            ? "translateX(0) scale(1)"
-            : "translateX(-100%) scale(0.95)",
+            ? "translateX(0)"
+            : "translateX(-100%)",
           opacity: open ? 1 : 0,
         };
       case "right":
@@ -201,9 +184,119 @@ export const Drawer: React.FC<DrawerProps> = ({
           width:
             typeof actualSize === "number" ? `${actualSize}px` : actualSize,
           transform: open
-            ? "translateX(0) scale(1)"
-            : "translateX(100%) scale(0.95)",
+            ? "translateX(0)"
+            : "translateX(100%)",
           opacity: open ? 1 : 0,
+        };
+      case "top-left":
+        return {
+          ...baseStyles,
+          top: 0,
+          left: 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          transform: open
+            ? "translate(0, 0) scale(1)"
+            : "translate(-100%, -100%) scale(0.8)",
+          opacity: open ? 1 : 0,
+          borderRadius: "0 0 100% 0",
+          overflow: "hidden",
+        };
+      case "top-right":
+        return {
+          ...baseStyles,
+          top: 0,
+          right: 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          transform: open
+            ? "translate(0, 0) scale(1)"
+            : "translate(100%, -100%) scale(0.8)",
+          opacity: open ? 1 : 0,
+          borderRadius: "0 0 0 100%",
+          overflow: "hidden",
+        };
+      case "bottom-left":
+        return {
+          ...baseStyles,
+          bottom: 0,
+          left: 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          transform: open
+            ? "translate(0, 0) scale(1)"
+            : "translate(-100%, 100%) scale(0.8)",
+          opacity: open ? 1 : 0,
+          borderRadius: "0 100% 0 0",
+          overflow: "hidden",
+        };
+      case "bottom-right":
+        return {
+          ...baseStyles,
+          bottom: 0,
+          right: 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          transform: open
+            ? "translate(0, 0) scale(1)"
+            : "translate(100%, 100%) scale(0.8)",
+          opacity: open ? 1 : 0,
+          borderRadius: "100% 0 0 0",
+          overflow: "hidden",
+        };
+      case "top-center":
+        return {
+          ...baseStyles,
+          top: 0,
+          left: "50%",
+          transform: open
+            ? "translateX(-50%) translateY(0) scale(1)"
+            : "translateX(-50%) translateY(-100%) scale(0.9)",
+          opacity: open ? 1 : 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          borderRadius: "0 0 20px 20px",
+        };
+      case "bottom-center":
+        return {
+          ...baseStyles,
+          bottom: 0,
+          left: "50%",
+          transform: open
+            ? "translateX(-50%) translateY(0) scale(1)"
+            : "translateX(-50%) translateY(100%) scale(0.9)",
+          opacity: open ? 1 : 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          borderRadius: "20px 20px 0 0",
+        };
+      case "center":
+        return {
+          ...baseStyles,
+          top: "50%",
+          left: "50%",
+          transform: open
+            ? "translate(-50%, -50%) scale(1)"
+            : "translate(-50%, -50%) scale(0.5)",
+          opacity: open ? 1 : 0,
+          width:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          height:
+            typeof actualSize === "number" ? `${actualSize}px` : actualSize,
+          borderRadius: "20px",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
         };
       default:
         return baseStyles;
@@ -225,8 +318,6 @@ export const Drawer: React.FC<DrawerProps> = ({
       : "none",
     backdropFilter: open ? (isMobile ? "blur(1px)" : "blur(2px)") : "blur(0px)",
   });
-
-  if (!isVisible && !open) return null;
 
   return createPortal(
     <>
