@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ColorPicker } from "./colorpicker";
 
 export const ColorPickerExamples = () => {
@@ -8,15 +8,18 @@ export const ColorPickerExamples = () => {
   const [disabledColor, setDisabledColor] = useState("#8B5CF6");
   const [errorColor, setErrorColor] = useState("#F59E0B");
 
-
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">ColorPicker Component Examples</h1>
-        
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          ColorPicker Component Examples
+        </h1>
+
         {/* Basic Usage */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Basic Usage</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Basic Usage
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="basic-color"
@@ -26,14 +29,18 @@ export const ColorPickerExamples = () => {
               helperText="This is a basic color picker with default settings"
             />
             <div className="p-4 bg-gray-100 rounded-md">
-              <p className="text-sm text-gray-600">Selected color: <span className="font-mono">{basicColor}</span></p>
+              <p className="text-sm text-gray-600">
+                Selected color: <span className="font-mono">{basicColor}</span>
+              </p>
             </div>
           </div>
         </section>
 
         {/* Different Sizes */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Different Sizes</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Different Sizes
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="small-color"
@@ -61,7 +68,9 @@ export const ColorPickerExamples = () => {
 
         {/* Different Variants */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Different Variants</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Different Variants
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="contained-color"
@@ -89,7 +98,9 @@ export const ColorPickerExamples = () => {
 
         {/* Different Colors */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Different Colors</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Different Colors
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="primary-color"
@@ -124,7 +135,9 @@ export const ColorPickerExamples = () => {
 
         {/* Advanced Configuration */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Advanced Configuration</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Advanced Configuration
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="advanced-color"
@@ -139,14 +152,19 @@ export const ColorPickerExamples = () => {
               helperText="This color picker has all features enabled"
             />
             <div className="p-4 bg-gray-100 rounded-md">
-              <p className="text-sm text-gray-600">Selected color: <span className="font-mono">{advancedColor}</span></p>
+              <p className="text-sm text-gray-600">
+                Selected color:{" "}
+                <span className="font-mono">{advancedColor}</span>
+              </p>
             </div>
           </div>
         </section>
 
         {/* Form Integration */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Form Integration</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Form Integration
+          </h2>
           <form className="space-y-4">
             <ColorPicker
               id="form-color"
@@ -175,7 +193,9 @@ export const ColorPickerExamples = () => {
 
         {/* Disabled State */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Disabled State</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Disabled State
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="disabled-color"
@@ -198,7 +218,9 @@ export const ColorPickerExamples = () => {
 
         {/* Error State */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Error State</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Error State
+          </h2>
           <ColorPicker
             id="error-color"
             label="Color with Error"
@@ -209,11 +231,11 @@ export const ColorPickerExamples = () => {
           />
         </section>
 
-
-
         {/* Minimal Configuration */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Minimal Configuration</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Minimal Configuration
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="minimal-color"
@@ -235,7 +257,9 @@ export const ColorPickerExamples = () => {
 
         {/* Format Examples */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Different Formats</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Different Formats
+          </h2>
           <div className="space-y-4">
             <ColorPicker
               id="hex-format"
@@ -263,7 +287,9 @@ export const ColorPickerExamples = () => {
 
         {/* Full Width */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Full Width</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Full Width
+          </h2>
           <ColorPicker
             id="fullwidth-color"
             label="Full Width Color Picker"
