@@ -21,7 +21,7 @@ console.log(message);`;
         {/* Basic Usage */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Basic Usage
+            Basic Usage with Toast
           </h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -29,6 +29,9 @@ console.log(message);`;
               <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{basicText}</span>
               <Clipboard text={basicText} />
             </div>
+            <p className="text-sm text-gray-500">
+              Click the button to see the toast notification appear!
+            </p>
           </div>
         </section>
 
@@ -160,6 +163,75 @@ console.log(message);`;
           <div className="flex items-center gap-4">
             <Clipboard text="Disabled button" disabled={true} />
             <Clipboard text="" disabled={true} />
+          </div>
+        </section>
+
+        {/* Toast Positions */}
+        <section className="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Toast Positions
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-700">Top Positions</h3>
+              <div className="flex items-center gap-4">
+                <Clipboard text="Top" toastPosition="top" />
+                <Clipboard text="Top Left" toastPosition="top-left" />
+                <Clipboard text="Top Right" toastPosition="top-right" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-700">Bottom Positions</h3>
+              <div className="flex items-center gap-4">
+                <Clipboard text="Bottom" toastPosition="bottom" />
+                <Clipboard text="Bottom Left" toastPosition="bottom-left" />
+                <Clipboard text="Bottom Right" toastPosition="bottom-right" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-700">Side Positions</h3>
+              <div className="flex items-center gap-4">
+                <Clipboard text="Left" toastPosition="left" />
+                <Clipboard text="Right" toastPosition="right" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Custom Toast Duration */}
+        <section className="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Custom Toast Duration
+          </h2>
+          <div className="flex items-center gap-4">
+            <Clipboard 
+              text="Quick toast (1s)" 
+              toastDuration={1000}
+              copiedText="Quick!"
+            />
+            <Clipboard 
+              text="Long toast (5s)" 
+              toastDuration={5000}
+              copiedText="This stays longer!"
+            />
+          </div>
+        </section>
+
+        {/* No Toast */}
+        <section className="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            No Toast
+          </h2>
+          <div className="flex items-center gap-4">
+            <Clipboard 
+              text="No toast notification" 
+              showToast={false}
+            />
+            <Clipboard 
+              text="Button changes only" 
+              showToast={false}
+              variant="outlined"
+            />
           </div>
         </section>
 
