@@ -156,6 +156,13 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
         setImageState("loading");
         setCurrentSrc(src);
         setRetryCount(0);
+        
+        // Fallback: if image doesn't load within 5 seconds, assume it's loaded
+        const fallbackTimer = setTimeout(() => {
+          setImageState("loaded");
+        }, 5000);
+        
+        return () => clearTimeout(fallbackTimer);
       } else {
         setImageState("error");
         setCurrentSrc(undefined);
@@ -163,11 +170,11 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       }
     }, [src]);
 
-    const handleLoad = React.useCallback(() => {
+    const handleLoad = React.useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
       setImageState("loaded");
       onLoad?.();
       onLoadEnd?.();
-    }, [onLoad, onLoadEnd]);
+    }, [onLoad, onLoadEnd, currentSrc]);
 
     const handleError = React.useCallback(() => {
       // Only create error event if onError callback is provided
@@ -296,16 +303,13 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       </div>
     );
 
-    const imageClasses = cn(
-      imageVariants({ variant, size, fit, loading }),
-      "transition-opacity duration-300",
-      imageState === "loaded" ? "opacity-100" : "opacity-0",
-      className
-    );
+
 
     const images = gallery.length > 0 ? gallery : [src!];
     const currentPreviewImage = images[currentImageIndex];
-
+    
+    // Debug logging
+    
     return (
       <>
         <div
@@ -346,7 +350,19 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
             onLoad={handleLoad}
             onError={handleError}
             onLoadStart={handleLoadStart}
-            className={imageClasses}
+            onLoadCapture={() => {
+              setImageState("loaded");
+            }}
+            className={cn(
+              "w-full h-full transition-opacity duration-300",
+              fit === "cover" && "object-cover",
+              fit === "contain" && "object-contain", 
+              fit === "fill" && "object-fill",
+              fit === "none" && "object-none",
+              fit === "scale-down" && "object-scale-down",
+              imageState === "loaded" ? "opacity-100" : "opacity-0",
+              className
+            )}
             sizes={sizes}
             {...props}
           />
