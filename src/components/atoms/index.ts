@@ -26,7 +26,6 @@ export {
   DrawerFooter,
 } from "@/components/atoms/drawer/drawer";
 export { Input } from "@/components/atoms/input/input";
-export { Label } from "@/components/atoms/label/label";
 export { Password } from "@/components/atoms/password/password";
 export {
   RadioGroup,
@@ -35,7 +34,7 @@ export {
 export { Select } from "@/components/atoms/select/select";
 export { Stepper } from "@/components/atoms/stepper/stepper";
 export { Tabs } from "@/components/atoms/tabs/tabs";
-export { TimePicker } from "@/components/atoms/timepicker/timePicker";
+export { TimePicker } from "@/components/atoms/timepicker/timepicker";
 
 export { Toast } from "@/components/atoms/toast/toast";
 export { ToastContainer } from "@/components/atoms/toast/ToastContainer";
