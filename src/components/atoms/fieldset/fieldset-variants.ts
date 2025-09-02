@@ -1,47 +1,47 @@
 import { cva } from 'class-variance-authority';
 
 export const fieldsetVariants = cva(
-  "relative transition-all duration-300 ease-in-out",
+  "relative transition-all duration-300 ease-in-out border-0",
   {
     variants: {
       variant: {
-        default: "border border-border bg-background",
-        card: "border border-border bg-card shadow-sm",
-        elevated: "border border-border bg-background shadow-lg",
-        outlined: "border-2 border-border bg-transparent",
-        filled: "border-0 bg-muted",
-        ghost: "border-0 bg-transparent",
-        destructive: "border border-destructive bg-destructive/5 text-destructive",
-        warning: "border border-warning bg-warning/5 text-warning",
-        success: "border border-success bg-success/5 text-success",
-        info: "border border-info bg-info/5 text-info",
+        default: "bg-background border border-border/50 shadow-sm",
+        card: "bg-card border border-border/60 shadow-md backdrop-blur-sm",
+        elevated: "bg-background border border-border/70 shadow-xl backdrop-blur-md",
+        outlined: "bg-transparent border-2 border-border/80 shadow-none",
+        filled: "bg-muted/80 border border-muted-foreground/20 shadow-inner",
+        ghost: "bg-transparent border border-transparent shadow-none",
+        destructive: "bg-destructive/10 border border-destructive/30 text-destructive shadow-sm",
+        warning: "bg-warning/10 border border-warning/30 text-warning shadow-sm",
+        success: "bg-success/10 border border-success/30 text-success shadow-sm",
+        info: "bg-info/10 border border-info/30 text-info shadow-sm",
       },
       size: {
-        xs: "p-2 text-xs",
-        sm: "p-3 text-sm",
-        md: "p-4 text-base",
-        lg: "p-6 text-lg",
-        xl: "p-8 text-xl",
-        "2xl": "p-10 text-2xl",
+        xs: "p-3 text-xs gap-2",
+        sm: "p-4 text-sm gap-3",
+        md: "p-5 text-base gap-4",
+        lg: "p-6 text-lg gap-5",
+        xl: "p-8 text-xl gap-6",
+        "2xl": "p-10 text-2xl gap-8",
       },
       shape: {
         none: "rounded-none",
-        sm: "rounded-sm",
-        md: "rounded-md",
-        lg: "rounded-lg",
-        xl: "rounded-xl",
-        "2xl": "rounded-2xl",
-        "3xl": "rounded-3xl",
+        sm: "rounded-lg",
+        md: "rounded-xl",
+        lg: "rounded-2xl",
+        xl: "rounded-3xl",
+        "2xl": "rounded-[1.5rem]",
+        "3xl": "rounded-[2rem]",
         full: "rounded-full",
       },
       shadow: {
         none: "shadow-none",
-        sm: "shadow-sm",
-        md: "shadow-md",
-        lg: "shadow-lg",
-        xl: "shadow-xl",
-        "2xl": "shadow-2xl",
-        inner: "shadow-inner",
+        sm: "shadow-sm shadow-black/5",
+        md: "shadow-md shadow-black/10",
+        lg: "shadow-lg shadow-black/15",
+        xl: "shadow-xl shadow-black/20",
+        "2xl": "shadow-2xl shadow-black/25",
+        inner: "shadow-inner shadow-black/10",
       },
       animation: {
         none: "",
@@ -54,39 +54,44 @@ export const fieldsetVariants = cva(
       },
       hover: {
         none: "",
-        lift: "hover:shadow-lg hover:-translate-y-1 transition-all duration-200",
-        glow: "hover:shadow-lg hover:shadow-primary/25 transition-all duration-200",
-        scale: "hover:scale-105 transition-transform duration-200",
-        opacity: "hover:opacity-90 transition-opacity duration-200",
+        lift: "hover:shadow-xl hover:-translate-y-2 hover:shadow-black/20 transition-all duration-300 ease-out",
+        glow: "hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 ease-out",
+        scale: "hover:scale-[1.02] transition-transform duration-300 ease-out",
+        opacity: "hover:opacity-95 transition-opacity duration-300 ease-out",
       },
       focus: {
         none: "",
-        ring: "focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2",
-        glow: "focus-within:shadow-lg focus-within:shadow-primary/25",
+        ring: "focus-within:ring-2 focus-within:ring-primary/50 focus-within:ring-offset-2 focus-within:ring-offset-background",
+        glow: "focus-within:shadow-xl focus-within:shadow-primary/30",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed pointer-events-none",
         false: "",
       },
       required: {
-        true: "border-l-4 border-l-primary",
+        true: "border-l-4 border-l-primary/80 shadow-sm",
         false: "",
       },
       error: {
-        true: "border-destructive bg-destructive/5",
+        true: "border-destructive/50 bg-destructive/5 shadow-sm",
         false: "",
       },
       success: {
-        true: "border-success bg-success/5",
+        true: "border-success/50 bg-success/5 shadow-sm",
         false: "",
       },
       warning: {
-        true: "border-warning bg-warning/5",
+        true: "border-warning/50 bg-warning/5 shadow-sm",
         false: "",
       },
       info: {
-        true: "border-info bg-info/5",
+        true: "border-info/50 bg-info/5 shadow-sm",
         false: "",
+      },
+      direction: {
+        ltr: "text-left",
+        rtl: "text-right",
+        auto: "",
       },
     },
     defaultVariants: {
@@ -103,21 +108,22 @@ export const fieldsetVariants = cva(
       success: false,
       warning: false,
       info: false,
+      direction: "auto",
     },
   }
 );
 
 export const legendVariants = cva(
-  "font-medium transition-colors duration-200",
+  "font-semibold transition-all duration-300 ease-out leading-tight",
   {
     variants: {
       variant: {
         default: "text-foreground",
-        muted: "text-muted-foreground",
-        destructive: "text-destructive",
-        warning: "text-warning",
-        success: "text-success",
-        info: "text-info",
+        muted: "text-muted-foreground/80",
+        destructive: "text-destructive font-bold",
+        warning: "text-warning font-bold",
+        success: "text-success font-bold",
+        info: "text-info font-bold",
       },
       size: {
         xs: "text-xs",
@@ -133,11 +139,17 @@ export const legendVariants = cva(
         semibold: "font-semibold",
         bold: "font-bold",
       },
+      direction: {
+        ltr: "text-left",
+        rtl: "text-right",
+        auto: "",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "md",
-      weight: "medium",
+      weight: "semibold",
+      direction: "auto",
     },
   }
 );
