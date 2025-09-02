@@ -21,19 +21,14 @@ console.log(message);`;
         {/* Basic Usage */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Basic Usage with Toast
+            Basic Usage
           </h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">Text to copy:</span>
-              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
-                {basicText}
-              </span>
-              <Clipboard text={basicText} toastPosition="left" />
+              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{basicText}</span>
+              <Clipboard text={basicText} />
             </div>
-            <p className="text-sm text-gray-500">
-              Click the button to see the toast notification appear!
-            </p>
           </div>
         </section>
 
@@ -84,8 +79,8 @@ console.log(message);`;
             <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
               <pre>{codeText}</pre>
             </div>
-            <Clipboard
-              text={codeText}
+            <Clipboard 
+              text={codeText} 
               copyText="Copy Code"
               copiedText="Code Copied!"
             />
@@ -100,16 +95,12 @@ console.log(message);`;
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">URL:</span>
-              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
-                {urlText}
-              </span>
+              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{urlText}</span>
               <Clipboard text={urlText} copyText="Copy Link" />
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">Email:</span>
-              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
-                {emailText}
-              </span>
+              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{emailText}</span>
               <Clipboard text={emailText} copyText="Copy Email" />
             </div>
           </div>
@@ -121,13 +112,13 @@ console.log(message);`;
             Custom Text
           </h2>
           <div className="flex items-center gap-4">
-            <Clipboard
-              text="Custom copy text"
+            <Clipboard 
+              text="Custom copy text" 
               copyText="📋 Copy This"
               copiedText="✅ Copied!"
             />
-            <Clipboard
-              text="Another custom text"
+            <Clipboard 
+              text="Another custom text" 
               copyText="Click to Copy"
               copiedText="Done!"
             />
@@ -141,16 +132,8 @@ console.log(message);`;
           </h2>
           <div className="flex items-center gap-4">
             <Clipboard text="Icon only button" showText={false} />
-            <Clipboard
-              text="Icon only outlined"
-              showText={false}
-              variant="outlined"
-            />
-            <Clipboard
-              text="Icon only filled"
-              showText={false}
-              variant="filled"
-            />
+            <Clipboard text="Icon only outlined" showText={false} variant="outlined" />
+            <Clipboard text="Icon only filled" showText={false} variant="filled" />
           </div>
         </section>
 
@@ -185,8 +168,8 @@ console.log(message);`;
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Full Width
           </h2>
-          <Clipboard
-            text="This button takes the full width of its container"
+          <Clipboard 
+            text="This button takes the full width of its container" 
             fullWidth={true}
           />
         </section>
