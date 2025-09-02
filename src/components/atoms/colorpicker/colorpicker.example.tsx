@@ -7,12 +7,7 @@ export const ColorPickerExamples = () => {
   const [formColor, setFormColor] = useState("#10B981");
   const [disabledColor, setDisabledColor] = useState("#8B5CF6");
   const [errorColor, setErrorColor] = useState("#F59E0B");
-  const [customPresets, setCustomPresets] = useState("#EC4899");
 
-  const customColorPresets = [
-    "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7",
-    "#DDA0DD", "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E9"
-  ];
 
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
@@ -138,7 +133,6 @@ export const ColorPickerExamples = () => {
               onChange={setAdvancedColor}
               format="rgb"
               showFormatSelector={true}
-              showPresets={true}
               showInput={true}
               showPreview={true}
               fullWidth={true}
@@ -215,23 +209,7 @@ export const ColorPickerExamples = () => {
           />
         </section>
 
-        {/* Custom Presets */}
-        <section className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Custom Presets</h2>
-          <div className="space-y-4">
-            <ColorPicker
-              id="custom-presets"
-              label="Color with Custom Presets"
-              value={customPresets}
-              onChange={setCustomPresets}
-              presets={customColorPresets}
-              helperText="This color picker has custom preset colors"
-            />
-            <div className="p-4 bg-gray-100 rounded-md">
-              <p className="text-sm text-gray-600">Selected color: <span className="font-mono">{customPresets}</span></p>
-            </div>
-          </div>
-        </section>
+
 
         {/* Minimal Configuration */}
         <section className="bg-white p-6 rounded-lg shadow-sm border">
@@ -243,7 +221,6 @@ export const ColorPickerExamples = () => {
               onChange={() => {}}
               showInput={false}
               showFormatSelector={false}
-              showPresets={false}
             />
             <ColorPicker
               id="preview-only"
@@ -251,7 +228,6 @@ export const ColorPickerExamples = () => {
               onChange={() => {}}
               showInput={false}
               showFormatSelector={false}
-              showPresets={false}
               label="Preview Only"
             />
           </div>
