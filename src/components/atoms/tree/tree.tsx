@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ChevronDown, Folder, FolderOpen, File, FileText, Image, Database, Code, Settings, ChevronLeft, Edit, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronLeft, Folder, FolderOpen, File, FileText, Image, Database, Code, Settings, Edit, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ActionsDropdown } from '../actionsDropdown/actionsDropdown';
+import { useTextDirection } from '@/hooks/useTextDirection';
 
 export interface TreeNode {
   id: string;
@@ -80,6 +81,7 @@ const TreeNode: React.FC<{
   const [isExpanded, setIsExpanded] = useState(node.isExpanded || false);
   const hasChildren = node.children && node.children.length > 0;
   const isSelected = selectedNodeId === node.id;
+  const { isRTL } = useTextDirection();
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -101,14 +103,20 @@ const TreeNode: React.FC<{
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick();
-    } else if (e.key === 'ArrowRight' && hasChildren && !isExpanded) {
-      e.preventDefault();
-      const fakeEvent = { stopPropagation: () => {} } as React.MouseEvent;
-      handleToggle(fakeEvent);
-    } else if (e.key === 'ArrowLeft' && hasChildren && isExpanded) {
-      e.preventDefault();
-      const fakeEvent = { stopPropagation: () => {} } as React.MouseEvent;
-      handleToggle(fakeEvent);
+    } else {
+      // Handle RTL/LTR arrow key navigation
+      const expandKey = isRTL ? 'ArrowLeft' : 'ArrowRight';
+      const collapseKey = isRTL ? 'ArrowRight' : 'ArrowLeft';
+      
+      if (e.key === expandKey && hasChildren && !isExpanded) {
+        e.preventDefault();
+        const fakeEvent = { stopPropagation: () => {} } as React.MouseEvent;
+        handleToggle(fakeEvent);
+      } else if (e.key === collapseKey && hasChildren && isExpanded) {
+        e.preventDefault();
+        const fakeEvent = { stopPropagation: () => {} } as React.MouseEvent;
+        handleToggle(fakeEvent);
+      }
     }
   };
 
@@ -121,7 +129,10 @@ const TreeNode: React.FC<{
           isSelected && 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100',
           'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
         )}
-        style={{ paddingLeft: `${level * indentSize + 8}px` }}
+        style={isRTL 
+          ? { paddingRight: `${level * indentSize + 8}px` }
+          : { paddingLeft: `${level * indentSize + 8}px` }
+        }
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -134,9 +145,13 @@ const TreeNode: React.FC<{
             aria-label={isExpanded ? 'Collapse' : 'Expand'}
           >
             {isExpanded ? (
-              <ChevronLeft className="w-4 h-4 text-gray-500" />
-            ) : (
               <ChevronDown className="w-4 h-4 text-gray-500" />
+            ) : (
+              isRTL ? (
+                <ChevronLeft className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )
             )}
           </button>
         )}
@@ -180,7 +195,7 @@ const TreeNode: React.FC<{
 
       {/* Children */}
       {hasChildren && isExpanded && (
-        <div className="mr-4">
+        <div className={isRTL ? "ml-4" : "mr-4"}>
           {node.children!.map((child) => (
             <TreeNode
               key={child.id}
@@ -234,11 +249,13 @@ export const Tree: React.FC<TreeProps> = ({
   onNodeSelect,
   showActions = true,
 }) => {
+  const { isRTL } = useTextDirection();
+  
   // Build tree with parent references
   const treeWithParents = buildTreeWithParents(data);
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {treeWithParents.map((node) => (
         <TreeNode
           key={node.id}

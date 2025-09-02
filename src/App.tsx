@@ -1,12 +1,12 @@
-import { FlexExamples } from "./components/atoms/flex/flex-examples";
-import { GridExamples } from "./components/atoms/grid/grid-examples";
+
 
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
+import { TreeExample } from "./components/atoms/tree/tree.example";
 function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
-        <GridExamples />
+        <TreeExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
