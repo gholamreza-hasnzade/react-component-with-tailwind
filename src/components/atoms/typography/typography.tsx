@@ -1,6 +1,30 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
+// Hook for text direction detection
+function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
+  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
+    "ltr"
+  );
+
+  React.useEffect(() => {
+    if (dir === "auto") {
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      const detectedDir = htmlDir || bodyDir || "ltr";
+      setTextDirection(detectedDir);
+    } else if (dir) {
+      setTextDirection(dir);
+    } else {
+      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
+      const bodyDir = document.body.dir as "ltr" | "rtl";
+      setTextDirection(htmlDir || bodyDir || "ltr");
+    }
+  }, [dir]);
+
+  return textDirection;
+}
+
 const variantMap = {
   h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent",
   h2: "scroll-m-20 border-b border-gray-200 pb-3 text-3xl font-semibold tracking-tight first:mt-0 text-gray-800",
@@ -106,6 +130,7 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   size?: SizeKey;
   weight?: WeightKey;
   align?: AlignKey;
+  dir?: "ltr" | "rtl" | "auto";
   as?: React.ElementType;
   className?: string;
   children: React.ReactNode;
@@ -124,6 +149,7 @@ function Typography({
   size,
   weight,
   align = "left",
+  dir,
   as,
   className,
   children,
@@ -136,8 +162,21 @@ function Typography({
   capitalize = false,
   ...props
 }: TypographyProps) {
+  const textDirection = useTextDirection(dir);
+  
   // Determine the HTML element to render
   const Component = as || getDefaultElement(variant);
+
+  // Get direction-aware alignment
+  const getDirectionAwareAlignment = () => {
+    if (align === "left") {
+      return textDirection === "rtl" ? "text-right" : "text-left";
+    }
+    if (align === "right") {
+      return textDirection === "rtl" ? "text-left" : "text-right";
+    }
+    return alignMap[align];
+  };
 
   // Build the className
   const classes = cn(
@@ -149,8 +188,8 @@ function Typography({
     !variant.startsWith('h') && size && sizeMap[size],
     // Weight (only if not overridden by variant)
     !variant.startsWith('h') && weight && weightMap[weight],
-    // Alignment
-    alignMap[align],
+    // Direction-aware alignment
+    getDirectionAwareAlignment(),
     // Text utilities
     truncate && "truncate",
     noWrap && "whitespace-nowrap",
@@ -163,7 +202,11 @@ function Typography({
   );
 
   return (
-    <Component className={classes} {...props}>
+    <Component 
+      className={classes} 
+      dir={textDirection}
+      {...props}
+    >
       {children}
     </Component>
   );
