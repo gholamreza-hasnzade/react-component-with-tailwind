@@ -26,7 +26,6 @@ const iconVariants = {
   },
 } as const;
 
-// Size variants
 type SizeVariants = {
   sm: "py-2 px-3 text-xs";
   md: "py-4 px-4 text-sm";
@@ -161,7 +160,6 @@ function Accordion({
   onValueChange,
   ...props
 }: AccordionProps) {
-  // Validate animation duration
   const validAnimationDuration = Math.max(100, Math.min(2000, animationDuration));
   
   const textDirection = useTextDirection(dir);

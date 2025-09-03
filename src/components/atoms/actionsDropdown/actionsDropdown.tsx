@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaTimes } from "react-icons/fa";
 
 interface Action<T> {
   label: string;
@@ -172,21 +171,16 @@ export function ActionsDropdown<T>({
             type="button"
             aria-label="Actions"
           >
-            <BsThreeDotsVertical className="sm:w-5 sm:h-5 text-gray-600" />
+            <BsThreeDotsVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
           </button>
         )}
 
         {open && (
-          <div className={clsx(getPositionClasses(), getDropdownWidth())}>
-            <div className="sr-only">
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close actions menu"
-                tabIndex={0}
-              >
-                <FaTimes />
-              </button>
-            </div>
+          <div 
+            className={clsx(getPositionClasses(), getDropdownWidth())}
+            role="menu"
+            aria-label="Actions menu"
+          >
 
             {actions.map((item, idx) => {
               if (isSeparator(item)) {
@@ -204,7 +198,7 @@ export function ActionsDropdown<T>({
                   <button
                     key={item.label + idx}
                     className={clsx(
-                      "w-full flex items-center gap-2 px-3 py-2 text-sm text-right transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg",
+                      "w-full flex items-center gap-2 px-3 py-2 text-sm text-left transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg",
                       "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
                       item.disabled &&
                         "opacity-50 cursor-not-allowed hover:bg-transparent",
@@ -213,6 +207,7 @@ export function ActionsDropdown<T>({
                         "text-red-600 hover:bg-red-50 focus:bg-red-50",
                       !item.disabled && !item.danger && "text-gray-700"
                     )}
+                    role="menuitem"
                     onClick={() => handleActionClick(item)}
                     disabled={item.disabled || item.loading}
                     type="button"

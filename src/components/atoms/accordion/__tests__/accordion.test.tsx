@@ -9,10 +9,8 @@ import {
   AccordionTrigger,
 } from "../accordion";
 
-// Mock the CSS import
 vi.mock("./accordion.css", () => ({}));
 
-// Mock the utils
 vi.mock("@/lib/utils", () => ({
   cn: (...classes: (string | undefined | null | false)[]) =>
     classes.filter(Boolean).join(" "),
@@ -22,13 +20,11 @@ vi.mock("@/lib/utils", () => ({
 
 describe("Accordion Component", () => {
   beforeEach(() => {
-    // Reset DOM
     document.head.innerHTML = "";
     document.body.innerHTML = "";
   });
 
   afterEach(() => {
-    // Clean up any styles added during tests
     const styles = document.querySelectorAll(
       'style[data-accordion-animation="true"]'
     );
@@ -47,7 +43,6 @@ describe("Accordion Component", () => {
       );
 
       expect(screen.getByText("Test Trigger")).toBeInTheDocument();
-      // Content exists but is hidden by default - check via DOM query
       const content = container.querySelector('[data-slot="accordion-content"]');
       expect(content).toBeInTheDocument();
     });
@@ -86,17 +81,14 @@ describe("Accordion Component", () => {
       const trigger1 = screen.getByRole("button", { name: "Item 1" });
       const trigger2 = screen.getByRole("button", { name: "Item 2" });
 
-      // Click first item
       await user.click(trigger1);
       await waitFor(() => {
         expect(screen.getByText("Content 1")).toBeVisible();
       });
 
-      // Click second item - first should close
       await user.click(trigger2);
       await waitFor(() => {
         expect(screen.getByText("Content 2")).toBeVisible();
-        // Check that Content 1 is hidden by checking its container state
         const content1 = container.querySelector('[data-slot="accordion-content"]');
         expect(content1).toHaveAttribute("data-state", "closed");
       });
@@ -116,8 +108,7 @@ describe("Accordion Component", () => {
         </Accordion>
       );
 
-      expect(screen.getByText("Content 2")).toBeVisible();
-      // Check that Content 1 is closed by checking its container state
+      expect(screen.getByText("Content 2")).toBeVisible();  
       const content1 = container.querySelectorAll('[data-slot="accordion-content"]')[0];
       expect(content1).toHaveAttribute("data-state", "closed");
     });
@@ -223,7 +214,6 @@ describe("Accordion Component", () => {
       );
 
       const accordion = container.querySelector('[data-slot="accordion"]');
-      // Check that RTL class is applied (main functionality)
       expect(accordion).toHaveClass("rtl");
     });
   });
@@ -373,7 +363,6 @@ describe("Accordion Component", () => {
         </Accordion>
       );
 
-      // Open the accordion to make content visible
       const trigger = screen.getByRole("button");
       await user.click(trigger);
 
@@ -400,13 +389,11 @@ describe("Accordion Component", () => {
       const trigger = screen.getByRole("button");
       const content = container.querySelector('[data-slot="accordion-content"]');
 
-      // Click to open
       await user.click(trigger);
       await waitFor(() => {
         expect(content).toHaveAttribute("data-state", "open");
       });
 
-      // Click again to close
       await user.click(trigger);
       await waitFor(() => {
         expect(content).toHaveAttribute("data-state", "closed");

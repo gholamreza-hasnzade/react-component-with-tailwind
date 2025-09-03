@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActionsDropdown } from "./actionsDropdown";
+import { ActionsDropdown } from "../actionsDropdown";
 import { HiPencil, HiTrash, HiEye, HiStar, HiCog, HiUser } from "react-icons/hi";
 
 interface User {
@@ -92,7 +92,7 @@ export const ActionsDropdownExample: React.FC = () => {
           <div className="flex justify-center space-x-8">
             <div className="text-center">
               <h3 className="text-sm font-medium text-gray-800 mb-2">Default Trigger</h3>
-              <ActionsDropdown actions={getBasicActions()}  position="bottom"/>
+              <ActionsDropdown actions={getBasicActions()}  position="top-left"/>
             </div>
             <div className="text-center">
               <h3 className="text-sm font-medium text-gray-800 mb-2">Custom Button</h3>

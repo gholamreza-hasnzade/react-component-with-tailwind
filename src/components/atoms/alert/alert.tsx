@@ -3,7 +3,6 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { X, AlertCircle, CheckCircle, AlertTriangle, Info, Bell } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// Hook for text direction detection
 function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
   const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr");
 
@@ -25,7 +24,6 @@ function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
   return textDirection;
 }
 
-// Alert variants using class-variance-authority
 const alertVariants = cva(
   "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
   {
@@ -50,7 +48,6 @@ const alertVariants = cva(
   }
 )
 
-// Icon mapping for different alert types
 const iconMap = {
   default: Bell,
   destructive: AlertCircle,
@@ -98,13 +95,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     
     const IconComponent = iconMap[variant || "default"]
     
-    // Handle entrance animation
     React.useEffect(() => {
       if (animated) {
-        // Trigger entrance animation after component mounts
         const timer = setTimeout(() => {
           setIsEntering(false)
-        }, 10) // Small delay to ensure initial state is rendered
+        }, 10)
         
         return () => clearTimeout(timer)
       }
@@ -113,7 +108,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     const handleDismiss = () => {
       if (animated) {
         setIsAnimating(true)
-        // Wait for animation to complete before hiding
         setTimeout(() => {
           setIsVisible(false)
           onDismiss?.()
@@ -126,7 +120,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 
     if (!isVisible) return null
 
-    // CSS animation classes based on state
     const animationClasses = animated ? cn(
       "transition-all ease-in-out",
       isEntering 
@@ -136,7 +129,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
           : "opacity-100 translate-y-0 scale-100"
     ) : ""
 
-    // Custom duration style
     const animationStyle = animated ? {
       transitionDuration: `${animationDuration}ms`
     } : {}
@@ -193,7 +185,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 )
 Alert.displayName = "Alert"
 
-// AlertTitle component
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
@@ -206,7 +197,6 @@ const AlertTitle = React.forwardRef<
 ))
 AlertTitle.displayName = "AlertTitle"
 
-// AlertDescription component
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -219,7 +209,6 @@ const AlertDescription = React.forwardRef<
 ))
 AlertDescription.displayName = "AlertDescription"
 
-// Convenience components for different alert types
 export const AlertSuccess = React.forwardRef<HTMLDivElement, Omit<AlertProps, 'variant'>>(
   (props, ref) => <Alert ref={ref} variant="success" {...props} />
 )

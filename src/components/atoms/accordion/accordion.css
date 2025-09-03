@@ -1,12 +1,9 @@
-/* Accordion Component Styles */
 
-/* Base Accordion Container */
 .accordion {
   width: 100%;
   font-family: inherit;
 }
 
-/* Accordion Item */
 .accordion-item {
   border-bottom: 1px solid hsl(var(--border));
   transition: all 0.2s ease-in-out;
@@ -24,7 +21,6 @@
   background-color: hsl(var(--muted) / 0.5);
 }
 
-/* Accordion Trigger */
 .accordion-trigger {
   display: flex;
   flex: 1;
@@ -62,7 +58,6 @@
   opacity: 0.5;
 }
 
-/* Accordion Content */
 .accordion-content {
   overflow: hidden;
   font-size: 0.875rem;
@@ -82,7 +77,6 @@
   padding: 0 1rem 1rem 1rem;
 }
 
-/* Icon Container */
 .accordion-icon-container {
   display: flex;
   align-items: center;
@@ -98,7 +92,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-/* Loading State */
+
 .accordion-loading {
   display: flex;
   align-items: center;
@@ -109,7 +103,6 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* Size Variants */
 .accordion-size-sm {
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
@@ -130,7 +123,6 @@
   font-size: 1.125rem;
 }
 
-/* Color Variants */
 .accordion-color-default .accordion-trigger {
   color: hsl(var(--foreground));
 }
@@ -243,7 +235,6 @@
   color: hsl(0 84% 60% / 0.9);
 }
 
-/* Style Variants */
 .accordion-variant-default .accordion-item {
   border-bottom: 1px solid hsl(var(--border));
 }
@@ -269,7 +260,6 @@
   border-radius: 0.5rem;
 }
 
-/* Rounded Variants */
 .accordion-rounded-none {
   border-radius: 0;
 }
@@ -298,7 +288,6 @@
   border-radius: 9999px;
 }
 
-/* Width Control */
 .accordion-full-width {
   width: 100%;
 }
@@ -307,7 +296,6 @@
   width: auto;
 }
 
-/* RTL Support */
 .accordion[dir="rtl"] .accordion-trigger {
   text-align: right;
 }
@@ -324,7 +312,6 @@
   transform: rotate(180deg);
 }
 
-/* Animations */
 @keyframes accordion-down {
   from {
     height: 0;
@@ -352,13 +339,11 @@
   }
 }
 
-/* Focus Ring */
 .accordion-trigger:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-/* Disabled State */
 .accordion[data-disabled="true"] {
   opacity: 0.5;
   pointer-events: none;
@@ -369,7 +354,6 @@
   pointer-events: none;
 }
 
-/* Responsive Design */
 @media (max-width: 640px) {
   .accordion-trigger {
     padding: 0.75rem;
@@ -392,7 +376,6 @@
   }
 }
 
-/* High Contrast Mode */
 @media (prefers-contrast: high) {
   .accordion-trigger {
     border: 1px solid hsl(var(--border));
@@ -407,7 +390,6 @@
   }
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .accordion-trigger,
   .accordion-content,
@@ -421,7 +403,6 @@
   }
 }
 
-/* Print Styles */
 @media print {
   .accordion-trigger {
     background: none !important;
