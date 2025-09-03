@@ -161,6 +161,9 @@ function Accordion({
   onValueChange,
   ...props
 }: AccordionProps) {
+  // Validate animation duration
+  const validAnimationDuration = Math.max(100, Math.min(2000, animationDuration));
+  
   const textDirection = useTextDirection(dir);
 
   const rootProps =
@@ -177,20 +180,24 @@ function Accordion({
 
   React.useEffect(() => {
     const style = document.createElement("style");
+    style.setAttribute('data-accordion-animation', 'true');
     style.textContent = `
       .accordion-content[data-state="closed"] {
-        animation-duration: ${animationDuration}ms !important;
+        animation-duration: ${validAnimationDuration}ms !important;
       }
       .accordion-content[data-state="open"] {
-        animation-duration: ${animationDuration}ms !important;
+        animation-duration: ${validAnimationDuration}ms !important;
       }
     `;
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style);
+      const existingStyle = document.querySelector('style[data-accordion-animation="true"]');
+      if (existingStyle && existingStyle.parentNode) {
+        existingStyle.parentNode.removeChild(existingStyle);
+      }
     };
-  }, [animationDuration]);
+  }, [validAnimationDuration]);
 
   return (
     <AccordionPrimitive.Root
@@ -257,6 +264,8 @@ function AccordionTrigger({
   const IconComponent = iconVariants[iconVariant];
 
   React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
     const accordionRoot = document.querySelector('[data-slot="accordion"]');
     if (accordionRoot) {
       const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
@@ -310,7 +319,7 @@ function AccordionTrigger({
               className={cn(
                 "accordion-icon",
                 "group-data-[state=open]:hidden",
-                textDirection === "rtl" && "rotate-180",
+                textDirection === "rtl" && "rotate-90",
                 iconClassName
               )}
             />
@@ -318,7 +327,7 @@ function AccordionTrigger({
               className={cn(
                 "accordion-icon",
                 "hidden group-data-[state=open]:block",
-                textDirection === "rtl" && "-rotate-90",
+                textDirection === "rtl" && "rotate-90",
                 iconClassName
               )}
             />
@@ -350,6 +359,8 @@ function AccordionContent({
   );
 
   React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
     const accordionRoot = document.querySelector('[data-slot="accordion"]');
     if (accordionRoot) {
       const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
@@ -378,7 +389,7 @@ function AccordionContent({
       )}
       {...props}
     >
-      <div className={cn(textDirection === "rtl" && "text-right", className)}>
+      <div className={cn(textDirection === "rtl" && "text-right")}>
         {children}
       </div>
     </AccordionPrimitive.Content>

@@ -24,7 +24,17 @@ interface ActionSeparator {
 
 type ActionItem<T> = Action<T> | ActionSeparator;
 
-type DropdownPosition = 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top' | 'bottom' | 'left' | 'right';
+type DropdownPosition =
+  | "top-left"
+  | "top-right"
+  | "top-center"
+  | "bottom-left"
+  | "bottom-right"
+  | "bottom-center"
+  | "top"
+  | "bottom"
+  | "left"
+  | "right";
 
 interface ActionsDropdownProps<T> {
   actions: ActionItem<T>[];
@@ -39,14 +49,14 @@ export function ActionsDropdown<T>({
   row,
   trigger,
   triggerClassName,
-  position = 'bottom-right',
+  position = "bottom-right",
 }: ActionsDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    
+
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
@@ -54,14 +64,14 @@ export function ActionsDropdown<T>({
     }
 
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setOpen(false);
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
@@ -70,13 +80,13 @@ export function ActionsDropdown<T>({
 
   const handleActionClick = (action: Action<T>) => {
     if (action.disabled || action.loading) return;
-    
+
     action.onClick(row);
     setOpen(false);
   };
 
   const isSeparator = (item: ActionItem<T>): item is ActionSeparator => {
-    return 'separator' in item && item.separator === true;
+    return "separator" in item && item.separator === true;
   };
 
   const isAction = (item: ActionItem<T>): item is Action<T> => {
@@ -84,37 +94,59 @@ export function ActionsDropdown<T>({
   };
 
   const getPositionClasses = (): string => {
-    const baseClasses = "absolute bg-white border border-gray-200 rounded-lg shadow-lg z-30";
-    
+    const baseClasses =
+      "absolute bg-white border border-gray-200 rounded-lg shadow-lg z-30";
+
     switch (position) {
-      case 'top-left':
+      case "top-left":
         return clsx(baseClasses, "bottom-full right-0 mb-1");
-      case 'top-right':
+      case "top-right":
         return clsx(baseClasses, "bottom-full left-0 mb-1");
-      case 'top-center':
-        return clsx(baseClasses, "bottom-full left-1/2 transform -translate-x-1/2 mb-1");
-      case 'bottom-left':
+      case "top-center":
+        return clsx(
+          baseClasses,
+          "bottom-full left-1/2 transform -translate-x-1/2 mb-1"
+        );
+      case "bottom-left":
         return clsx(baseClasses, "top-full right-0 mt-1");
-      case 'bottom-right':
+      case "bottom-right":
         return clsx(baseClasses, "top-full left-0 mt-1");
-      case 'bottom-center':
-        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
-      case 'top':
-        return clsx(baseClasses, "bottom-full left-1/2 transform -translate-x-1/2 mb-1");
-      case 'bottom':
-        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
-      case 'left':
-        return clsx(baseClasses, "right-full top-1/2 transform -translate-y-1/2 mr-1");
-      case 'right':
-        return clsx(baseClasses, "left-full top-1/2 transform -translate-y-1/2 ml-1");
+      case "bottom-center":
+        return clsx(
+          baseClasses,
+          "top-full left-1/2 transform -translate-x-1/2 mt-1"
+        );
+      case "top":
+        return clsx(
+          baseClasses,
+          "bottom-full left-1/2 transform -translate-x-1/2 mb-1"
+        );
+      case "bottom":
+        return clsx(
+          baseClasses,
+          "top-full left-1/2 transform -translate-x-1/2 mt-1"
+        );
+      case "left":
+        return clsx(
+          baseClasses,
+          "right-full top-1/2 transform -translate-y-1/2 mr-1"
+        );
+      case "right":
+        return clsx(
+          baseClasses,
+          "left-full top-1/2 transform -translate-y-1/2 ml-1"
+        );
       default:
-        return clsx(baseClasses, "top-full left-1/2 transform -translate-x-1/2 mt-1");
+        return clsx(
+          baseClasses,
+          "top-full left-1/2 transform -translate-x-1/2 mt-1"
+        );
     }
   };
 
   const getDropdownWidth = (): string => {
     // Adjust width based on position to prevent overflow
-    if (position === 'left' || position === 'right') {
+    if (position === "left" || position === "right") {
       return "w-36 sm:w-40";
     }
     return "w-36 sm:w-40";
@@ -124,7 +156,7 @@ export function ActionsDropdown<T>({
     <div className="flex justify-end items-center" ref={ref}>
       <div className="relative">
         {trigger ? (
-          <div 
+          <div
             className={clsx("cursor-pointer", triggerClassName)}
             onClick={() => setOpen((o) => !o)}
           >
@@ -143,7 +175,7 @@ export function ActionsDropdown<T>({
             <BsThreeDotsVertical className="sm:w-5 sm:h-5 text-gray-600" />
           </button>
         )}
-        
+
         {open && (
           <div className={clsx(getPositionClasses(), getDropdownWidth())}>
             <div className="sr-only">
@@ -155,11 +187,11 @@ export function ActionsDropdown<T>({
                 <FaTimes />
               </button>
             </div>
-            
+
             {actions.map((item, idx) => {
               if (isSeparator(item)) {
                 return (
-                  <div 
+                  <div
                     key={`separator-${idx}`}
                     className="h-px bg-gray-200 my-1"
                     role="separator"
@@ -174,9 +206,11 @@ export function ActionsDropdown<T>({
                     className={clsx(
                       "w-full flex items-center gap-2 px-3 py-2 text-sm text-right transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg",
                       "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-                      item.disabled && "opacity-50 cursor-not-allowed hover:bg-transparent",
+                      item.disabled &&
+                        "opacity-50 cursor-not-allowed hover:bg-transparent",
                       item.loading && "cursor-wait",
-                      item.danger && "text-red-600 hover:bg-red-50 focus:bg-red-50",
+                      item.danger &&
+                        "text-red-600 hover:bg-red-50 focus:bg-red-50",
                       !item.disabled && !item.danger && "text-gray-700"
                     )}
                     onClick={() => handleActionClick(item)}

@@ -19,7 +19,7 @@ export function AccordionExample() {
 
       {/* Basic Accordion */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">Basic Accordion</h2>
+        <h2 className="text-xl font-semibold text-foreground">Basic Accordion (LTR)</h2>
         <Accordion type="single" collapsible className="border rounded-lg">
           <AccordionItem value="item-1">
             <AccordionTrigger>What is React?</AccordionTrigger>
@@ -37,6 +37,25 @@ export function AccordionExample() {
             <AccordionTrigger>What is TypeScript?</AccordionTrigger>
             <AccordionContent>
               TypeScript is a superset of JavaScript that adds static typing to the language. It helps catch errors during development and provides better tooling support.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      {/* RTL Accordion */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">RTL Accordion</h2>
+        <Accordion type="single" collapsible className="border rounded-lg" dir="rtl">
+          <AccordionItem value="rtl-item-1">
+            <AccordionTrigger>ما هو React؟</AccordionTrigger>
+            <AccordionContent>
+              React هي مكتبة JavaScript لبناء واجهات المستخدم. تم تطويرها بواسطة Facebook وتستخدم لإنشاء تطبيقات ويب تفاعلية بمكونات قابلة لإعادة الاستخدام.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="rtl-item-2">
+            <AccordionTrigger>ما هو Tailwind CSS؟</AccordionTrigger>
+            <AccordionContent>
+              Tailwind CSS هو إطار عمل CSS يعتمد على المرافق يسمح لك ببناء تصميمات مخصصة دون مغادرة HTML. يوفر فئات مرافق منخفضة المستوى تتيح لك بناء تصميمات مخصصة بالكامل.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
