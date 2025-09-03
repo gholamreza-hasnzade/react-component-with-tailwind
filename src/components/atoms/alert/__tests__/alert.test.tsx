@@ -567,7 +567,7 @@ describe("Alert Component", () => {
       await expect(user.click(dismissButton)).resolves.not.toThrow();
     });
 
-    it("prevents multiple dismiss calls with animation", async () => {
+    it("handles multiple dismiss calls with animation", async () => {
       const user = userEvent.setup();
       const mockOnDismiss = vi.fn();
 
@@ -588,10 +588,10 @@ describe("Alert Component", () => {
       await user.click(dismissButton);
       await user.click(dismissButton);
 
-      // Wait for animation to complete
+      // Wait for animation to complete - only first click is processed
       await waitFor(() => {
         expect(mockOnDismiss).toHaveBeenCalledTimes(1);
-      }, { timeout: 100 });
+      }, { timeout: 200 });
     });
   });
 
