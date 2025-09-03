@@ -7,8 +7,8 @@ import {
   AlertError,
   AlertWarning,
   AlertInfo,
-} from "./alert";
-import { Button } from "../button/button";
+} from "../alert";
+import { Button } from "../../button/button";
 
 export function AlertExamples() {
   const [showDismissible, setShowDismissible] = React.useState(true);
