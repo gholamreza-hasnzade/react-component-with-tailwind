@@ -6,11 +6,31 @@ import { Badge } from "../badge";
 
 // Mock react-icons
 vi.mock("react-icons/fa", () => ({
-  FaBell: () => <div data-testid="bell-icon" aria-hidden="true">Bell</div>,
-  FaCheck: () => <div data-testid="check-icon" aria-hidden="true">Check</div>,
-  FaTimes: () => <div data-testid="times-icon" aria-hidden="true">Times</div>,
-  FaExclamationTriangle: () => <div data-testid="warning-icon" aria-hidden="true">Warning</div>,
-  FaInfoCircle: () => <div data-testid="info-icon" aria-hidden="true">Info</div>,
+  FaBell: () => (
+    <div data-testid="bell-icon" aria-hidden="true">
+      Bell
+    </div>
+  ),
+  FaCheck: () => (
+    <div data-testid="check-icon" aria-hidden="true">
+      Check
+    </div>
+  ),
+  FaTimes: () => (
+    <div data-testid="times-icon" aria-hidden="true">
+      Times
+    </div>
+  ),
+  FaExclamationTriangle: () => (
+    <div data-testid="warning-icon" aria-hidden="true">
+      Warning
+    </div>
+  ),
+  FaInfoCircle: () => (
+    <div data-testid="info-icon" aria-hidden="true">
+      Info
+    </div>
+  ),
 }));
 
 describe("Badge Component", () => {
@@ -19,7 +39,12 @@ describe("Badge Component", () => {
       render(<Badge>Default Badge</Badge>);
       const badge = screen.getByText("Default Badge");
       expect(badge).toBeInTheDocument();
-      expect(badge).toHaveClass("inline-flex", "items-center", "border", "font-semibold");
+      expect(badge).toHaveClass(
+        "inline-flex",
+        "items-center",
+        "border",
+        "font-semibold"
+      );
     });
 
     it("renders with custom children", () => {
@@ -38,25 +63,41 @@ describe("Badge Component", () => {
     it("renders default variant", () => {
       render(<Badge variant="default">Default</Badge>);
       const badge = screen.getByText("Default");
-      expect(badge).toHaveClass("border-transparent", "bg-primary", "text-primary-foreground");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-primary",
+        "text-primary-foreground"
+      );
     });
 
     it("renders primary variant", () => {
       render(<Badge variant="primary">Primary</Badge>);
       const badge = screen.getByText("Primary");
-      expect(badge).toHaveClass("border-transparent", "bg-blue-600", "text-white");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-blue-600",
+        "text-white"
+      );
     });
 
     it("renders secondary variant", () => {
       render(<Badge variant="secondary">Secondary</Badge>);
       const badge = screen.getByText("Secondary");
-      expect(badge).toHaveClass("border-transparent", "bg-secondary", "text-secondary-foreground");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-secondary",
+        "text-secondary-foreground"
+      );
     });
 
     it("renders destructive variant", () => {
       render(<Badge variant="destructive">Destructive</Badge>);
       const badge = screen.getByText("Destructive");
-      expect(badge).toHaveClass("border-transparent", "bg-destructive", "text-destructive-foreground");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-destructive",
+        "text-destructive-foreground"
+      );
     });
 
     it("renders outline variant", () => {
@@ -68,32 +109,75 @@ describe("Badge Component", () => {
     it("renders success variant", () => {
       render(<Badge variant="success">Success</Badge>);
       const badge = screen.getByText("Success");
-      expect(badge).toHaveClass("border-transparent", "bg-green-100", "text-green-800");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-green-100",
+        "text-green-800"
+      );
     });
 
     it("renders warning variant", () => {
       render(<Badge variant="warning">Warning</Badge>);
       const badge = screen.getByText("Warning");
-      expect(badge).toHaveClass("border-transparent", "bg-yellow-100", "text-yellow-800");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-yellow-100",
+        "text-yellow-800"
+      );
     });
 
     it("renders info variant", () => {
       render(<Badge variant="info">Info</Badge>);
       const badge = screen.getByText("Info");
-      expect(badge).toHaveClass("border-transparent", "bg-blue-100", "text-blue-800");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-blue-100",
+        "text-blue-800"
+      );
     });
 
     it("renders error variant", () => {
       render(<Badge variant="error">Error</Badge>);
       const badge = screen.getByText("Error");
-      expect(badge).toHaveClass("border-transparent", "bg-red-100", "text-red-800");
+      expect(badge).toHaveClass(
+        "border-transparent",
+        "bg-red-100",
+        "text-red-800"
+      );
     });
 
     it("renders color variants", () => {
-      const colorVariants = ["purple", "pink", "indigo", "orange", "teal", "gray", "green", "blue", "yellow"];
-      
+      const colorVariants = [
+        "purple",
+        "pink",
+        "indigo",
+        "orange",
+        "teal",
+        "gray",
+        "green",
+        "blue",
+        "yellow",
+      ];
+
       colorVariants.forEach((variant) => {
-        const { unmount } = render(<Badge variant={variant as "purple" | "pink" | "indigo" | "orange" | "teal" | "gray" | "green" | "blue" | "yellow"}>{variant}</Badge>);
+        const { unmount } = render(
+          <Badge
+            variant={
+              variant as
+                | "purple"
+                | "pink"
+                | "indigo"
+                | "orange"
+                | "teal"
+                | "gray"
+                | "green"
+                | "blue"
+                | "yellow"
+            }
+          >
+            {variant}
+          </Badge>
+        );
         const badge = screen.getByText(variant);
         expect(badge).toHaveClass("border-transparent");
         unmount();
@@ -151,7 +235,9 @@ describe("Badge Component", () => {
     it("renders without dot by default", () => {
       render(<Badge>No Dot</Badge>);
       const badge = screen.getByText("No Dot");
-      expect(badge.querySelector("[aria-hidden='true']")).not.toBeInTheDocument();
+      expect(
+        badge.querySelector("[aria-hidden='true']")
+      ).not.toBeInTheDocument();
     });
 
     it("renders with status dot", () => {
@@ -164,7 +250,9 @@ describe("Badge Component", () => {
 
     it("status dot has proper accessibility", () => {
       render(<Badge showDot>With Dot</Badge>);
-      const dot = screen.getByText("With Dot").querySelector("span[aria-hidden='true']");
+      const dot = screen
+        .getByText("With Dot")
+        .querySelector("span[aria-hidden='true']");
       expect(dot).toHaveAttribute("aria-hidden", "true");
     });
   });
@@ -177,7 +265,9 @@ describe("Badge Component", () => {
     });
 
     it("renders with left icon by default", () => {
-      render(<Badge icon={<div data-testid="test-icon">Icon</div>}>With Icon</Badge>);
+      render(
+        <Badge icon={<div data-testid="test-icon">Icon</div>}>With Icon</Badge>
+      );
       const badge = screen.getByText("With Icon");
       const icon = badge.querySelector("[data-testid='test-icon']");
       expect(icon).toBeInTheDocument();
@@ -186,7 +276,10 @@ describe("Badge Component", () => {
 
     it("renders with right icon when iconPosition is right", () => {
       render(
-        <Badge icon={<div data-testid="test-icon">Icon</div>} iconPosition="right">
+        <Badge
+          icon={<div data-testid="test-icon">Icon</div>}
+          iconPosition="right"
+        >
           With Icon
         </Badge>
       );
@@ -197,8 +290,12 @@ describe("Badge Component", () => {
     });
 
     it("icon has proper accessibility", () => {
-      render(<Badge icon={<div data-testid="test-icon">Icon</div>}>With Icon</Badge>);
-      const icon = screen.getByText("With Icon").querySelector("[data-testid='test-icon']");
+      render(
+        <Badge icon={<div data-testid="test-icon">Icon</div>}>With Icon</Badge>
+      );
+      const icon = screen
+        .getByText("With Icon")
+        .querySelector("[data-testid='test-icon']");
       expect(icon).toHaveAttribute("aria-hidden", "true");
     });
   });
@@ -221,17 +318,27 @@ describe("Badge Component", () => {
     it("applies clickable styles", () => {
       render(<Badge clickable>Clickable</Badge>);
       const badge = screen.getByText("Clickable");
-      expect(badge).toHaveClass("cursor-pointer", "hover:scale-105", "active:scale-95", "transform", "transition-transform");
+      expect(badge).toHaveClass(
+        "cursor-pointer",
+        "hover:scale-105",
+        "active:scale-95",
+        "transform",
+        "transition-transform"
+      );
     });
 
     it("calls onClick when clicked", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
-      render(<Badge clickable onClick={handleClick}>Clickable</Badge>);
-      
+      render(
+        <Badge clickable onClick={handleClick}>
+          Clickable
+        </Badge>
+      );
+
       const badge = screen.getByText("Clickable");
       await user.click(badge);
-      
+
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
@@ -239,10 +346,10 @@ describe("Badge Component", () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
       render(<Badge onClick={handleClick}>Not Clickable</Badge>);
-      
+
       const badge = screen.getByText("Not Clickable");
       await user.click(badge);
-      
+
       expect(handleClick).toHaveBeenCalledTimes(1); // Still calls because onClick is passed
     });
   });
@@ -264,42 +371,67 @@ describe("Badge Component", () => {
 
     it("dismiss button has proper styling", () => {
       render(<Badge dismissible>Dismissible</Badge>);
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
-      expect(dismissButton).toHaveClass("ml-1.5", "p-0.5", "rounded-full", "hover:bg-black/10");
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
+      expect(dismissButton).toHaveClass(
+        "ml-1.5",
+        "p-0.5",
+        "rounded-full",
+        "hover:bg-black/10"
+      );
     });
 
     it("calls onDismiss when dismiss button is clicked", async () => {
       const user = userEvent.setup();
       const handleDismiss = vi.fn();
-      render(<Badge dismissible onDismiss={handleDismiss}>Dismissible</Badge>);
-      
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
+      render(
+        <Badge dismissible onDismiss={handleDismiss}>
+          Dismissible
+        </Badge>
+      );
+
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
       await user.click(dismissButton!);
-      
+
       expect(handleDismiss).toHaveBeenCalledTimes(1);
     });
 
     it("handles keyboard dismissal", async () => {
       const user = userEvent.setup();
       const handleDismiss = vi.fn();
-      render(<Badge dismissible onDismiss={handleDismiss}>Dismissible</Badge>);
-      
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
+      render(
+        <Badge dismissible onDismiss={handleDismiss}>
+          Dismissible
+        </Badge>
+      );
+
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
       dismissButton!.focus();
       await user.keyboard("{Enter}");
-      
+
       expect(handleDismiss).toHaveBeenCalledTimes(1);
     });
 
     it("handles space key dismissal", async () => {
       const user = userEvent.setup();
       const handleDismiss = vi.fn();
-      render(<Badge dismissible onDismiss={handleDismiss}>Dismissible</Badge>);
-      
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
+      render(
+        <Badge dismissible onDismiss={handleDismiss}>
+          Dismissible
+        </Badge>
+      );
+
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
       dismissButton!.focus();
       await user.keyboard(" ");
-      
+
       expect(handleDismiss).toHaveBeenCalledTimes(1);
     });
 
@@ -312,10 +444,12 @@ describe("Badge Component", () => {
           Dismissible
         </Badge>
       );
-      
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
+
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
       await user.click(dismissButton!);
-      
+
       expect(handleDismiss).toHaveBeenCalledTimes(1);
       expect(handleClick).not.toHaveBeenCalled();
     });
@@ -329,15 +463,25 @@ describe("Badge Component", () => {
         </Badge>
       );
       const badge = screen.getByText("With Both");
-      expect(badge.querySelector("span[aria-hidden='true']")).toBeInTheDocument();
-      expect(badge.querySelector("[data-testid='test-icon']")).toBeInTheDocument();
+      expect(
+        badge.querySelector("span[aria-hidden='true']")
+      ).toBeInTheDocument();
+      expect(
+        badge.querySelector("[data-testid='test-icon']")
+      ).toBeInTheDocument();
     });
 
     it("renders clickable with dot", () => {
-      render(<Badge clickable showDot>Clickable Dot</Badge>);
+      render(
+        <Badge clickable showDot>
+          Clickable Dot
+        </Badge>
+      );
       const badge = screen.getByText("Clickable Dot");
       expect(badge).toHaveAttribute("role", "button");
-      expect(badge.querySelector("span[aria-hidden='true']")).toBeInTheDocument();
+      expect(
+        badge.querySelector("span[aria-hidden='true']")
+      ).toBeInTheDocument();
     });
 
     it("renders dismissible with icon", () => {
@@ -348,7 +492,9 @@ describe("Badge Component", () => {
       );
       const badge = screen.getByText("Dismissible Icon");
       expect(badge.querySelector("button")).toBeInTheDocument();
-      expect(badge.querySelector("[data-testid='test-icon']")).toBeInTheDocument();
+      expect(
+        badge.querySelector("[data-testid='test-icon']")
+      ).toBeInTheDocument();
     });
 
     it("renders with all features", () => {
@@ -366,8 +512,12 @@ describe("Badge Component", () => {
       );
       const badge = screen.getByText("Full Featured");
       expect(badge).toHaveAttribute("role", "button");
-      expect(badge.querySelector("span[aria-hidden='true']")).toBeInTheDocument();
-      expect(badge.querySelector("[data-testid='test-icon']")).toBeInTheDocument();
+      expect(
+        badge.querySelector("span[aria-hidden='true']")
+      ).toBeInTheDocument();
+      expect(
+        badge.querySelector("[data-testid='test-icon']")
+      ).toBeInTheDocument();
       expect(badge.querySelector("button")).toBeInTheDocument();
     });
   });
@@ -376,12 +526,19 @@ describe("Badge Component", () => {
     it("has proper focus states", () => {
       render(<Badge clickable>Clickable</Badge>);
       const badge = screen.getByText("Clickable");
-      expect(badge).toHaveClass("focus:outline-none", "focus:ring-2", "focus:ring-ring", "focus:ring-offset-2");
+      expect(badge).toHaveClass(
+        "focus:outline-none",
+        "focus:ring-2",
+        "focus:ring-ring",
+        "focus:ring-offset-2"
+      );
     });
 
     it("dismiss button has proper focus states", () => {
       render(<Badge dismissible>Dismissible</Badge>);
-      const dismissButton = screen.getByText("Dismissible").querySelector("button");
+      const dismissButton = screen
+        .getByText("Dismissible")
+        .querySelector("button");
       expect(dismissButton).toHaveClass("focus:outline-none", "focus:ring-1");
     });
 
@@ -392,11 +549,11 @@ describe("Badge Component", () => {
           <Badge dismissible>Second</Badge>
         </div>
       );
-      
+
       const firstBadge = screen.getByText("First");
       const secondBadge = screen.getByText("Second");
       const dismissButton = secondBadge.querySelector("button");
-      
+
       expect(firstBadge).toHaveAttribute("tabIndex", "0");
       expect(dismissButton).toHaveAttribute("tabIndex", "0");
     });
@@ -404,21 +561,23 @@ describe("Badge Component", () => {
 
   describe("Content Handling", () => {
     it("handles whitespace properly", () => {
-      render(<Badge>  Whitespace  </Badge>);
-      const badge = screen.getByText("  Whitespace  ");
-      const contentSpan = badge.querySelector("span.whitespace-nowrap");
+      render(<Badge> Whitespace </Badge>);
+      const badge = screen.getByText(/Whitespace/);
+      const contentSpan = badge.querySelector("span");
       expect(contentSpan).toBeInTheDocument();
+      expect(contentSpan).toHaveClass("whitespace-nowrap");
     });
 
     it("handles long content", () => {
-      const longText = "This is a very long badge text that should be handled properly";
+      const longText =
+        "This is a very long badge text that should be handled properly";
       render(<Badge>{longText}</Badge>);
       expect(screen.getByText(longText)).toBeInTheDocument();
     });
 
     it("handles empty content", () => {
-      render(<Badge></Badge>);
-      const badge = screen.getByRole("generic");
+      render(<Badge data-testid="empty-badge"></Badge>);
+      const badge = screen.getByTestId("empty-badge");
       expect(badge).toBeInTheDocument();
     });
   });
@@ -433,17 +592,17 @@ describe("Badge Component", () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
       const handleMouseEnter = vi.fn();
-      
+
       render(
         <Badge clickable onClick={handleClick} onMouseEnter={handleMouseEnter}>
           Multi Event
         </Badge>
       );
-      
+
       const badge = screen.getByText("Multi Event");
       await user.click(badge);
       await user.hover(badge);
-      
+
       expect(handleClick).toHaveBeenCalledTimes(1);
       expect(handleMouseEnter).toHaveBeenCalledTimes(1);
     });
@@ -453,12 +612,14 @@ describe("Badge Component", () => {
     it("handles undefined onDismiss gracefully", async () => {
       const user = userEvent.setup();
       render(<Badge dismissible>Dismissible</Badge>);
-      
-      const dismissButton = screen.getByRole("button", { name: "Remove badge" });
+
+      const dismissButton = screen.getByRole("button", {
+        name: "Remove badge",
+      });
       expect(dismissButton).toBeInTheDocument();
-      
+
       await user.click(dismissButton);
-      
+
       // Should not throw error and button should still exist
       expect(dismissButton).toBeInTheDocument();
     });
@@ -466,10 +627,10 @@ describe("Badge Component", () => {
     it("handles undefined onClick gracefully", async () => {
       const user = userEvent.setup();
       render(<Badge clickable>Clickable</Badge>);
-      
+
       const badge = screen.getByText("Clickable");
       await user.click(badge);
-      
+
       // Should not throw error
       expect(badge).toBeInTheDocument();
     });
