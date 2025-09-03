@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar } from "./avatar";
+import { Avatar } from "../avatar";
 import { HiUser, HiCamera } from "react-icons/hi";
 
 export const AvatarExample: React.FC = () => {
@@ -7,8 +7,6 @@ export const AvatarExample: React.FC = () => {
     (teamName: string, hiddenCount: number) => {
       console.log(`🔄 More clicked for ${teamName}`);
       console.log(`📊 Hidden members count: ${hiddenCount}`);
-
-      // Toggle showing hidden members for this team
     },
     []
   );

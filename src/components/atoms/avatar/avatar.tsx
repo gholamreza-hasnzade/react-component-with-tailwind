@@ -68,10 +68,10 @@ const statusSizeMap: Record<AvatarSize, string> = {
 };
 
 const statusPositionMap: Record<StatusPosition, string> = {
-  "top-right": "top-0 right-0",
-  "bottom-right": "bottom-0 right-0",
-  "top-left": "top-0 left-0",
-  "bottom-left": "bottom-0 left-0",
+  "top-right": "top-0 right-0 transform translate-x-1/4 -translate-y-1/4",
+  "bottom-right": "bottom-0 right-0 transform translate-x-1/4 translate-y-1/4",
+  "top-left": "top-0 left-0 transform -translate-x-1/4 -translate-y-1/4",
+  "bottom-left": "bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4",
 };
 
 const badgePositionMap: Record<BadgePosition, string> = {
@@ -93,11 +93,10 @@ export interface AvatarProps {
   size?: AvatarSize;
   variant?: AvatarVariant;
   color?: AvatarColor;
-  children?: React.ReactNode; // fallback initials or icon
+  children?: React.ReactNode;
   className?: string;
   shadow?: boolean;
   border?: boolean;
-  // New features
   status?: AvatarStatus;
   statusPosition?: StatusPosition;
   badge?: React.ReactNode;
@@ -110,7 +109,6 @@ export interface AvatarProps {
   onLoad?: () => void;
   onError?: () => void;
   fallbackIcon?: React.ReactNode;
-  // Group functionality
   group?: boolean;
   groupVariant?: "stack" | "grid" | "list";
   groupSpacing?: "tight" | "normal" | "loose";
@@ -120,7 +118,6 @@ export interface AvatarProps {
   showGroupMore?: boolean;
   groupMoreLabel?: string;
   onGroupMoreClick?: () => void;
-  // Radix UI props
   fallbackDelayMs?: number;
 }
 
@@ -146,7 +143,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   onLoad,
   onError,
   fallbackIcon,
-  // Group functionality
   group = false,
   groupVariant = "stack",
   groupSpacing = "normal",
@@ -156,7 +152,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   showGroupMore = true,
   groupMoreLabel,
   onGroupMoreClick,
-  // Radix UI props
   fallbackDelayMs,
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -173,37 +168,40 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   const shouldShowFallback = !src || imageError || loading;
-  
-  // Group logic
+
   const isStackMode = group && groupVariant === "stack";
   const isGridMode = group && groupVariant === "grid";
   const isListMode = group && groupVariant === "list";
-  
-  const shouldShowMore = group && groupMax && groupTotal > groupMax && showGroupMore && groupIndex === groupMax - 1;
+
+  const shouldShowMore =
+    group &&
+    groupMax &&
+    groupTotal > groupMax &&
+    showGroupMore &&
+    groupIndex === groupMax - 1;
   const hiddenCount = group && groupMax ? groupTotal - groupMax : 0;
 
-  // Group spacing classes
-  const groupSpacingClass = isStackMode && groupIndex > 0 ? {
-    "tight": "-ml-2",
-    "normal": "-ml-3", 
-    "loose": "-ml-4"
-  }[groupSpacing] : "";
+  const groupSpacingClass =
+    isStackMode && groupIndex > 0
+      ? {
+          tight: "-ml-2",
+          normal: "-ml-3",
+          loose: "-ml-4",
+        }[groupSpacing]
+      : "";
 
-  // Z-index for stacking
   const zIndex = isStackMode ? groupTotal - groupIndex : undefined;
-  
-  // Grid positioning
-  const gridPosition = isGridMode ? {
-    "col-start-1": groupIndex % 3 === 0,
-    "col-start-2": groupIndex % 3 === 1,
-    "col-start-3": groupIndex % 3 === 2,
-  } : {};
+
+  const gridPosition = isGridMode
+    ? {
+        "col-start-1": groupIndex % 3 === 0,
+        "col-start-2": groupIndex % 3 === 1,
+        "col-start-3": groupIndex % 3 === 2,
+      }
+    : {};
 
   return (
-    <div className={clsx(
-      "relative inline-block",
-      groupSpacingClass
-    )}>
+    <div className={clsx("relative inline-block", groupSpacingClass)}>
       <AvatarPrimitive.Root
         className={clsx(
           "relative inline-flex items-center justify-center overflow-hidden select-none",
@@ -224,7 +222,9 @@ export const Avatar: React.FC<AvatarProps> = ({
         data-slot="avatar"
         onClick={clickable ? onClick : undefined}
         tabIndex={clickable ? 0 : undefined}
-        onKeyDown={clickable ? (e) => e.key === 'Enter' && onClick?.() : undefined}
+        onKeyDown={
+          clickable ? (e) => e.key === "Enter" && onClick?.() : undefined
+        }
         role={clickable ? "button" : "img"}
         aria-label={alt}
       >
@@ -234,7 +234,6 @@ export const Avatar: React.FC<AvatarProps> = ({
             alt={alt}
             className={clsx(
               "object-cover w-full h-full transition-opacity duration-200",
-              variantMap[variant],
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={handleImageLoad}
@@ -242,7 +241,7 @@ export const Avatar: React.FC<AvatarProps> = ({
             data-slot="avatar-image"
           />
         )}
-        
+
         <AvatarPrimitive.Fallback
           className={clsx(
             "w-full h-full flex items-center justify-center font-medium",
@@ -256,14 +255,11 @@ export const Avatar: React.FC<AvatarProps> = ({
               <div className="animate-spin rounded-full border-2 border-current border-t-transparent w-1/2 h-1/2"></div>
             </div>
           ) : (
-            <span className="font-medium">
-              {fallbackIcon || children}
-            </span>
+            <span className="font-medium">{fallbackIcon || children}</span>
           )}
         </AvatarPrimitive.Fallback>
       </AvatarPrimitive.Root>
 
-      {/* Show More Button for Groups */}
       {shouldShowMore && (
         <button
           className={clsx(
@@ -280,7 +276,6 @@ export const Avatar: React.FC<AvatarProps> = ({
         </button>
       )}
 
-      {/* Status Indicator */}
       {status && (
         <span
           className={clsx(
@@ -307,8 +302,6 @@ export const Avatar: React.FC<AvatarProps> = ({
     </div>
   );
 };
-
-// Export individual components for advanced usage
 export const AvatarImage = AvatarPrimitive.Image;
 export const AvatarFallback = AvatarPrimitive.Fallback;
 export const AvatarRoot = AvatarPrimitive.Root;
