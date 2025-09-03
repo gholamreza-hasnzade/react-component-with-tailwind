@@ -25,7 +25,7 @@ import {
   DataTableToolbar,
   EmptyState
 } from "./components";
-import { createAdvancedFilterFn } from "../../../utils/filterFunctions";
+import { createAdvancedFilterFn } from "@/utils/filterFunctions";
 
 import type { Action, DataTableProps, ApiResponse, Density } from "./types";
 import { ActionsDropdown } from "@/components/atoms";

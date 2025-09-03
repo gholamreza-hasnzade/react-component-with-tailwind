@@ -11,6 +11,6 @@ export {
   type SizeVariant,
   type RoundedVariant,
   type ColorVariant,
-} from "./accordion"
+} from "./accordion";
 
-export { AccordionExample } from "./accordion-example"
+export { AccordionExample } from "./example/accordion-example";
