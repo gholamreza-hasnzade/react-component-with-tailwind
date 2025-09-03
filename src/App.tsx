@@ -8,7 +8,6 @@ function App() {
   return (
     <>
       <div className="w-full h-screen bg-gray-50 pb-60">
-        <ClipboardExamples />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>
