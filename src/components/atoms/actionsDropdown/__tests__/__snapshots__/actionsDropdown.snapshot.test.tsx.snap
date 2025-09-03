@@ -1,0 +1,640 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ActionsDropdown Component Snapshots > Action States > renders danger actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Action States > renders disabled actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Action States > renders loading actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Action States > renders mixed action states 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Basic Actions > renders default dropdown with basic actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Basic Actions > renders dropdown with multiple actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Basic Actions > renders dropdown with single action 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Complex Scenarios > renders long action list 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Complex Scenarios > renders product management actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Complex Scenarios > renders user management actions 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Custom Triggers > renders with custom button trigger 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <div
+      class="cursor-pointer"
+    >
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        Custom Button
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Custom Triggers > renders with custom div trigger 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <div
+      class="cursor-pointer"
+    >
+      <div
+        class="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+      >
+        <div
+          data-testid="cog-icon"
+        >
+          Cog
+        </div>
+        <span
+          class="text-sm text-gray-700"
+        >
+          Actions
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Custom Triggers > renders with custom trigger and className 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <div
+      class="cursor-pointer custom-trigger-class"
+    >
+      <span>
+        Custom
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Edge Cases > renders actions without icons 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Edge Cases > renders with empty actions array 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Edge Cases > renders with long action labels 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Edge Cases > renders with mixed action configurations 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with bottom-center position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with bottom-left position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with bottom-right position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with left position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with right position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with top-center position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with top-left position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Positioning > renders with top-right position 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Row Data > renders with product row data 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Row Data > renders with user row data 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Separators > renders actions with separators 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ActionsDropdown Component Snapshots > Separators > renders multiple separators 1`] = `
+<div
+  class="flex justify-end items-center"
+>
+  <div
+    class="relative"
+  >
+    <button
+      aria-label="Actions"
+      class="p-1.5 sm:p-2 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-gray-100"
+      type="button"
+    >
+      <div
+        data-testid="three-dots-icon"
+      >
+        ThreeDots
+      </div>
+    </button>
+  </div>
+</div>
+`;
