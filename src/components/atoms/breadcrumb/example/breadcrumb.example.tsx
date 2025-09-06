@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Breadcrumb } from './breadcrumb'
-import { generateBreadcrumbItems, createBreadcrumbItems } from './breadcrumb.utils'
-import { Folder, File, Settings, User, ShoppingCart, Package, Tag, CreditCard } from 'lucide-react'
+import { Breadcrumb } from '../breadcrumb'
+import { generateBreadcrumbItems, createBreadcrumbItems } from '../breadcrumb.utils'
+import { Folder, File, Settings, User, ShoppingCart, Package, Tag } from 'lucide-react'
 
 export const BreadcrumbExample: React.FC = () => {
   const [currentPath, setCurrentPath] = useState('/products/electronics/smartphones/iphone-15')
@@ -41,7 +41,7 @@ export const BreadcrumbExample: React.FC = () => {
     { label: 'RTX 4090 Models', icon: <File className="h-4 w-4" />, isCurrentPage: true }
   ]
 
-  const handleBreadcrumbClick = (item: any, index: number) => {
+  const handleBreadcrumbClick = (item: { label: string; href?: string }, index: number) => {
     console.log(`Clicked breadcrumb item: ${item.label} at index ${index}`)
     if (item.href) {
       // In a real app, you would navigate here
@@ -193,6 +193,99 @@ export const BreadcrumbExample: React.FC = () => {
         </div>
       </div>
 
+      {/* Condensed Menu Feature */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold mb-4">Condensed Menu Feature</h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-medium mb-2">Condensed with Menu (Default)</h3>
+            <Breadcrumb 
+              items={longBreadcrumbs}
+              condensed={true}
+              condensedThreshold={3}
+              showCondensedMenu={true}
+            />
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Condensed with Bordered Variant</h3>
+            <Breadcrumb 
+              items={longBreadcrumbs}
+              condensed={true}
+              condensedThreshold={2}
+              showCondensedMenu={true}
+              variant="bordered"
+              color="success"
+              size="lg"
+            />
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Condensed with Different Colors</h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Primary</h4>
+                <Breadcrumb 
+                  items={longBreadcrumbs}
+                  condensed={true}
+                  condensedThreshold={3}
+                  showCondensedMenu={true}
+                  color="primary"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Success</h4>
+                <Breadcrumb 
+                  items={longBreadcrumbs}
+                  condensed={true}
+                  condensedThreshold={3}
+                  showCondensedMenu={true}
+                  color="success"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Error</h4>
+                <Breadcrumb 
+                  items={longBreadcrumbs}
+                  condensed={true}
+                  condensedThreshold={3}
+                  showCondensedMenu={true}
+                  color="error"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">RTL Condensed Menu</h3>
+            <Breadcrumb 
+              items={longBreadcrumbs}
+              condensed={true}
+              condensedThreshold={3}
+              showCondensedMenu={true}
+              variant="filled"
+              color="warning"
+              dir="rtl"
+            />
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Short Path (No Condensed Menu)</h3>
+            <Breadcrumb 
+              items={ecommerceBreadcrumbs}
+              condensed={true}
+              condensedThreshold={5}
+              showCondensedMenu={true}
+              variant="minimal"
+              color="secondary"
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              When items are fewer than threshold, condensed menu won't appear
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Dynamic Path Generation */}
       <div className="space-y-6">
         <h2 className="text-xl font-semibold mb-4">Dynamic Path Generation</h2>
@@ -226,6 +319,7 @@ export const BreadcrumbExample: React.FC = () => {
                   value={customLabels.products || ''}
                   onChange={(e) => handleLabelChange('products', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter custom label for products"
                 />
               </div>
               <div>
@@ -235,6 +329,7 @@ export const BreadcrumbExample: React.FC = () => {
                   value={customLabels.electronics || ''}
                   onChange={(e) => handleLabelChange('electronics', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter custom label for electronics"
                 />
               </div>
             </div>
@@ -302,6 +397,9 @@ export const BreadcrumbExample: React.FC = () => {
               <li>• Focus management with visible focus rings</li>
               <li>• Semantic HTML structure</li>
               <li>• Current page indication</li>
+              <li>• Condensed menu with dropdown accessibility</li>
+              <li>• Click-outside-to-close functionality</li>
+              <li>• Escape key support for menu closing</li>
             </ul>
           </div>
         </div>
@@ -349,6 +447,21 @@ const items = [
 
 const items = generateBreadcrumbItems('/products/electronics/smartphones')
 <Breadcrumb items={items} />`}
+              </pre>
+            </div>
+
+            <div>
+              <h4 className="font-medium">Condensed Menu:</h4>
+              <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`<Breadcrumb 
+  items={longBreadcrumbItems}
+  condensed={true}
+  condensedThreshold={3}
+  showCondensedMenu={true}
+  variant="bordered"
+  color="success"
+  size="lg"
+/>`}
               </pre>
             </div>
           </div>

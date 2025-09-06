@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { ChevronRight, MoreHorizontal, Home } from "lucide-react"
+import { ChevronRight, MoreHorizontal, Home, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Enhanced types for better type safety
@@ -32,6 +32,9 @@ export interface BreadcrumbProps extends React.ComponentProps<"nav"> {
   color?: BreadcrumbColor
   dir?: "ltr" | "rtl" | "auto"
   onItemClick?: (item: BreadcrumbItem, index: number) => void
+  condensed?: boolean
+  condensedThreshold?: number
+  showCondensedMenu?: boolean
 }
 
 // Hook for text direction detection
@@ -71,17 +74,24 @@ function BreadcrumbComponent({
   color = "primary",
   dir,
   onItemClick,
+  condensed = false,
+  condensedThreshold = 3,
+  showCondensedMenu = true,
   className,
   ...props 
 }: BreadcrumbProps) {
   const [isExpanded, setIsExpanded] = React.useState(false)
+  const [isCondensedMenuOpen, setIsCondensedMenuOpen] = React.useState(false)
   const textDirection = useTextDirection(dir)
   
-  // Determine if we need to show ellipsis
+  // Determine if we need to show ellipsis or condensed menu
   const shouldTruncate = items.length > maxItems && !isExpanded
+  const shouldShowCondensed = condensed && items.length > condensedThreshold && showCondensedMenu
+  
   const visibleItems = shouldTruncate 
     ? [...items.slice(0, 1), ...items.slice(-maxItems + 2)]
     : items
+
 
   // Size variants
   const sizeClasses = {
@@ -176,6 +186,91 @@ function BreadcrumbComponent({
     }
   }
 
+  // Condensed menu component
+  const CondensedMenu = () => {
+    const middleItems = items.slice(1, -1)
+    const menuRef = React.useRef<HTMLDivElement>(null)
+    
+    // Close menu when clicking outside
+    React.useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+          setIsCondensedMenuOpen(false)
+        }
+      }
+
+      if (isCondensedMenuOpen) {
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+      }
+    })
+
+    // Close menu on escape key
+    React.useEffect(() => {
+      const handleEscape = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          setIsCondensedMenuOpen(false)
+        }
+      }
+
+      if (isCondensedMenuOpen) {
+        document.addEventListener('keydown', handleEscape)
+        return () => document.removeEventListener('keydown', handleEscape)
+      }
+    })
+    
+    return (
+      <div className="relative" ref={menuRef}>
+        <button
+          onClick={() => setIsCondensedMenuOpen(!isCondensedMenuOpen)}
+          className={cn(
+            "flex items-center gap-1 px-2 py-1 rounded transition-colors",
+            "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
+            currentColor.text,
+            currentColor.hover,
+            sizeClasses[size]
+          )}
+          aria-label={`Show ${middleItems.length} more breadcrumb items`}
+          aria-expanded={isCondensedMenuOpen ? "true" : "false"}
+          aria-haspopup="menu"
+        >
+          <MoreHorizontal className="h-4 w-4" />
+          <ChevronDown className={cn("h-3 w-3 transition-transform", isCondensedMenuOpen && "rotate-180")} />
+        </button>
+        
+        {isCondensedMenuOpen && (
+          <div
+            className={cn(
+              "absolute top-full left-0 mt-1 min-w-[200px] bg-white rounded-md shadow-lg border border-gray-200 p-1 z-50",
+              "animate-in fade-in-0 zoom-in-95"
+            )}
+            role="menu"
+            aria-orientation="vertical"
+          >
+            {middleItems.map((item, index) => (
+              <button
+                key={`${item.label}-${index + 1}`}
+                className={cn(
+                  "w-full flex items-center gap-2 px-3 py-2 text-sm rounded cursor-pointer text-left",
+                  "hover:bg-gray-100 focus:bg-gray-100 focus:outline-none",
+                  currentColor.text
+                )}
+                onClick={() => {
+                  handleItemClick(item, index + 1)
+                  setIsCondensedMenuOpen(false)
+                }}
+                role="menuitem"
+              >
+                {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
+                <span className="truncate">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   const renderBreadcrumbItem = (item: BreadcrumbItem, index: number, isLast: boolean) => {
     const isCurrent = item.isCurrentPage || isLast
     
@@ -253,7 +348,51 @@ function BreadcrumbComponent({
         sizeClasses[size],
         variant === "bordered" && "gap-2"
       )}>
-        {textDirection === "rtl" ? (
+        {shouldShowCondensed ? (
+          // Condensed Layout with Menu
+          <>
+            {/* Home icon */}
+            {showHomeIcon && (
+              <>
+                <BreadcrumbItem className={sizeClasses[size]}>
+                  <BreadcrumbLink 
+                    href={homeHref}
+                    className={cn(
+                      "flex items-center gap-1 transition-colors",
+                      currentColor.text,
+                      currentColor.hover,
+                      textDirection === "rtl" && "flex-row-reverse"
+                    )}
+                    aria-label="Go to home page"
+                  >
+                    <Home className="h-4 w-4" />
+                    <span className="sr-only sm:not-sr-only">Home</span>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                  {textDirection === "rtl" ? <ChevronRight className="h-4 w-4 rotate-180" /> : separator}
+                </BreadcrumbSeparator>
+              </>
+            )}
+
+            {/* First item */}
+            {renderBreadcrumbItem(items[0], 0, false)}
+            <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+              {textDirection === "rtl" ? <ChevronRight className="h-4 w-4 rotate-180" /> : separator}
+            </BreadcrumbSeparator>
+
+            {/* Condensed Menu */}
+            <BreadcrumbItem className={sizeClasses[size]}>
+              <CondensedMenu />
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+              {textDirection === "rtl" ? <ChevronRight className="h-4 w-4 rotate-180" /> : separator}
+            </BreadcrumbSeparator>
+
+            {/* Last item */}
+            {renderBreadcrumbItem(items[items.length - 1], items.length - 1, true)}
+          </>
+        ) : textDirection === "rtl" ? (
           // RTL Layout: Home on right, current page on left
           <>
             {/* Home icon first (right side) for RTL */}
