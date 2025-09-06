@@ -1,67 +1,68 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { ChevronRight, MoreHorizontal, Home, ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { ChevronRight, MoreHorizontal, Home, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Enhanced types for better type safety
 export interface BreadcrumbItem {
-  label: string
-  href?: string
-  icon?: React.ReactNode
-  isCurrentPage?: boolean
-  onClick?: () => void
+  label: string;
+  href?: string;
+  icon?: React.ReactNode;
+  isCurrentPage?: boolean;
+  onClick?: () => void;
 }
 
-export type BreadcrumbColor = 
-  | "primary" 
-  | "secondary" 
-  | "success" 
-  | "error" 
-  | "warning" 
-  | "info"
+export type BreadcrumbColor =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "warning"
+  | "info";
 
 export interface BreadcrumbProps extends React.ComponentProps<"nav"> {
-  items: BreadcrumbItem[]
-  separator?: React.ReactNode
-  maxItems?: number
-  showHomeIcon?: boolean
-  homeHref?: string
-  truncateLabels?: boolean
-  variant?: "default" | "minimal" | "bordered" | "filled" | "gradient"
-  size?: "sm" | "md" | "lg"
-  color?: BreadcrumbColor
-  dir?: "ltr" | "rtl" | "auto"
-  onItemClick?: (item: BreadcrumbItem, index: number) => void
-  condensed?: boolean
-  condensedThreshold?: number
-  showCondensedMenu?: boolean
-  // Customization options
-  customSeparator?: React.ReactNode
-  separatorPosition?: "before" | "after" | "both" | "none"
-  customMenuTrigger?: React.ReactNode
-  customMenuContent?: React.ReactNode
-  menuPosition?: "bottom" | "top" | "left" | "right"
-  menuAlignment?: "start" | "center" | "end"
-  customItemRenderer?: (item: BreadcrumbItem, index: number, isLast: boolean) => React.ReactNode
-  customHomeIcon?: React.ReactNode
-  customHomeLabel?: string
-  animationDuration?: number
-  enableAnimations?: boolean
+  items: BreadcrumbItem[];
+  separator?: React.ReactNode;
+  maxItems?: number;
+  showHomeIcon?: boolean;
+  homeHref?: string;
+  truncateLabels?: boolean;
+  variant?: "default" | "minimal" | "bordered" | "filled" | "gradient";
+  size?: "sm" | "md" | "lg";
+  color?: BreadcrumbColor;
+  dir?: "ltr" | "rtl" | "auto";
+  onItemClick?: (item: BreadcrumbItem, index: number) => void;
+  condensed?: boolean;
+  condensedThreshold?: number;
+  showCondensedMenu?: boolean;
+  customSeparator?: React.ReactNode;
+  separatorPosition?: "before" | "after" | "both" | "none";
+  customMenuTrigger?: React.ReactNode;
+  customMenuContent?: React.ReactNode;
+  menuPosition?: "bottom" | "top" | "left" | "right";
+  menuAlignment?: "start" | "center" | "end";
+  customItemRenderer?: (
+    item: BreadcrumbItem,
+    index: number,
+    isLast: boolean
+  ) => React.ReactNode;
+  customHomeIcon?: React.ReactNode;
+  customHomeLabel?: string;
+  animationDuration?: number;
+  enableAnimations?: boolean;
   customClassName?: {
-    container?: string
-    list?: string
-    item?: string
-    link?: string
-    page?: string
-    separator?: string
-    menu?: string
-    menuTrigger?: string
-    menuContent?: string
-    menuItem?: string
-  }
+    container?: string;
+    list?: string;
+    item?: string;
+    link?: string;
+    page?: string;
+    separator?: string;
+    menu?: string;
+    menuTrigger?: string;
+    menuContent?: string;
+    menuItem?: string;
+  };
 }
 
-// Hook for text direction detection
 function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
   const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
     "ltr"
@@ -85,9 +86,8 @@ function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
   return textDirection;
 }
 
-// Main Breadcrumb component with enhanced functionality
-function BreadcrumbComponent({ 
-  items, 
+function BreadcrumbComponent({
+  items,
   separator = <ChevronRight className="h-4 w-4" />,
   maxItems = 5,
   showHomeIcon = true,
@@ -101,7 +101,6 @@ function BreadcrumbComponent({
   condensed = false,
   condensedThreshold = 3,
   showCondensedMenu = true,
-  // Customization options
   customSeparator,
   separatorPosition = "after",
   customMenuTrigger,
@@ -115,38 +114,34 @@ function BreadcrumbComponent({
   enableAnimations = true,
   customClassName = {},
   className,
-  ...props 
+  ...props
 }: BreadcrumbProps) {
-  const [isExpanded, setIsExpanded] = React.useState(false)
-  const [isCondensedMenuOpen, setIsCondensedMenuOpen] = React.useState(false)
-  const textDirection = useTextDirection(dir)
-  
-  // Determine if we need to show ellipsis or condensed menu
-  const shouldTruncate = items.length > maxItems && !isExpanded
-  const shouldShowCondensed = condensed && items.length > condensedThreshold && showCondensedMenu
-  
-  const visibleItems = shouldTruncate 
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isCondensedMenuOpen, setIsCondensedMenuOpen] = React.useState(false);
+  const textDirection = useTextDirection(dir);
+
+  const shouldTruncate = items.length > maxItems && !isExpanded;
+  const shouldShowCondensed =
+    condensed && items.length > condensedThreshold && showCondensedMenu;
+
+  const visibleItems = shouldTruncate
     ? [...items.slice(0, 1), ...items.slice(-maxItems + 2)]
-    : items
+    : items;
 
-
-  // Size variants
   const sizeClasses = {
     sm: "text-xs gap-1",
     md: "text-sm gap-1.5",
-    lg: "text-base gap-2"
-  }
+    lg: "text-base gap-2",
+  };
 
-  // Variant styles
   const variantClasses = {
     default: "text-muted-foreground",
     minimal: "text-gray-500",
     bordered: "border border-gray-200 rounded-lg px-3 py-2 bg-gray-50",
     filled: "bg-gray-100 rounded-lg px-3 py-2",
-    gradient: "bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg px-3 py-2"
-  }
+    gradient: "bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg px-3 py-2",
+  };
 
-  // Color system - matching button component structure
   const colorClasses = {
     primary: {
       text: "text-blue-600",
@@ -154,7 +149,7 @@ function BreadcrumbComponent({
       current: "text-blue-900",
       border: "border-blue-200",
       bg: "bg-blue-50",
-      separator: "text-blue-400"
+      separator: "text-blue-400",
     },
     secondary: {
       text: "text-gray-600",
@@ -162,7 +157,7 @@ function BreadcrumbComponent({
       current: "text-gray-900",
       border: "border-gray-200",
       bg: "bg-gray-50",
-      separator: "text-gray-400"
+      separator: "text-gray-400",
     },
     success: {
       text: "text-green-600",
@@ -170,7 +165,7 @@ function BreadcrumbComponent({
       current: "text-green-900",
       border: "border-green-200",
       bg: "bg-green-50",
-      separator: "text-green-400"
+      separator: "text-green-400",
     },
     error: {
       text: "text-red-600",
@@ -178,7 +173,7 @@ function BreadcrumbComponent({
       current: "text-red-900",
       border: "border-red-200",
       bg: "bg-red-50",
-      separator: "text-red-400"
+      separator: "text-red-400",
     },
     warning: {
       text: "text-yellow-600",
@@ -186,7 +181,7 @@ function BreadcrumbComponent({
       current: "text-yellow-900",
       border: "border-yellow-200",
       bg: "bg-yellow-50",
-      separator: "text-yellow-400"
+      separator: "text-yellow-400",
     },
     info: {
       text: "text-sky-600",
@@ -194,104 +189,102 @@ function BreadcrumbComponent({
       current: "text-sky-900",
       border: "border-sky-200",
       bg: "bg-sky-50",
-      separator: "text-sky-400"
-    }
-  }
+      separator: "text-sky-400",
+    },
+  };
 
-  const currentColor = colorClasses[color]
+  const currentColor = colorClasses[color];
 
-  // Customization helpers
-  const getEffectiveSeparator = () => customSeparator || separator
-  const getEffectiveHomeIcon = () => customHomeIcon || <Home className="h-4 w-4" />
-  const getEffectiveHomeLabel = () => customHomeLabel
+  const getEffectiveSeparator = () => customSeparator || separator;
+  const getEffectiveHomeIcon = () =>
+    customHomeIcon || <Home className="h-4 w-4" />;
+  const getEffectiveHomeLabel = () => customHomeLabel;
 
-  // Animation styles
   const getAnimationStyles = () => {
-    if (!enableAnimations) return {}
+    if (!enableAnimations) return {};
     return {
       transitionDuration: `${animationDuration}ms`,
-      transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
-    }
-  }
+      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    };
+  };
 
-  // Menu positioning classes
   const getMenuPositionClasses = () => {
     const positionClasses = {
       bottom: "top-full mt-1",
       top: "bottom-full mb-1",
       left: "right-full mr-1",
-      right: "left-full ml-1"
-    }
-    
+      right: "left-full ml-1",
+    };
+
     const alignmentClasses = {
       start: "left-0",
       center: "left-1/2 -translate-x-1/2",
-      end: "right-0"
-    }
+      end: "right-0",
+    };
 
-    return cn(
-      positionClasses[menuPosition],
-      alignmentClasses[menuAlignment]
-    )
-  }
+    return cn(positionClasses[menuPosition], alignmentClasses[menuAlignment]);
+  };
 
-  // Variant styles with color integration
   const getVariantClasses = () => {
-    const baseClasses = variantClasses[variant]
-    if (variant === "bordered" || variant === "filled" || variant === "gradient") {
+    const baseClasses = variantClasses[variant];
+    if (
+      variant === "bordered" ||
+      variant === "filled" ||
+      variant === "gradient"
+    ) {
       return cn(
         baseClasses,
         variant === "bordered" && `border ${currentColor.border}`,
         variant === "filled" && currentColor.bg,
         variant === "gradient" && currentColor.bg
-      )
+      );
     }
-    return baseClasses
-  }
+    return baseClasses;
+  };
 
   const handleItemClick = (item: BreadcrumbItem, index: number) => {
     if (item.onClick) {
-      item.onClick()
+      item.onClick();
     }
     if (onItemClick) {
-      onItemClick(item, index)
+      onItemClick(item, index);
     }
-  }
+  };
 
-  // Condensed menu component
   const CondensedMenu = () => {
-    const middleItems = items.slice(1, -1)
-    const menuRef = React.useRef<HTMLDivElement>(null)
-    
-    // Close menu when clicking outside
+    const middleItems = items.slice(1, -1);
+    const menuRef = React.useRef<HTMLDivElement>(null);
+
     React.useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
-        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-          setIsCondensedMenuOpen(false)
+        if (
+          menuRef.current &&
+          !menuRef.current.contains(event.target as Node)
+        ) {
+          setIsCondensedMenuOpen(false);
         }
-      }
+      };
 
       if (isCondensedMenuOpen) {
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+          document.removeEventListener("mousedown", handleClickOutside);
       }
-    })
+    });
 
-    // Close menu on escape key
     React.useEffect(() => {
       const handleEscape = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          setIsCondensedMenuOpen(false)
+        if (event.key === "Escape") {
+          setIsCondensedMenuOpen(false);
         }
-      }
+      };
 
       if (isCondensedMenuOpen) {
-        document.addEventListener('keydown', handleEscape)
-        return () => document.removeEventListener('keydown', handleEscape)
+        document.addEventListener("keydown", handleEscape);
+        return () => document.removeEventListener("keydown", handleEscape);
       }
-    })
+    });
 
-    // Custom menu content
     if (customMenuContent) {
       return (
         <div className="relative" ref={menuRef}>
@@ -311,11 +304,16 @@ function BreadcrumbComponent({
                 aria-haspopup="menu"
               >
                 <MoreHorizontal className="h-4 w-4" />
-                <ChevronDown className={cn("h-3 w-3 transition-transform", isCondensedMenuOpen && "rotate-180")} />
+                <ChevronDown
+                  className={cn(
+                    "h-3 w-3 transition-transform",
+                    isCondensedMenuOpen && "rotate-180"
+                  )}
+                />
               </button>
             )}
           </div>
-          
+
           {isCondensedMenuOpen && (
             <div
               className={cn(
@@ -331,9 +329,9 @@ function BreadcrumbComponent({
             </div>
           )}
         </div>
-      )
+      );
     }
-    
+
     return (
       <div className={cn("relative", customClassName.menu)} ref={menuRef}>
         {customMenuTrigger ? (
@@ -357,10 +355,15 @@ function BreadcrumbComponent({
             style={getAnimationStyles()}
           >
             <MoreHorizontal className="h-4 w-4" />
-            <ChevronDown className={cn("h-3 w-3 transition-transform", isCondensedMenuOpen && "rotate-180")} />
+            <ChevronDown
+              className={cn(
+                "h-3 w-3 transition-transform",
+                isCondensedMenuOpen && "rotate-180"
+              )}
+            />
           </button>
         )}
-        
+
         {isCondensedMenuOpen && (
           <div
             className={cn(
@@ -383,53 +386,66 @@ function BreadcrumbComponent({
                   customClassName.menuItem
                 )}
                 onClick={() => {
-                  handleItemClick(item, index + 1)
-                  setIsCondensedMenuOpen(false)
+                  handleItemClick(item, index + 1);
+                  setIsCondensedMenuOpen(false);
                 }}
                 role="menuitem"
                 style={getAnimationStyles()}
               >
-                {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
+                {item.icon && (
+                  <span className="flex-shrink-0">{item.icon}</span>
+                )}
                 <span className="truncate">{item.label}</span>
               </button>
             ))}
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
-  const renderBreadcrumbItem = (item: BreadcrumbItem, index: number, isLast: boolean) => {
+  const renderBreadcrumbItem = (
+    item: BreadcrumbItem,
+    index: number,
+    isLast: boolean
+  ) => {
     // Use custom item renderer if provided
     if (customItemRenderer) {
-      return customItemRenderer(item, index, isLast)
+      return customItemRenderer(item, index, isLast);
     }
 
-    const isCurrent = item.isCurrentPage || isLast
-    
+    const isCurrent = item.isCurrentPage || isLast;
+
     if (isCurrent) {
       return (
-        <BreadcrumbItem key={`${item.label}-${index}`} className={cn(sizeClasses[size], customClassName.item)}>
+        <BreadcrumbItem
+          key={`${item.label}-${index}`}
+          className={cn(sizeClasses[size], customClassName.item)}
+        >
           {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
-          <BreadcrumbPage className={cn(
-            "font-medium",
-            currentColor.current,
-            variant === "minimal" && currentColor.current,
-            variant === "bordered" && currentColor.current,
-            customClassName.page
-          )}>
-            {truncateLabels && item.label.length > 20 
-              ? `${item.label.substring(0, 20)}...` 
-              : item.label
-            }
+          <BreadcrumbPage
+            className={cn(
+              "font-medium",
+              currentColor.current,
+              variant === "minimal" && currentColor.current,
+              variant === "bordered" && currentColor.current,
+              customClassName.page
+            )}
+          >
+            {truncateLabels && item.label.length > 20
+              ? `${item.label.substring(0, 20)}...`
+              : item.label}
           </BreadcrumbPage>
         </BreadcrumbItem>
-      )
+      );
     }
 
     if (item.href) {
       return (
-        <BreadcrumbItem key={`${item.label}-${index}`} className={cn(sizeClasses[size], customClassName.item)}>
+        <BreadcrumbItem
+          key={`${item.label}-${index}`}
+          className={cn(sizeClasses[size], customClassName.item)}
+        >
           {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
           <BreadcrumbLink
             href={item.href}
@@ -444,49 +460,65 @@ function BreadcrumbComponent({
             )}
             style={getAnimationStyles()}
           >
-            {truncateLabels && item.label.length > 20 
-              ? `${item.label.substring(0, 20)}...` 
-              : item.label
-            }
+            {truncateLabels && item.label.length > 20
+              ? `${item.label.substring(0, 20)}...`
+              : item.label}
           </BreadcrumbLink>
         </BreadcrumbItem>
-      )
+      );
     }
 
     return (
-      <BreadcrumbItem key={`${item.label}-${index}`} className={cn(sizeClasses[size], customClassName.item)}>
+      <BreadcrumbItem
+        key={`${item.label}-${index}`}
+        className={cn(sizeClasses[size], customClassName.item)}
+      >
         {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
-        <span className={cn("cursor-default", currentColor.text, customClassName.page)}>
-          {truncateLabels && item.label.length > 20 
-            ? `${item.label.substring(0, 20)}...` 
-            : item.label
-          }
+        <span
+          className={cn(
+            "cursor-default",
+            currentColor.text,
+            customClassName.page
+          )}
+        >
+          {truncateLabels && item.label.length > 20
+            ? `${item.label.substring(0, 20)}...`
+            : item.label}
         </span>
       </BreadcrumbItem>
-    )
-  }
+    );
+  };
 
   // Render separator based on position
   const renderSeparator = (key: string) => {
-    if (separatorPosition === "none") return null
-    
-    const shouldShow = separatorPosition === "both" || separatorPosition === "after"
-    if (!shouldShow) return null
+    if (separatorPosition === "none") return null;
+
+    const shouldShow =
+      separatorPosition === "both" || separatorPosition === "after";
+    if (!shouldShow) return null;
 
     return (
-      <BreadcrumbSeparator 
+      <BreadcrumbSeparator
         key={key}
-        className={cn(sizeClasses[size], currentColor.separator, customClassName.separator)}
+        className={cn(
+          sizeClasses[size],
+          currentColor.separator,
+          customClassName.separator
+        )}
       >
-        {textDirection === "rtl" ? <ChevronRight className="h-4 w-4 rotate-180" /> : getEffectiveSeparator()}
+        {textDirection === "rtl" ? (
+          <ChevronRight className="h-4 w-4 rotate-180" />
+        ) : (
+          getEffectiveSeparator()
+        )}
       </BreadcrumbSeparator>
-    )
-  }
+    );
+  };
 
   return (
-    <nav 
-      aria-label="breadcrumb" 
-      data-slot="breadcrumb" 
+    <nav
+      aria-label="breadcrumb"
+      data-slot="breadcrumb"
       dir={textDirection}
       className={cn(
         "w-full",
@@ -498,20 +530,24 @@ function BreadcrumbComponent({
       style={getAnimationStyles()}
       {...props}
     >
-      <BreadcrumbList className={cn(
-        "flex flex-wrap items-center break-words",
-        sizeClasses[size],
-        variant === "bordered" && "gap-2",
-        customClassName.list
-      )}>
+      <BreadcrumbList
+        className={cn(
+          "flex flex-wrap items-center break-words",
+          sizeClasses[size],
+          variant === "bordered" && "gap-2",
+          customClassName.list
+        )}
+      >
         {shouldShowCondensed ? (
-          // Condensed Layout with Menu
+          
           <>
             {/* Home icon */}
             {showHomeIcon && (
               <>
-                <BreadcrumbItem className={cn(sizeClasses[size], customClassName.item)}>
-                  <BreadcrumbLink 
+                <BreadcrumbItem
+                  className={cn(sizeClasses[size], customClassName.item)}
+                >
+                  <BreadcrumbLink
                     href={homeHref}
                     className={cn(
                       "flex items-center gap-1 transition-colors",
@@ -524,34 +560,40 @@ function BreadcrumbComponent({
                     style={getAnimationStyles()}
                   >
                     {getEffectiveHomeIcon()}
-                    <span className="sr-only sm:not-sr-only">{getEffectiveHomeLabel()}</span>
+                    <span className="sr-only sm:not-sr-only">
+                      {getEffectiveHomeLabel()}
+                    </span>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 {renderSeparator("home-separator")}
               </>
             )}
 
-            {/* First item */}
+            
             {renderBreadcrumbItem(items[0], 0, false)}
             {renderSeparator("first-separator")}
 
-            {/* Condensed Menu */}
-            <BreadcrumbItem className={cn(sizeClasses[size], customClassName.item)}>
+            
+            <BreadcrumbItem
+              className={cn(sizeClasses[size], customClassName.item)}
+            >
               <CondensedMenu />
             </BreadcrumbItem>
             {renderSeparator("menu-separator")}
 
-            {/* Last item */}
-            {renderBreadcrumbItem(items[items.length - 1], items.length - 1, true)}
+            {renderBreadcrumbItem(
+              items[items.length - 1],
+              items.length - 1,
+              true
+            )}
           </>
         ) : textDirection === "rtl" ? (
-          // RTL Layout: Home on right, current page on left
           <>
-            {/* Home icon first (right side) for RTL */}
+            
             {showHomeIcon && (
               <>
                 <BreadcrumbItem className={sizeClasses[size]}>
-                  <BreadcrumbLink 
+                  <BreadcrumbLink
                     href={homeHref}
                     className={cn(
                       "flex items-center gap-1 transition-colors",
@@ -565,17 +607,21 @@ function BreadcrumbComponent({
                     <span className="sr-only sm:not-sr-only">Home</span>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   <ChevronRight className="h-4 w-4 rotate-180" />
                 </BreadcrumbSeparator>
               </>
             )}
 
-            {/* Truncated items with ellipsis */}
+            
             {shouldTruncate && (
               <>
                 {renderBreadcrumbItem(items[0], 0, false)}
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   <ChevronRight className="h-4 w-4 rotate-180" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem className={sizeClasses[size]}>
@@ -584,44 +630,47 @@ function BreadcrumbComponent({
                     className={cn(
                       "flex items-center justify-center p-1 rounded transition-colors",
                       currentColor.bg,
-                      `hover:${currentColor.bg.replace('bg-', 'bg-')}`
+                      `hover:${currentColor.bg.replace("bg-", "bg-")}`
                     )}
-                    aria-label={`Show ${items.length - maxItems} more breadcrumb items`}
+                    aria-label={`Show ${
+                      items.length - maxItems
+                    } more breadcrumb items`}
                   >
                     <BreadcrumbEllipsis />
                   </button>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   <ChevronRight className="h-4 w-4 rotate-180" />
                 </BreadcrumbSeparator>
               </>
             )}
 
-            {/* Visible breadcrumb items in normal order for RTL */}
             {visibleItems.map((item, index) => {
-              const isLast = index === visibleItems.length - 1
-              const isFirst = index === 0
-              
+              const isLast = index === visibleItems.length - 1;
+              const isFirst = index === 0;
+
               return (
                 <React.Fragment key={`${item.label}-${index}`}>
                   {!isFirst && (
-                    <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                    <BreadcrumbSeparator
+                      className={cn(sizeClasses[size], currentColor.separator)}
+                    >
                       <ChevronRight className="h-4 w-4 rotate-180" />
                     </BreadcrumbSeparator>
                   )}
                   {renderBreadcrumbItem(item, index, isLast)}
                 </React.Fragment>
-              )
+              );
             })}
           </>
         ) : (
-          // LTR Layout: Items flow left to right (default)
           <>
-            {/* Home icon */}
             {showHomeIcon && (
               <>
                 <BreadcrumbItem className={sizeClasses[size]}>
-                  <BreadcrumbLink 
+                  <BreadcrumbLink
                     href={homeHref}
                     className={cn(
                       "flex items-center gap-1 transition-colors",
@@ -634,17 +683,20 @@ function BreadcrumbComponent({
                     <span className="sr-only sm:not-sr-only">Home</span>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   {separator}
                 </BreadcrumbSeparator>
               </>
             )}
 
-            {/* Truncated items with ellipsis */}
             {shouldTruncate && (
               <>
                 {renderBreadcrumbItem(items[0], 0, false)}
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   {separator}
                 </BreadcrumbSeparator>
                 <BreadcrumbItem className={sizeClasses[size]}>
@@ -653,39 +705,45 @@ function BreadcrumbComponent({
                     className={cn(
                       "flex items-center justify-center p-1 rounded transition-colors",
                       currentColor.bg,
-                      `hover:${currentColor.bg.replace('bg-', 'bg-')}`
+                      `hover:${currentColor.bg.replace("bg-", "bg-")}`
                     )}
-                    aria-label={`Show ${items.length - maxItems} more breadcrumb items`}
+                    aria-label={`Show ${
+                      items.length - maxItems
+                    } more breadcrumb items`}
                   >
                     <BreadcrumbEllipsis />
                   </button>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                <BreadcrumbSeparator
+                  className={cn(sizeClasses[size], currentColor.separator)}
+                >
                   {separator}
                 </BreadcrumbSeparator>
               </>
             )}
 
-            {/* Visible breadcrumb items */}
             {visibleItems.map((item, index) => {
-              const isLast = index === visibleItems.length - 1
-              const isFirst = index === 0
-              
+              const isLast = index === visibleItems.length - 1;
+              const isFirst = index === 0;
+
               return (
                 <React.Fragment key={`${item.label}-${index}`}>
                   {!isFirst && (
-                    <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+                    <BreadcrumbSeparator
+                      className={cn(sizeClasses[size], currentColor.separator)}
+                    >
                       {separator}
                     </BreadcrumbSeparator>
                   )}
                   {renderBreadcrumbItem(item, index, isLast)}
                 </React.Fragment>
-              )
+              );
             })}
 
-            {/* Expand button for truncated breadcrumbs */}
             {shouldTruncate && (
-              <BreadcrumbSeparator className={cn(sizeClasses[size], currentColor.separator)}>
+              <BreadcrumbSeparator
+                className={cn(sizeClasses[size], currentColor.separator)}
+              >
                 {separator}
               </BreadcrumbSeparator>
             )}
@@ -693,10 +751,9 @@ function BreadcrumbComponent({
         )}
       </BreadcrumbList>
     </nav>
-  )
+  );
 }
 
-// Enhanced individual components with better accessibility
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
@@ -707,7 +764,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
@@ -717,7 +774,7 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
       className={cn("inline-flex items-center gap-1.5", className)}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbLink({
@@ -725,9 +782,9 @@ function BreadcrumbLink({
   className,
   ...props
 }: React.ComponentProps<"a"> & {
-  asChild?: boolean
+  asChild?: boolean;
 }) {
-  const Comp = asChild ? Slot : "a"
+  const Comp = asChild ? Slot : "a";
 
   return (
     <Comp
@@ -738,7 +795,7 @@ function BreadcrumbLink({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
@@ -751,7 +808,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
       className={cn("text-foreground font-medium", className)}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbSeparator({
@@ -769,7 +826,7 @@ function BreadcrumbSeparator({
     >
       {children ?? <ChevronRight className="h-4 w-4" />}
     </li>
-  )
+  );
 }
 
 function BreadcrumbEllipsis({
@@ -787,7 +844,7 @@ function BreadcrumbEllipsis({
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More breadcrumb items</span>
     </span>
-  )
+  );
 }
 
 export {
@@ -798,4 +855,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-}
+};
