@@ -14,8 +14,8 @@ import {
   CardGradient,
   CardGlass,
   CardInteractive,
-} from "./card";
-import { Button } from "../button/button";
+} from "../card";
+import { Button } from "../../button/button";
 
 export function CardExamples() {
   const [selectedCard, setSelectedCard] = React.useState<string | null>(null);
