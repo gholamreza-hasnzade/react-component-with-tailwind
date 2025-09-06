@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Breadcrumb } from '../breadcrumb'
 import { generateBreadcrumbItems, createBreadcrumbItems } from '../breadcrumb.utils'
-import { Folder, File, Settings, User, ShoppingCart, Package, Tag } from 'lucide-react'
+import { Folder, File, Settings, User, ShoppingCart, Package, Tag, ChevronDown } from 'lucide-react'
 
 export const BreadcrumbExample: React.FC = () => {
   const [currentPath, setCurrentPath] = useState('/products/electronics/smartphones/iphone-15')
@@ -286,6 +286,185 @@ export const BreadcrumbExample: React.FC = () => {
         </div>
       </div>
 
+      {/* Advanced Customization */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold mb-4">Advanced Customization</h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-medium mb-2">Custom Separators and Positioning</h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Custom Separator (Star)</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  customSeparator="⭐"
+                  separatorPosition="after"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">No Separators</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  separatorPosition="none"
+                  variant="bordered"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Custom Icon Separator</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  customSeparator={<Tag className="h-3 w-3 text-purple-500" />}
+                  separatorPosition="both"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Custom Home Icon and Label</h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Custom Home Icon</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  customHomeIcon={<Settings className="h-4 w-4" />}
+                  customHomeLabel="Dashboard"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Custom Home with Different Icon</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  customHomeIcon={<User className="h-4 w-4" />}
+                  customHomeLabel="Profile"
+                  homeHref="/profile"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Custom Menu Positioning</h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Menu on Top</h4>
+                <Breadcrumb 
+                  items={longBreadcrumbs}
+                  condensed={true}
+                  condensedThreshold={3}
+                  menuPosition="top"
+                  menuAlignment="center"
+                  variant="bordered"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Menu on Right</h4>
+                <Breadcrumb 
+                  items={longBreadcrumbs}
+                  condensed={true}
+                  condensedThreshold={3}
+                  menuPosition="right"
+                  menuAlignment="start"
+                  variant="filled"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Custom Styling with ClassNames</h3>
+            <Breadcrumb 
+              items={ecommerceBreadcrumbs}
+              customClassName={{
+                container: "bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border-2 border-blue-200",
+                list: "gap-3",
+                item: "bg-white rounded-lg px-3 py-1 shadow-sm",
+                link: "hover:bg-blue-100 rounded-md px-2 py-1 transition-all duration-300",
+                page: "font-bold text-purple-700",
+                separator: "text-blue-400 font-bold"
+              }}
+              variant="bordered"
+            />
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Custom Item Renderer</h3>
+            <Breadcrumb 
+              items={ecommerceBreadcrumbs}
+              customItemRenderer={(item, index, isLast) => (
+                <div key={`${item.label}-${index}`} className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className={`font-medium ${isLast ? 'text-green-700' : 'text-gray-600'}`}>
+                    {item.label}
+                  </span>
+                  {!isLast && <span className="text-gray-400">→</span>}
+                </div>
+              )}
+            />
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Animation Customization</h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Fast Animations</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  animationDuration={100}
+                  enableAnimations={true}
+                  variant="bordered"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">Slow Animations</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  animationDuration={500}
+                  enableAnimations={true}
+                  variant="filled"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-600">No Animations</h4>
+                <Breadcrumb 
+                  items={ecommerceBreadcrumbs}
+                  enableAnimations={false}
+                  variant="minimal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-2">Custom Menu Trigger and Content</h3>
+            <Breadcrumb 
+              items={longBreadcrumbs}
+              condensed={true}
+              condensedThreshold={3}
+              customMenuTrigger={
+                <button className="flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition-colors">
+                  <span className="text-sm font-medium">More</span>
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              }
+              customMenuContent={
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 min-w-[250px]">
+                  <div className="text-xs font-semibold text-purple-600 mb-2">Navigation Menu</div>
+                  {longBreadcrumbs.slice(1, -1).map((item, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 hover:bg-purple-100 rounded cursor-pointer">
+                      <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
+                      <span className="text-sm text-purple-700">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              }
+              menuPosition="bottom"
+              menuAlignment="center"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Dynamic Path Generation */}
       <div className="space-y-6">
         <h2 className="text-xl font-semibold mb-4">Dynamic Path Generation</h2>
@@ -461,6 +640,36 @@ const items = generateBreadcrumbItems('/products/electronics/smartphones')
   variant="bordered"
   color="success"
   size="lg"
+/>`}
+              </pre>
+            </div>
+
+            <div>
+              <h4 className="font-medium">Advanced Customization:</h4>
+              <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`<Breadcrumb 
+  items={breadcrumbItems}
+  customSeparator="⭐"
+  separatorPosition="after"
+  customHomeIcon={<Settings className="h-4 w-4" />}
+  customHomeLabel="Dashboard"
+  menuPosition="top"
+  menuAlignment="center"
+  animationDuration={300}
+  enableAnimations={true}
+  customClassName={{
+    container: "bg-gradient-to-r from-blue-50 to-purple-50",
+    item: "bg-white rounded-lg px-3 py-1",
+    link: "hover:bg-blue-100 transition-all duration-300"
+  }}
+  customItemRenderer={(item, index, isLast) => (
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+      <span className={isLast ? 'text-green-700' : 'text-gray-600'}>
+        {item.label}
+      </span>
+    </div>
+  )}
 />`}
               </pre>
             </div>
