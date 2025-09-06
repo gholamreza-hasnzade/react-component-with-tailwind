@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Barcode } from "./barcodes";
 
 const meta: Meta<typeof Barcode> = {
-  title: "Atoms/Barcode",
+  title: "'Components/Atoms/Barcode",
   component: Barcode,
   parameters: {
     layout: "centered",

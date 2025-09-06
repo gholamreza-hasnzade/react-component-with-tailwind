@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "../button";
 import { FaDownload, FaHeart, FaUser } from "react-icons/fa";
 
 export const ButtonExamples = () => {
@@ -8,19 +8,30 @@ export const ButtonExamples = () => {
 
   return (
     <div className="p-8 space-y-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Button Component Examples</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        Button Component Examples
+      </h1>
 
       {/* Variants */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold text-gray-800">Variants</h2>
         <div className="flex flex-wrap gap-4">
-          <Button onClick={() => handleClick("Contained button clicked")} debounce={1000}>
+          <Button
+            onClick={() => handleClick("Contained button clicked")}
+            debounce={1000}
+          >
             Contained
           </Button>
-          <Button variant="outlined" onClick={() => handleClick("Outlined button clicked")}>
+          <Button
+            variant="outlined"
+            onClick={() => handleClick("Outlined button clicked")}
+          >
             Outlined
           </Button>
-          <Button variant="text" onClick={() => handleClick("Text button clicked")}>
+          <Button
+            variant="text"
+            onClick={() => handleClick("Text button clicked")}
+          >
             Text
           </Button>
         </div>
@@ -58,9 +69,7 @@ export const ButtonExamples = () => {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold text-gray-800">With Icons</h2>
         <div className="flex flex-wrap gap-4">
-          <Button startIcon={<FaDownload />}>
-            Download
-          </Button>
+          <Button startIcon={<FaDownload />}>Download</Button>
           <Button endIcon={<FaHeart />} color="error">
             Like
           </Button>

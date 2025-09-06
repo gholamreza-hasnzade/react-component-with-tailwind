@@ -32,7 +32,7 @@ interface Product {
 }
 
 const meta: Meta<typeof ActionsDropdown<unknown>> = {
-  title: "Atoms/ActionsDropdown",
+  title: "'Components/Atoms/ActionsDropdown",
   component: ActionsDropdown,
   parameters: {
     layout: "centered",

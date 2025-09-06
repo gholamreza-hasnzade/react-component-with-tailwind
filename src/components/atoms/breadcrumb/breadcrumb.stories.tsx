@@ -49,7 +49,7 @@ const adminItems = [
 ];
 
 const meta: Meta<typeof Breadcrumb> = {
-  title: "Atoms/Breadcrumb",
+  title: "Components/Atoms/Breadcrumb",
   component: Breadcrumb,
   parameters: {
     layout: "padded",
