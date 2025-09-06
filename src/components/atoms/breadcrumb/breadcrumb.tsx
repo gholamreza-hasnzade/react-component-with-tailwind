@@ -300,7 +300,7 @@ function BreadcrumbComponent({
                   customClassName.menuTrigger
                 )}
                 aria-label={`Show ${middleItems.length} more breadcrumb items`}
-                aria-expanded={isCondensedMenuOpen ? "true" : "false"}
+               // aria-expanded={isCondensedMenuOpen ? "true" : "false"}
                 aria-haspopup="menu"
               >
                 <MoreHorizontal className="h-4 w-4" />
@@ -321,8 +321,8 @@ function BreadcrumbComponent({
                 getMenuPositionClasses(),
                 customClassName.menu
               )}
-              role="menu"
-              aria-orientation="vertical"
+             // role="menu"
+             // aria-orientation="vertical"
               style={getAnimationStyles()}
             >
               {customMenuContent}
@@ -350,7 +350,7 @@ function BreadcrumbComponent({
               customClassName.menuTrigger
             )}
             aria-label={`Show ${middleItems.length} more breadcrumb items`}
-            aria-expanded={isCondensedMenuOpen ? "true" : "false"}
+          //  aria-expanded={isCondensedMenuOpen ? "true" : "false"}
             aria-haspopup="menu"
             style={getAnimationStyles()}
           >

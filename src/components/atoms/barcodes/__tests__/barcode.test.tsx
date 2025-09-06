@@ -1,8 +1,6 @@
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
-import { act } from "react";
 import { Barcode } from "../barcodes";
 
 // Mock JsBarcode
