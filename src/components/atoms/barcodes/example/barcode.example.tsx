@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Barcode } from "./barcodes";
+import { Barcode } from "../barcodes";
 
 export const BarcodeExamples = () => {
   const [barcodeValue, setBarcodeValue] = useState("123456789");

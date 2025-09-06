@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { QRCode } from "./qrcode";
+import { QRCode } from "../barcodes/qrcode";
 
 export const QRCodeExamples = () => {
   const [qrValue, setQrValue] = useState("https://example.com");
