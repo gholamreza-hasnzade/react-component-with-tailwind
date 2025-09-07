@@ -1,410 +1,230 @@
-import * as React from "react";
-import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  PlusIcon,
-  MinusIcon,
-  Loader2Icon,
-} from "lucide-react";
+import React from 'react'
+import * as AccordionPrimitive from '@radix-ui/react-accordion'
+import { ChevronDownIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-import { cn } from "@/lib/utils";
-import "./accordion.css";
-
-const iconVariants = {
-  chevron: {
-    closed: ChevronRightIcon,
-    open: ChevronDownIcon,
-  },
-  plus: {
-    closed: PlusIcon,
-    open: MinusIcon,
-  },
-  arrow: {
-    closed: ChevronRightIcon,
-    open: ChevronDownIcon,
-  },
-} as const;
-
-type SizeVariants = {
-  sm: "py-2 px-3 text-xs";
-  md: "py-4 px-4 text-sm";
-  lg: "py-6 px-6 text-base";
-  xl: "py-8 px-8 text-lg";
-};
-
-type RoundedVariants = {
-  none: "rounded-none";
-  sm: "rounded-sm";
-  md: "rounded-md";
-  lg: "rounded-lg";
-  xl: "rounded-xl";
-  "2xl": "rounded-2xl";
-  full: "rounded-full";
-};
-
-type ColorVariants = {
-  default: {
-    trigger: "text-foreground hover:bg-muted/80 focus-visible:bg-muted/80 data-[state=open]:bg-muted/50";
-    content: "text-foreground";
-    icon: "text-muted-foreground";
-  };
-  primary: {
-    trigger: "text-primary hover:bg-primary/10 focus-visible:bg-primary/10 data-[state=open]:bg-primary/5";
-    content: "text-primary/90";
-    icon: "text-primary";
-  };
-  secondary: {
-    trigger: "text-secondary-foreground hover:bg-secondary/80 focus-visible:bg-secondary/80 data-[state=open]:bg-secondary/50";
-    content: "text-secondary-foreground";
-    icon: "text-secondary-foreground";
-  };
-  success: {
-    trigger: "text-green-600 hover:bg-green-50 focus-visible:bg-green-50 data-[state=open]:bg-green-50";
-    content: "text-green-700";
-    icon: "text-green-600";
-  };
-  warning: {
-    trigger: "text-yellow-600 hover:bg-yellow-50 focus-visible:bg-yellow-50 data-[state=open]:bg-yellow-50";
-    content: "text-yellow-700";
-    icon: "text-yellow-600";
-  };
-  danger: {
-    trigger: "text-red-600 hover:bg-red-50 focus-visible:bg-red-50 data-[state=open]:bg-red-50";
-    content: "text-red-700";
-    icon: "text-red-600";
-  };
-};
-
-type IconVariant = keyof typeof iconVariants;
-type SizeVariant = keyof SizeVariants;
-type RoundedVariant = keyof RoundedVariants;
-type ColorVariant = keyof ColorVariants;
-
-interface AccordionProps {
-  type?: "single" | "multiple";
-  collapsible?: boolean;
-  defaultValue?: string | string[];
-  className?: string;
-  children?: React.ReactNode;
-  variant?: "default" | "bordered" | "card" | "ghost";
-  rounded?: RoundedVariant;
-  fullWidth?: boolean;
-  disabled?: boolean;
-  dir?: "ltr" | "rtl" | "auto";
-  animationDuration?: number;
-  onValueChange?: (value: string | string[]) => void;
+// Types and Interfaces
+export interface AccordionItem {
+  id: string
+  title: string
+  content: React.ReactNode
+  disabled?: boolean
 }
 
-interface AccordionItemProps {
-  value: string;
-  className?: string;
-  disabled?: boolean;
-  children?: React.ReactNode;
+interface BaseAccordionProps {
+  items: AccordionItem[]
+  className?: string
+  itemClassName?: string
+  triggerClassName?: string
+  contentClassName?: string
+  showChevron?: boolean
+  chevronPosition?: 'left' | 'right'
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'default' | 'bordered' | 'filled'
+  icon?: React.ComponentType<{ className?: string }>
+  iconClassName?: string
 }
 
-interface AccordionTriggerProps {
-  iconVariant?: IconVariant;
-  showIcon?: boolean;
-  iconClassName?: string;
-  children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-  loading?: boolean;
-  size?: SizeVariant;
-  color?: ColorVariant;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+export interface AccordionSingleProps extends BaseAccordionProps {
+  type?: 'single'
+  defaultValue?: string
+  value?: string
+  onValueChange?: (value: string) => void
+  collapsible?: boolean
 }
 
-interface AccordionContentProps {
-  children: React.ReactNode;
-  className?: string;
-  transition?: "slide" | "fade" | "none";
+export interface AccordionMultipleProps extends BaseAccordionProps {
+  type: 'multiple'
+  defaultValue?: string[]
+  value?: string[]
+  onValueChange?: (value: string[]) => void
+  collapsible?: boolean
 }
 
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
+export type AccordionProps = AccordionSingleProps | AccordionMultipleProps
 
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
+// Accordion Root Component
+export const Accordion = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Root>,
+  AccordionProps
+>(
+  (
+    {
+      items,
+      type = 'single',
+      defaultValue,
+      value,
+      onValueChange,
+      collapsible = true,
+      className,
+      itemClassName,
+      triggerClassName,
+      contentClassName,
+      showChevron = true,
+      chevronPosition = 'right',
+      size = 'md',
+      variant = 'default',
+      icon: IconComponent = ChevronDownIcon,
+      iconClassName,
+      ...props
+    },
+    ref
+  ) => {
+    const sizeClasses = {
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg'
     }
-  }, [dir]);
 
-  return textDirection;
-}
+    const variantClasses = {
+      default: 'border-0',
+      bordered: 'border border-gray-200 rounded-lg',
+      filled: 'bg-gray-50 border border-gray-200 rounded-lg'
+    }
 
-function Accordion({
-  type = "single",
-  collapsible = true,
-  defaultValue,
-  className,
-  children,
-  variant = "default",
-  rounded = "md",
-  fullWidth = false,
-  disabled = false,
-  dir,
-  animationDuration = 200,
-  onValueChange,
-  ...props
-}: AccordionProps) {
-  const validAnimationDuration = Math.max(100, Math.min(2000, animationDuration));
-  
-  const textDirection = useTextDirection(dir);
+    const rootClassName = cn(
+      'w-full',
+      variantClasses[variant],
+      className
+    )
 
-  const rootProps =
-    type === "single"
+    // Type-safe props based on accordion type
+    const accordionProps = type === 'multiple' 
       ? {
-          type: "single" as const,
+          ref,
+          type: 'multiple' as const,
+          defaultValue: defaultValue as string[] | undefined,
+          value: value as string[] | undefined,
+          onValueChange: onValueChange as ((value: string[]) => void) | undefined,
           collapsible,
-          defaultValue: defaultValue as string | undefined,
+          className: rootClassName,
+          ...props
         }
       : {
-          type: "multiple" as const,
-          defaultValue: defaultValue as string[] | undefined,
-        };
+          ref,
+          type: 'single' as const,
+          defaultValue: defaultValue as string | undefined,
+          value: value as string | undefined,
+          onValueChange: onValueChange as ((value: string) => void) | undefined,
+          collapsible,
+          className: rootClassName,
+          ...props
+        }
 
-  React.useEffect(() => {
-    const style = document.createElement("style");
-    style.setAttribute('data-accordion-animation', 'true');
-    style.textContent = `
-      .accordion-content[data-state="closed"] {
-        animation-duration: ${validAnimationDuration}ms !important;
-      }
-      .accordion-content[data-state="open"] {
-        animation-duration: ${validAnimationDuration}ms !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      const existingStyle = document.querySelector('style[data-accordion-animation="true"]');
-      if (existingStyle && existingStyle.parentNode) {
-        existingStyle.parentNode.removeChild(existingStyle);
-      }
-    };
-  }, [validAnimationDuration]);
-
-  return (
-    <AccordionPrimitive.Root
-      {...rootProps}
-      data-slot="accordion"
-      dir={textDirection}
-      className={cn(
-        "accordion",
-        fullWidth ? "accordion-full-width" : "accordion-auto-width",
-        `accordion-variant-${variant}`,
-        `accordion-rounded-${rounded}`,
-        disabled && "accordion-disabled",
-        textDirection === "rtl" && "rtl",
-        className
-      )}
-      onValueChange={onValueChange}
-      {...props}
-    >
-      {children}
-    </AccordionPrimitive.Root>
-  );
-}
-
-function AccordionItem({
-  className,
-  value,
-  disabled = false,
-  children,
-  ...props
-}: AccordionItemProps) {
-  return (
-    <AccordionPrimitive.Item
-      value={value}
-      data-slot="accordion-item"
-      className={cn(
-        "accordion-item",
-        disabled && "accordion-item-disabled",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </AccordionPrimitive.Item>
-  );
-}
-
-function AccordionTrigger({
-  className,
-  children,
-  iconVariant = "chevron",
-  showIcon = true,
-  iconClassName,
-  disabled = false,
-  loading = false,
-  size = "md",
-  color = "default",
-  onClick,
-  ...props
-}: AccordionTriggerProps) {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
-
-  const IconComponent = iconVariants[iconVariant];
-
-  React.useEffect(() => {
-    if (typeof document === 'undefined') return;
-    
-    const accordionRoot = document.querySelector('[data-slot="accordion"]');
-    if (accordionRoot) {
-      const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
-      setTextDirection(dir || "ltr");
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, []);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (onClick) {
-      onClick(event);
-    }
-  };
-
-  return (
-    <AccordionPrimitive.Header className="flex">
-      <AccordionPrimitive.Trigger
-        data-slot="accordion-trigger"
-        className={cn(
-          "accordion-trigger group",
-          `accordion-size-${size}`,
-          `accordion-color-${color}`,
-          textDirection === "rtl" && "rtl text-right",
-          disabled && "accordion-trigger-disabled",
-          className
-        )}
-        onClick={handleClick}
-        disabled={disabled || loading}
-        {...props}
-      >
-        <span
-          className={cn(
-            "flex-1 flex items-center gap-2",
-            textDirection === "rtl" && "flex-row-reverse"
-          )}
-        >
-          {loading && <Loader2Icon className="accordion-loading" />}
-          {children}
-        </span>
-        {showIcon && !loading && (
-          <div
+    return (
+      <AccordionPrimitive.Root {...accordionProps}>
+        {items.map((item) => (
+          <AccordionItem
+            key={item.id}
+            value={item.id}
+            disabled={item.disabled}
             className={cn(
-              "accordion-icon-container",
-              textDirection === "rtl" && "order-first"
+              'border-b border-gray-200 last:border-b-0',
+              itemClassName
             )}
           >
-            <IconComponent.closed
+            <AccordionTrigger
               className={cn(
-                "accordion-icon",
-                "group-data-[state=open]:hidden",
-                textDirection === "rtl" && "rotate-90",
-                iconClassName
+                sizeClasses[size],
+                'flex items-center justify-between w-full py-4 px-4 text-left font-medium transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset disabled:opacity-50 disabled:cursor-not-allowed',
+                triggerClassName
               )}
-            />
-            <IconComponent.open
+              chevronPosition={chevronPosition}
+              showChevron={showChevron}
+              icon={IconComponent}
+              iconClassName={iconClassName}
+            >
+              {item.title}
+            </AccordionTrigger>
+            <AccordionContent
               className={cn(
-                "accordion-icon",
-                "hidden group-data-[state=open]:block",
-                textDirection === "rtl" && "rotate-90",
-                iconClassName
+                'overflow-hidden text-gray-600 transition-all',
+                'data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
+                contentClassName
               )}
-            />
-          </div>
-        )}
-        {loading && (
-          <div
-            className={cn(
-              "accordion-icon-container",
-              textDirection === "rtl" && "order-first"
-            )}
-          >
-            <Loader2Icon className="accordion-loading" />
-          </div>
-        )}
-      </AccordionPrimitive.Trigger>
-    </AccordionPrimitive.Header>
-  );
+            >
+              <div className="py-4 px-4">
+                {item.content}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </AccordionPrimitive.Root>
+    )
+  }
+)
+
+Accordion.displayName = 'Accordion'
+
+// Individual Accordion Item Component
+const AccordionItem = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <AccordionPrimitive.Item
+    ref={ref}
+    className={cn('', className)}
+    {...props}
+  />
+))
+
+AccordionItem.displayName = 'AccordionItem'
+
+// Accordion Trigger Component
+interface AccordionTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> {
+  showChevron?: boolean
+  chevronPosition?: 'left' | 'right'
+  icon?: React.ComponentType<{ className?: string }>
+  iconClassName?: string
 }
 
-function AccordionContent({
-  className,
-  children,
-  transition = "slide",
-  ...props
-}: AccordionContentProps) {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
-
-  React.useEffect(() => {
-    if (typeof document === 'undefined') return;
-    
-    const accordionRoot = document.querySelector('[data-slot="accordion"]');
-    if (accordionRoot) {
-      const dir = accordionRoot.getAttribute("dir") as "ltr" | "rtl";
-      setTextDirection(dir || "ltr");
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, []);
-
-  const transitionClasses = {
-    slide:
-      "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
-    fade: "data-[state=closed]:opacity-0 data-[state=open]:opacity-100 transition-opacity",
-    none: "",
-  };
-
-  return (
-    <AccordionPrimitive.Content
-      data-slot="accordion-content"
+const AccordionTrigger = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
+  AccordionTriggerProps
+>(({ className, children, showChevron = true, chevronPosition = 'right', icon: IconComponent = ChevronDownIcon, iconClassName, ...props }, ref) => (
+  <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Trigger
+      ref={ref}
       className={cn(
-        "accordion-content",
-        transitionClasses[transition],
+        'flex flex-1 items-center justify-between transition-all [&[data-state=open]>svg]:rotate-180',
+        chevronPosition === 'left' ? 'flex-row-reverse' : '',
         className
       )}
       {...props}
     >
-      <div className={cn(textDirection === "rtl" && "text-right")}>
-        {children}
-      </div>
-    </AccordionPrimitive.Content>
-  );
-}
+      {chevronPosition === 'left' && showChevron && (
+        <IconComponent className={cn("h-4 w-4 shrink-0 transition-transform duration-200", iconClassName)} />
+      )}
+      <span className="flex-1">{children}</span>
+      {chevronPosition === 'right' && showChevron && (
+        <IconComponent className={cn("h-4 w-4 shrink-0 transition-transform duration-200", iconClassName)} />
+      )}
+    </AccordionPrimitive.Trigger>
+  </AccordionPrimitive.Header>
+))
 
-export {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-  type AccordionProps,
-  type AccordionItemProps,
-  type AccordionTriggerProps,
-  type AccordionContentProps,
-  type IconVariant,
-  type SizeVariant,
-  type RoundedVariant,
-  type ColorVariant,
-};
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+
+// Accordion Content Component
+const AccordionContent = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Content
+    ref={ref}
+    className={cn(
+      'overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
+      className
+    )}
+    {...props}
+  >
+    <div className="pb-4 pt-0">{children}</div>
+  </AccordionPrimitive.Content>
+))
+
+AccordionContent.displayName = AccordionPrimitive.Content.displayName
+
+// Export individual components for advanced usage
+export { AccordionItem, AccordionTrigger, AccordionContent }
+

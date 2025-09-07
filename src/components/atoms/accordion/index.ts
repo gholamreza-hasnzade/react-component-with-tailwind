@@ -1,16 +1,10 @@
-export {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
+export { 
+  Accordion, 
+  AccordionItem, 
+  AccordionTrigger, 
   AccordionContent,
-  type AccordionProps,
-  type AccordionItemProps,
-  type AccordionTriggerProps,
-  type AccordionContentProps,
-  type IconVariant,
-  type SizeVariant,
-  type RoundedVariant,
-  type ColorVariant,
-} from "./accordion";
+  type AccordionItem as AccordionItemType,
+  type AccordionProps 
+} from './accordion'
 
-export { AccordionExample } from "./example/accordion-example";
+export { default as AccordionExamples } from './example/accordion.example'
