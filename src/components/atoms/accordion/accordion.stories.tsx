@@ -4,7 +4,7 @@ import { ChevronDownIcon, ChevronRightIcon, PlusIcon, ArrowDownIcon, ChevronUpIc
 import { Accordion, type AccordionItem } from './accordion'
 
 const meta: Meta<typeof Accordion> = {
-  title: 'Atoms/Accordion',
+  title: 'Components/Atoms/Accordion',
   component: Accordion,
   parameters: {
     layout: 'padded',

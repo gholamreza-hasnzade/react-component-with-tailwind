@@ -1,4 +1,4 @@
-import { Clipboard } from "./clipboard";
+import { Clipboard } from "../clipboard";
 
 export const ClipboardExamples = () => {
   const basicText = "Hello, World!";
@@ -41,9 +41,10 @@ console.log(message);`;
             Different Sizes
           </h2>
           <div className="flex items-center gap-4">
-            <Clipboard text="Small button" size="sm" />
-            <Clipboard text="Medium button (default)" size="md" />
-            <Clipboard text="Large button" size="lg" />
+            <Clipboard text="Small" size="sm" />
+            <Clipboard text="Medium (default)" size="md" />
+            <Clipboard text="Large" size="lg" />
+            <Clipboard text="Icon" size="icon" showText={false} />
           </div>
         </section>
 
@@ -52,11 +53,10 @@ console.log(message);`;
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Different Variants
           </h2>
-          <div className="flex items-center gap-4">
-            <Clipboard text="Default variant" variant="default" />
-            <Clipboard text="Outlined variant" variant="outlined" />
-            <Clipboard text="Filled variant" variant="filled" />
-            <Clipboard text="Ghost variant" variant="ghost" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <Clipboard text="Contained" variant="contained" />
+            <Clipboard text="Outlined" variant="outlined" />
+            <Clipboard text="Text" variant="text" />
           </div>
         </section>
 
@@ -65,11 +65,13 @@ console.log(message);`;
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Different Colors
           </h2>
-          <div className="flex items-center gap-4">
-            <Clipboard text="Primary color" color="primary" />
-            <Clipboard text="Secondary color" color="secondary" />
-            <Clipboard text="Success color" color="success" />
-            <Clipboard text="Error color" color="error" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <Clipboard text="Primary" color="primary" />
+            <Clipboard text="Secondary" color="secondary" />
+            <Clipboard text="Success" color="success" />
+            <Clipboard text="Error" color="error" />
+            <Clipboard text="Warning" color="warning" />
+            <Clipboard text="Info" color="info" />
           </div>
         </section>
 
@@ -136,7 +138,7 @@ console.log(message);`;
           <div className="flex items-center gap-4">
             <Clipboard text="Icon only button" showText={false} />
             <Clipboard text="Icon only outlined" showText={false} variant="outlined" />
-            <Clipboard text="Icon only filled" showText={false} variant="filled" />
+            <Clipboard text="Icon only filled" showText={false} variant="text" />
           </div>
         </section>
 
@@ -232,6 +234,20 @@ console.log(message);`;
               showToast={false}
               variant="outlined"
             />
+          </div>
+        </section>
+
+        {/* Rounded Variants */}
+        <section className="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Rounded Variants
+          </h2>
+          <div className="flex flex-wrap items-center gap-4">
+            <Clipboard text="Default" rounded="default" />
+            <Clipboard text="Full" rounded="full" />
+            <Clipboard text="Large" rounded="lg" />
+            <Clipboard text="Extra Large" rounded="xl" />
+            <Clipboard text="None" rounded="none" />
           </div>
         </section>
 

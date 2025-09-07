@@ -1,44 +1,45 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { FaCopy, FaCheck } from "react-icons/fa";
+import { FaCopy, FaCheck, FaSpinner } from "react-icons/fa";
+import {
+  clipboardVariants,
+  type ClipboardVariants,
+} from "./clipboard-variants";
 
-export interface ClipboardProps {
+export interface ClipboardProps
+  extends Omit<
+      React.ButtonHTMLAttributes<HTMLButtonElement>,
+      "color" | "onCopy" | "onError"
+    >,
+    ClipboardVariants {
   text: string;
   children?: React.ReactNode;
-  size?: "sm" | "md" | "lg";
-  variant?: "default" | "outlined" | "filled" | "ghost";
-  color?: "primary" | "secondary" | "success" | "error";
-  disabled?: boolean;
-  className?: string;
-  fullWidth?: boolean;
   showIcon?: boolean;
   showText?: boolean;
   copyText?: string;
   copiedText?: string;
   showToast?: boolean;
-  toastPosition?: "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  toastPosition?:
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
   toastDuration?: number;
   onCopy?: (text: string) => void;
+  onError?: (error: Error) => void;
+  loadingText?: string;
+  iconSize?: "sm" | "md" | "lg";
+  minDisplayTime?: number;
 }
 
-const sizeClasses = {
-  sm: "h-8 px-3 text-sm",
-  md: "h-10 px-4 text-base", 
-  lg: "h-12 px-6 text-lg",
-};
-
-const variantClasses = {
-  default: "bg-blue-600 text-white hover:bg-blue-700",
-  outlined: "bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50",
-  filled: "bg-blue-50 text-blue-600 hover:bg-blue-100",
-  ghost: "bg-transparent text-blue-600 hover:bg-blue-50",
-};
-
-const colorClasses = {
-  primary: "focus:ring-blue-500/20",
-  secondary: "focus:ring-gray-500/20", 
-  success: "focus:ring-green-500/20",
-  error: "focus:ring-red-500/20",
+const iconSizeClasses = {
+  sm: "h-3 w-3",
+  md: "h-4 w-4",
+  lg: "h-5 w-5",
 };
 
 export const Clipboard = React.forwardRef<HTMLButtonElement, ClipboardProps>(
@@ -46,12 +47,14 @@ export const Clipboard = React.forwardRef<HTMLButtonElement, ClipboardProps>(
     {
       text,
       children,
-      size = "md",
-      variant = "default",
+      variant = "contained",
       color = "primary",
+      size = "md",
+      rounded = "default",
+      fullWidth = false,
+      iconOnly = false,
       disabled = false,
       className,
-      fullWidth = false,
       showIcon = true,
       showText = true,
       copyText = "Copy",
@@ -60,6 +63,10 @@ export const Clipboard = React.forwardRef<HTMLButtonElement, ClipboardProps>(
       toastPosition = "top",
       toastDuration = 2000,
       onCopy,
+      onError,
+      loadingText = "Copying...",
+      iconSize = "md",
+      minDisplayTime = 1000,
       ...props
     },
     ref
@@ -67,28 +74,64 @@ export const Clipboard = React.forwardRef<HTMLButtonElement, ClipboardProps>(
     const [isCopied, setIsCopied] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showToastNotification, setShowToastNotification] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }, []);
 
     const handleCopy = useCallback(async () => {
-      if (!text.trim()) return;
+      if (!text.trim() || disabled || isLoading) return;
 
       setIsLoading(true);
-      
+      setError(null);
+
       try {
+        // Check if clipboard API is available
+        if (!navigator.clipboard) {
+          throw new Error("Clipboard API not supported in this browser");
+        }
+
         await navigator.clipboard.writeText(text);
         setIsCopied(true);
         setShowToastNotification(true);
         onCopy?.(text);
-        
-        setTimeout(() => {
+
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        // Set new timeout with minimum display time
+        const actualDuration = Math.max(toastDuration, minDisplayTime);
+
+        timeoutRef.current = setTimeout(() => {
           setIsCopied(false);
           setShowToastNotification(false);
-        }, toastDuration);
+        }, actualDuration);
       } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to copy text";
+        setError(errorMessage);
+        onError?.(err instanceof Error ? err : new Error(errorMessage));
         console.error("Failed to copy:", err);
       } finally {
         setIsLoading(false);
       }
-    }, [text, onCopy, toastDuration]);
+    }, [
+      text,
+      disabled,
+      isLoading,
+      onCopy,
+      onError,
+      toastDuration,
+      minDisplayTime,
+    ]);
 
     // Toast position classes
     const getToastPositionClasses = () => {
@@ -114,69 +157,95 @@ export const Clipboard = React.forwardRef<HTMLButtonElement, ClipboardProps>(
       }
     };
 
+    const isDisabled = disabled || !text.trim() || isLoading;
+    const displayText = isLoading
+      ? loadingText
+      : isCopied
+      ? copiedText
+      : copyText;
+
     return (
-      <div className="relative inline-block">
+      <div className={cn("relative", fullWidth ? "w-full" : "inline-block")}>
         <button
           ref={ref}
           type="button"
           onClick={handleCopy}
-          disabled={disabled || !text.trim() || isLoading}
+          disabled={isDisabled}
           className={cn(
-            "inline-flex items-center justify-center gap-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1",
-            sizeClasses[size],
-            variantClasses[variant],
-            colorClasses[color],
-            disabled && "opacity-50 cursor-not-allowed",
-            fullWidth && "w-full",
+            clipboardVariants({
+              variant,
+              color,
+              size,
+              rounded,
+              fullWidth,
+              iconOnly,
+            }),
             className
           )}
-          title={isCopied ? copiedText : copyText}
-          aria-label={isCopied ? copiedText : copyText}
+          title={displayText}
+          aria-label={displayText}
+          aria-describedby={error ? "clipboard-error" : undefined}
           {...props}
         >
+          {/* Loading spinner */}
           {isLoading ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" />
+            <FaSpinner
+              className={cn("animate-spin", iconSizeClasses[iconSize])}
+            />
           ) : showIcon ? (
             isCopied ? (
-              <FaCheck className="h-4 w-4" />
+              <FaCheck className={iconSizeClasses[iconSize]} />
             ) : (
-              <FaCopy className="h-4 w-4" />
+              <FaCopy className={iconSizeClasses[iconSize]} />
             )
           ) : null}
-          
-          {showText && (
-            <span>
-              {isCopied ? copiedText : copyText}
-            </span>
-          )}
-          
+          {showText && <span className="font-medium">{displayText}</span>}
           {children}
         </button>
 
-        {/* Toast Notification */}
+        {error && (
+          <div
+            id="clipboard-error"
+            className="absolute top-full left-0 mt-1 text-xs text-red-600 whitespace-nowrap"
+            role="alert"
+            aria-live="polite"
+          >
+            {error}
+          </div>
+        )}
         {showToast && showToastNotification && (
           <div
             className={cn(
-              "absolute z-50 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap transition-all duration-300 ease-in-out",
+              "absolute z-50 px-3 py-2 text-sm rounded-lg shadow-lg whitespace-nowrap transition-all duration-300 ease-in-out",
+              "bg-gray-900 text-white border border-gray-700",
               getToastPositionClasses()
             )}
+            role="status"
+            aria-live="polite"
           >
             <div className="flex items-center gap-2">
-              <FaCheck className="h-3 w-3 text-green-400" />
-              <span>{copiedText}</span>
+              <FaCheck className="h-3 w-3 text-green-400 flex-shrink-0" />
+              <span className="font-medium">{copiedText}</span>
             </div>
-            {/* Arrow */}
             <div
               className={cn(
-                "absolute w-2 h-2 bg-gray-900 transform rotate-45",
-                toastPosition === "top" && "top-full left-1/2 -translate-x-1/2 -translate-y-1/2",
-                toastPosition === "bottom" && "bottom-full left-1/2 -translate-x-1/2 translate-y-1/2",
-                toastPosition === "left" && "left-full top-1/2 -translate-y-1/2 -translate-x-1/2",
-                toastPosition === "right" && "right-full top-1/2 -translate-y-1/2 translate-x-1/2",
-                toastPosition === "top-left" && "top-full left-3 -translate-y-1/2",
-                toastPosition === "top-right" && "top-full right-3 -translate-y-1/2",
-                toastPosition === "bottom-left" && "bottom-full left-3 translate-y-1/2",
-                toastPosition === "bottom-right" && "bottom-full right-3 translate-y-1/2"
+                "absolute w-2 h-2 bg-gray-900 border border-gray-700 transform rotate-45",
+                toastPosition === "top" &&
+                  "top-full left-1/2 -translate-x-1/2 -translate-y-1/2",
+                toastPosition === "bottom" &&
+                  "bottom-full left-1/2 -translate-x-1/2 translate-y-1/2",
+                toastPosition === "left" &&
+                  "left-full top-1/2 -translate-y-1/2 -translate-x-1/2",
+                toastPosition === "right" &&
+                  "right-full top-1/2 -translate-y-1/2 translate-x-1/2",
+                toastPosition === "top-left" &&
+                  "top-full left-3 -translate-y-1/2",
+                toastPosition === "top-right" &&
+                  "top-full right-3 -translate-y-1/2",
+                toastPosition === "bottom-left" &&
+                  "bottom-full left-3 translate-y-1/2",
+                toastPosition === "bottom-right" &&
+                  "bottom-full right-3 translate-y-1/2"
               )}
             />
           </div>
