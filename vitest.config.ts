@@ -19,7 +19,7 @@ export default defineConfig({
         // You can also exclude other files as needed
       ],
     },
-    setupFiles: [], // Add setup files here if needed
+    setupFiles: ['src/test-setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
 }); 

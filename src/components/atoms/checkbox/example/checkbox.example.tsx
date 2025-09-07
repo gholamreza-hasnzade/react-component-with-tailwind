@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox } from './checkbox';
+import { Checkbox } from '../checkbox';
 
 export const CheckboxExample = () => {
   const [checkedStates, setCheckedStates] = useState({
