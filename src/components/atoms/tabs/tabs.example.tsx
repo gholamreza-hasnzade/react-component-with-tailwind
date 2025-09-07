@@ -350,7 +350,7 @@ export const TabsExample = () => {
                 defaultActiveTab="overview"
                 variant="default"
                 size="md"
-                position="left"
+                position="right"
                 showScrollArrows={true}
               />
             </div>
