@@ -9,7 +9,7 @@ export const TabsExample = () => {
   const overviewTabs: TabItem[] = [
     {
       id: 'overview',
-      label: 'Overview',
+      label: 'Overview3333333333333',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -41,7 +41,7 @@ export const TabsExample = () => {
     },
     {
       id: 'analytics',
-      label: 'Analytics',
+      label: 'Analytics11111111111111',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -60,7 +60,7 @@ export const TabsExample = () => {
       )
     },
     {
-      id: 'settings',
+      id: 'settings222222222222222222222222',
       label: 'Settings',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -185,6 +185,25 @@ export const TabsExample = () => {
       label: 'Another Tab',
       content: <div className="p-4">This is another active tab.</div>
     }
+  ];
+
+  // Many tabs for scroll demonstration
+  const manyTabs: TabItem[] = [
+    { id: 'tab1', label: 'Dashboard', content: <div className="p-4">Dashboard content with analytics and metrics</div> },
+    { id: 'tab2', label: 'Projects', content: <div className="p-4">Project management and tracking</div> },
+    { id: 'tab3', label: 'Tasks', content: <div className="p-4">Task management and assignments</div> },
+    { id: 'tab4', label: 'Team', content: <div className="p-4">Team members and collaboration</div> },
+    { id: 'tab5', label: 'Calendar', content: <div className="p-4">Calendar and scheduling</div> },
+    { id: 'tab6', label: 'Messages', content: <div className="p-4">Messages and communications</div> },
+    { id: 'tab7', label: 'Files', content: <div className="p-4">File storage and management</div> },
+    { id: 'tab8', label: 'Reports', content: <div className="p-4">Reports and analytics</div> },
+    { id: 'tab9', label: 'Settings', content: <div className="p-4">Application settings</div> },
+    { id: 'tab10', label: 'Help', content: <div className="p-4">Help and documentation</div> },
+    { id: 'tab11', label: 'Support', content: <div className="p-4">Customer support</div> },
+    { id: 'tab12', label: 'Billing', content: <div className="p-4">Billing and payments</div> },
+    { id: 'tab13', label: 'Integrations', content: <div className="p-4">Third-party integrations</div> },
+    { id: 'tab14', label: 'API', content: <div className="p-4">API documentation</div> },
+    { id: 'tab15', label: 'Security', content: <div className="p-4">Security settings</div> }
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -327,11 +346,12 @@ export const TabsExample = () => {
             <h4 className="font-medium text-gray-900 mb-2">Left Position</h4>
             <div className="h-64">
               <Tabs
-                items={overviewTabs.slice(0, 2)}
+                items={manyTabs}
                 defaultActiveTab="overview"
                 variant="default"
                 size="md"
                 position="left"
+                showScrollArrows={true}
               />
             </div>
           </div>
@@ -345,6 +365,7 @@ export const TabsExample = () => {
                 variant="default"
                 size="md"
                 position="right"
+                showScrollArrows={true}
               />
             </div>
           </div>
@@ -380,6 +401,152 @@ export const TabsExample = () => {
         </div>
         <p className="text-xs text-gray-500">
           The "Disabled Tab" cannot be clicked or accessed
+        </p>
+      </div>
+
+      {/* Scrollable Tabs */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Scrollable Tabs with Navigation Arrows</h3>
+        <div className="p-4 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-600 mb-4">
+            When there are many tabs that don't fit in the container, scroll arrows will appear to navigate through them.
+          </p>
+          <Tabs
+            items={manyTabs}
+            defaultActiveTab="tab1"
+            variant="default"
+            size="md"
+            position="top"
+            showScrollArrows={true}
+          />
+        </div>
+        <div className="p-4 bg-blue-50 rounded-lg">
+          <p className="text-sm text-blue-600 mb-4">
+            Pills variant with scroll arrows:
+          </p>
+          <Tabs
+            items={manyTabs}
+            defaultActiveTab="tab1"
+            variant="pills"
+            size="md"
+            position="top"
+            showScrollArrows={true}
+          />
+        </div>
+        <div className="p-4 bg-green-50 rounded-lg">
+          <p className="text-sm text-green-600 mb-4">
+            Underline variant with scroll arrows:
+          </p>
+          <Tabs
+            items={manyTabs}
+            defaultActiveTab="tab1"
+            variant="underline"
+            size="md"
+            position="top"
+            showScrollArrows={true}
+          />
+        </div>
+        <p className="text-xs text-gray-500">
+          Use the left and right arrow buttons to scroll through tabs, or scroll with your mouse/trackpad
+        </p>
+      </div>
+
+      {/* Left/Right Scrollable Tabs */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Left/Right Position Scrollable Tabs</h3>
+        <div className="p-4 bg-indigo-50 rounded-lg">
+          <p className="text-sm text-indigo-600 mb-4">
+            Left and right positioned tabs now support vertical scrolling with up/down arrow navigation.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium text-indigo-900 mb-2">Left Position with Many Tabs</h4>
+              <div className="h-80">
+                <Tabs
+                  items={manyTabs}
+                  defaultActiveTab="tab1"
+                  variant="default"
+                  size="md"
+                  position="left"
+                  showScrollArrows={true}
+                />
+              </div>
+            </div>
+            <div>
+              <h4 className="font-medium text-indigo-900 mb-2">Right Position with Many Tabs</h4>
+              <div className="h-80">
+                <Tabs
+                  items={manyTabs}
+                  defaultActiveTab="tab1"
+                  variant="pills"
+                  size="md"
+                  position="right"
+                  showScrollArrows={true}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-gray-500">
+          • Up/down arrows appear when tabs exceed the container height<br/>
+          • Vertical scrolling with smooth animations<br/>
+          • Works with all tab variants and sizes
+        </p>
+      </div>
+
+      {/* Mobile Responsive Tabs */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Mobile Responsive Tabs</h3>
+        <div className="p-4 bg-purple-50 rounded-lg">
+          <p className="text-sm text-purple-600 mb-4">
+            On mobile devices, scroll arrows appear even with fewer tabs to ensure better navigation. 
+            Try resizing your browser window to see the responsive behavior.
+          </p>
+          <Tabs
+            items={overviewTabs}
+            defaultActiveTab="overview"
+            variant="default"
+            size="md"
+            position="top"
+            showScrollArrows={true}
+            mobileScrollArrows={true}
+            mobileBreakpoint="md"
+          />
+        </div>
+        <div className="p-4 bg-orange-50 rounded-lg">
+          <p className="text-sm text-orange-600 mb-4">
+            Mobile-optimized with smaller arrows and better touch targets:
+          </p>
+          <Tabs
+            items={profileTabs}
+            defaultActiveTab="personal"
+            variant="pills"
+            size="sm"
+            position="top"
+            showScrollArrows={true}
+            mobileScrollArrows={true}
+            mobileBreakpoint="lg"
+          />
+        </div>
+        <div className="p-4 bg-red-50 rounded-lg">
+          <p className="text-sm text-red-600 mb-4">
+            Disabled mobile scroll arrows (arrows only show when content overflows):
+          </p>
+          <Tabs
+            items={overviewTabs}
+            defaultActiveTab="overview"
+            variant="underline"
+            size="md"
+            position="top"
+            showScrollArrows={true}
+            mobileScrollArrows={false}
+          />
+        </div>
+        <p className="text-xs text-gray-500">
+          • Mobile scroll arrows appear on screens smaller than the specified breakpoint<br/>
+          • Arrows are smaller and more touch-friendly on mobile<br/>
+          • Scroll snap behavior improves mobile navigation<br/>
+          • Customizable breakpoint: sm (640px), md (768px), lg (1024px), xl (1280px)
         </p>
       </div>
 
@@ -551,6 +718,15 @@ export const TabsExample = () => {
             <li>• Custom icons for each tab</li>
             <li>• Disabled tab support</li>
             <li>• Keyboard navigation (arrows, Home, End)</li>
+            <li>• Scrollable tabs with navigation arrows</li>
+            <li>• Horizontal scrolling for top/bottom positions</li>
+            <li>• Vertical scrolling for left/right positions</li>
+            <li>• Mobile-responsive scroll arrows</li>
+            <li>• Customizable mobile breakpoints</li>
+            <li>• Auto-scroll to active tab</li>
+            <li>• Smooth scrolling animations</li>
+            <li>• Scroll snap behavior for mobile</li>
+            <li>• Touch-friendly mobile controls</li>
             <li>• Accessibility features with proper ARIA attributes</li>
             <li>• TypeScript support with comprehensive interfaces</li>
             <li>• Custom styling and className support</li>

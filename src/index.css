@@ -52,6 +52,54 @@ body {
   scrollbar-width: none;
 }
 
+/* Hide scrollbar for tabs */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile-specific tab improvements */
+@media (max-width: 768px) {
+  .tab-button {
+    min-width: max-content;
+    white-space: nowrap;
+  }
+  
+  .tab-list {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .tab-button {
+    scroll-snap-align: start;
+  }
+}
+
+/* Tab border improvements */
+.tab-button {
+  position: relative;
+}
+
+/* Ensure borders are visible for left/right positions */
+.tab-button[data-position="left"] {
+  border-right: 2px solid transparent;
+}
+
+/* .tab-button[data-position="right"] {
+  border-left: 2px solid transparent;
+}
+
+.tab-button[data-position="left"].active {
+  border-right-color: #3b82f6 !important;
+}
+ */
+.tab-button[data-position="right"].active {
+  border-left-color: #3b82f6 !important;
+}
+
 /* Show scrollbars for table containers */
 .table-container::-webkit-scrollbar {
   display: block;
