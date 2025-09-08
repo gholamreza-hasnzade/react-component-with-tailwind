@@ -26,6 +26,7 @@ import {
   EmptyState
 } from "./components";
 import { createAdvancedFilterFn } from "@/utils/filterFunctions";
+import { useTextDirection } from "@/hooks/useTextDirection";
 
 import type { Action, DataTableProps, ApiResponse, Density } from "./types";
 import { ActionsDropdown } from "@/components/atoms";
@@ -84,6 +85,7 @@ export function DataTable<T extends object>({
   emptyStateDescription = "Try adjusting your search or filters to find what you're looking for.",
   enableAdvancedFiltering = true,
 }: DataTableProps<T>) {
+  const { isRTL } = useTextDirection();
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [columnSizing, setColumnSizing] = useState({});
@@ -190,14 +192,14 @@ export function DataTable<T extends object>({
         id: "actions",
         header: "Actions",
         cell: ({ row }: CellContext<T, unknown>) => (
-          <ActionsDropdown actions={actions as Action<T>[]} row={row.original} />
+          <ActionsDropdown actions={actions as Action<T>[]} row={row.original} position={isRTL ? "bottom-right" : "bottom-left"} />
         ),
         enableSorting: false,
         enableResizing: false,
         meta: { isAction: true },
       },
     ];
-  }, [columns, actions, actionsHorizontal]);
+  }, [columns, actions, actionsHorizontal, isRTL]);
 
   const selectionColumn = React.useMemo(
     () => ({
@@ -242,21 +244,33 @@ export function DataTable<T extends object>({
 
   const ActionsRow = useCallback(({ actions, row }: { actions: Action<T>[]; row: T }) => {
     return (
-      <div className="flex gap-2">
+      <div className={clsx(
+        "flex gap-2",
+        isRTL ? "flex-row-reverse" : "flex-row"
+      )}>
         {actions.map((action, idx) => (
           <button
             key={action.label + idx}
-            className="px-3 py-1.5 rounded-md bg-gray-100 hover:bg-gray-200 text-sm flex items-center gap-1.5 transition-colors duration-200 font-medium text-gray-700"
+            className={clsx(
+              "px-3 py-1.5 rounded-md bg-gray-100 hover:bg-gray-200 text-sm flex items-center gap-1.5 transition-colors duration-200 font-medium text-gray-700",
+              isRTL ? "flex-row-reverse" : "flex-row"
+            )}
             onClick={() => action.onClick(row)}
             type="button"
+            title={action.label}
           >
             {action.icon && <span className="flex-shrink-0">{action.icon}</span>}
-            <span className="truncate">{action.label}</span>
+            <span className={clsx(
+              "truncate",
+              isRTL ? "text-right" : "text-left"
+            )}>
+              {action.label}
+            </span>
           </button>
         ))}
       </div>
     );
-  }, []);
+  }, [isRTL]);
 
   const handleRowSelectionChange = useCallback((updater: Updater<RowSelectionState>) => {
     const next = typeof updater === "function" ? updater(rowSelection) : updater;
@@ -396,7 +410,10 @@ export function DataTable<T extends object>({
                       }).map((_, colIdx) => (
                         <td
                           key={`skeleton-cell-${rowIdx}-${colIdx}`}
-                          className={`px-4 sm:px-6 ${skeletonDensityClasses} whitespace-nowrap text-sm border-b border-gray-100 text-right`}
+                          className={clsx(
+                            `px-4 sm:px-6 ${skeletonDensityClasses} whitespace-nowrap text-sm border-b border-gray-100`,
+                            isRTL ? "text-right" : "text-left"
+                          )}
                         >
                         <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
                       </td>
@@ -414,7 +431,10 @@ export function DataTable<T extends object>({
                     }
                     className="text-center text-red-500 py-12 px-4 sm:px-6"
                   >
-                    <div className="flex flex-col items-center gap-2">
+                    <div className={clsx(
+                      "flex flex-col items-center gap-2",
+                      isRTL ? "text-right" : "text-left"
+                    )}>
                       <FaExclamationCircle className="w-8 h-8 text-red-400" />
                       <span className="font-medium">{errorMsg}</span>
                     </div>
@@ -448,7 +468,10 @@ export function DataTable<T extends object>({
                       className={clsx(
                         "transition-all duration-200",
                         isSelected
-                          ? selectedRowClassName || "bg-blue-100 border-l-4 border-blue-500 shadow-sm"
+                          ? selectedRowClassName || clsx(
+                              "bg-blue-100 shadow-sm",
+                              isRTL ? "border-r-4 border-blue-500" : "border-l-4 border-blue-500"
+                            )
                           : customRowClass || (idx % 2 === 0
                             ? "bg-white hover:bg-blue-50"
                             : "bg-gray-50 hover:bg-blue-50"),
@@ -488,7 +511,8 @@ export function DataTable<T extends object>({
                               className={clsx(
                                 "px-4 sm:px-6",
                                 getDensityClasses,
-                                "whitespace-nowrap text-sm text-gray-900 text-right",
+                                "whitespace-nowrap text-sm text-gray-900",
+                                isRTL ? "text-right" : "text-left",
                                 isPinned && [
                                   "sticky z-20",
                                   isPinned === 'left' ? 'left-0' : 'right-0',
@@ -529,16 +553,25 @@ export function DataTable<T extends object>({
                                       cell.getContext()
                                     )}
                                   </span>
-                                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                  <div className={clsx(
+                                    "absolute bottom-full mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50",
+                                    isRTL ? "right-1/2 transform translate-x-1/2" : "left-1/2 transform -translate-x-1/2"
+                                  )}>
                                     {String(cell.getValue?.() ?? "")}
-                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                    <div className={clsx(
+                                      "absolute top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900",
+                                      isRTL ? "right-1/2 transform translate-x-1/2" : "left-1/2 transform -translate-x-1/2"
+                                    )}></div>
                                   </div>
                                 </div>
                               )}
                             </td>
                           );
                         })}
-                        <td className={`px-4 sm:px-6 ${getDensityClasses} whitespace-nowrap text-sm text-gray-900 border-b border-gray-100 text-right`}>
+                        <td className={clsx(
+                          `px-4 sm:px-6 ${getDensityClasses} whitespace-nowrap text-sm text-gray-900 border-b border-gray-100`,
+                          isRTL ? "text-right" : "text-left"
+                        )}>
                           <ActionsRow
                             actions={actions ?? []}
                             row={row.original}
@@ -561,8 +594,12 @@ export function DataTable<T extends object>({
                             className={clsx(
                               "px-4 sm:px-6",
                               getDensityClasses,
-                              "text-sm text-gray-900 text-right",
-                              cell.column.id === "actions" && "sticky left-0 z-20 border-l border-gray-300",
+                              "text-sm text-gray-900",
+                              isRTL ? "text-right" : "text-left",
+                              cell.column.id === "actions" && clsx(
+                                "sticky z-20",
+                                isRTL ? "right-0 border-r border-gray-300" : "left-0 border-l border-gray-300"
+                              ),
                               isPinned && [
                                 "sticky z-20",
                                 isPinned === 'left' ? 'left-0' : 'right-0',
@@ -603,9 +640,15 @@ export function DataTable<T extends object>({
                                     cell.getContext()
                                   )}
                                 </span>
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                <div className={clsx(
+                                  "absolute bottom-full mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50",
+                                  isRTL ? "right-1/2 transform translate-x-1/2" : "left-1/2 transform -translate-x-1/2"
+                                )}>
                                   {String(cell.getValue?.() ?? "")}
-                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                  <div className={clsx(
+                                    "absolute top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900",
+                                    isRTL ? "right-1/2 transform translate-x-1/2" : "left-1/2 transform -translate-x-1/2"
+                                  )}></div>
                                 </div>
                               </div>
                             )}
@@ -623,7 +666,10 @@ export function DataTable<T extends object>({
       </div>
       {Object.keys(rowSelection).length > 0 && (
         <div className="px-4 sm:px-6 py-3 bg-blue-50 border-t border-blue-200">
-          <div className="text-sm text-blue-700 font-medium">
+          <div className={clsx(
+            "text-sm text-blue-700 font-medium",
+            isRTL ? "text-right" : "text-left"
+          )}>
             {Object.keys(rowSelection).length} row(s) selected
           </div>
         </div>
@@ -632,9 +678,14 @@ export function DataTable<T extends object>({
         <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
           {fetching && (
             <div className="mb-3 flex items-center justify-center">
-              <div className="flex items-center gap-2 text-sm text-blue-600">
+              <div className={clsx(
+                "flex items-center gap-2 text-sm text-blue-600",
+                isRTL ? "flex-row-reverse" : "flex-row"
+              )}>
                 <div className="w-4 h-4 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
-                <span>Loading...</span>
+                <span className={clsx(
+                  isRTL ? "text-right" : "text-left"
+                )}>Loading...</span>
               </div>
             </div>
           )}

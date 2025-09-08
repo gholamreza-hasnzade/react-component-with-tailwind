@@ -3,6 +3,7 @@ import type { Row, Cell, Table, Column } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import type { Action } from '../types';
 import clsx from 'clsx';
+import { useTextDirection } from '@/hooks/useTextDirection';
 
 interface DataTableRowProps<T extends object> {
   row: Row<T>;
@@ -35,6 +36,8 @@ export const DataTableRow = memo(<T extends object>({
   ActionsRow,
   table,
 }: DataTableRowProps<T>) => {
+  const { isRTL } = useTextDirection();
+  
   const renderCell = (cell: Cell<T, unknown>) => {
     const isPinned = enableColumnPinning && cell.column.getIsPinned();
     const pinnedPosition = isPinned ? cell.column.getPinnedIndex() : null;
@@ -50,8 +53,12 @@ export const DataTableRow = memo(<T extends object>({
         className={clsx(
           "px-4 sm:px-6",
           densityClasses,
-          "text-sm text-gray-900 text-right",
-          cell.column.id === "actions" && "sticky left-0 z-20 border-l border-gray-300",
+          "text-sm text-gray-900",
+          isRTL ? "text-right" : "text-left",
+          cell.column.id === "actions" && clsx(
+            "sticky z-20",
+            isRTL ? "right-0 border-r border-gray-300" : "left-0 border-l border-gray-300"
+          ),
           isPinned && [
             "sticky z-20",
             isPinned === 'left' ? 'left-0' : 'right-0',
@@ -126,7 +133,8 @@ export const DataTableRow = memo(<T extends object>({
           <td className={clsx(
             "px-4 sm:px-6",
             densityClasses,
-            "whitespace-nowrap text-sm text-gray-900 border-b border-gray-100 text-right"
+            "whitespace-nowrap text-sm text-gray-900 border-b border-gray-100",
+            isRTL ? "text-right" : "text-left"
           )}>
             <ActionsRow
               actions={actions ?? []}

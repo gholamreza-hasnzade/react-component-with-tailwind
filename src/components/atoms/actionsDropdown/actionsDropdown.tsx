@@ -94,7 +94,7 @@ export function ActionsDropdown<T>({
 
   const getPositionClasses = (): string => {
     const baseClasses =
-      "absolute bg-white border border-gray-200 rounded-lg shadow-lg z-30";
+      "absolute bg-white border border-gray-200 rounded-lg shadow-lg z-50";
 
     switch (position) {
       case "top-left":

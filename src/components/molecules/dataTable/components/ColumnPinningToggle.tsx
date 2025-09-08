@@ -2,6 +2,7 @@ import React from "react";
 import type { Table, Column } from "@tanstack/react-table";
 import clsx from "clsx";
 import { FaThumbtack, FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
+import { useTextDirection } from "@/hooks/useTextDirection";
 
 interface ColumnPinningToggleProps<T> {
   table: Table<T>;
@@ -11,6 +12,7 @@ export const ColumnPinningToggle = <T extends object>({
   table,
 }: ColumnPinningToggleProps<T>) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { isRTL } = useTextDirection();
 
   const handlePinColumn = (
     column: Column<T, unknown>,
@@ -49,11 +51,16 @@ export const ColumnPinningToggle = <T extends object>({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={clsx(
-          "inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+          "inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200",
+          isRTL ? "flex-row-reverse" : "flex-row"
         )}
       >
         <FaThumbtack size={16} />
-        Pin Columns
+        <span className={clsx(
+          isRTL ? "text-right" : "text-left"
+        )}>
+          Pin Columns
+        </span>
         {Object.values(pinnedColumns).some((cols) => cols.length > 0) && (
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
             {pinnedColumns.left.length + pinnedColumns.right.length}
@@ -71,9 +78,17 @@ export const ColumnPinningToggle = <T extends object>({
             className="fixed inset-0 z-[90]"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-64 bg-white border border-blue-200 rounded-md shadow-lg z-[100]">
+          <div className={clsx(
+            "absolute mt-2 w-64 bg-white border border-blue-200 rounded-md shadow-lg z-[100]",
+            isRTL ? "left-0" : "right-0"
+          )}>
             <div className="p-3 border-b border-blue-200 bg-blue-50">
-              <h3 className="text-sm font-medium text-blue-700">Pin Columns</h3>
+              <h3 className={clsx(
+                "text-sm font-medium text-blue-700",
+                isRTL ? "text-right" : "text-left"
+              )}>
+                Pin Columns
+              </h3>
             </div>
 
             <div className="max-h-64 overflow-y-auto">
@@ -89,14 +104,23 @@ export const ColumnPinningToggle = <T extends object>({
                   return (
                     <div
                       key={column.id}
-                      className="flex items-center justify-between p-3 hover:bg-blue-50 border-b border-blue-100 last:border-b-0 bg-white"
+                      className={clsx(
+                        "flex items-center justify-between p-3 hover:bg-blue-50 border-b border-blue-100 last:border-b-0 bg-white",
+                        isRTL ? "flex-row-reverse" : "flex-row"
+                      )}
                     >
-                      <span className="text-sm text-gray-700 truncate flex-1">
+                      <span className={clsx(
+                        "text-sm text-gray-700 truncate flex-1",
+                        isRTL ? "text-right" : "text-left"
+                      )}>
                         {typeof column.columnDef.header === "string"
                           ? column.columnDef.header
                           : column.id}
                       </span>
-                      <div className="flex items-center gap-1">
+                      <div className={clsx(
+                        "flex items-center gap-1",
+                        isRTL ? "flex-row-reverse" : "flex-row"
+                      )}>
                         <button
                           type="button"
                           onClick={() => handlePinColumn(column, "left")}
@@ -142,10 +166,24 @@ export const ColumnPinningToggle = <T extends object>({
             {(pinnedColumns.left.length > 0 ||
               pinnedColumns.right.length > 0) && (
               <div className="p-3 border-t border-blue-200 bg-blue-50">
-                <div className="text-xs text-blue-700">
-                  <div className="flex justify-between">
-                    <span>Left: {pinnedColumns.left.length}</span>
-                    <span>Right: {pinnedColumns.right.length}</span>
+                <div className={clsx(
+                  "text-xs text-blue-700",
+                  isRTL ? "text-right" : "text-left"
+                )}>
+                  <div className={clsx(
+                    "flex justify-between",
+                    isRTL ? "flex-row-reverse" : "flex-row"
+                  )}>
+                    <span className={clsx(
+                      isRTL ? "text-right" : "text-left"
+                    )}>
+                      Left: {pinnedColumns.left.length}
+                    </span>
+                    <span className={clsx(
+                      isRTL ? "text-right" : "text-left"
+                    )}>
+                      Right: {pinnedColumns.right.length}
+                    </span>
                   </div>
                 </div>
               </div>

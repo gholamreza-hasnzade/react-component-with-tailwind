@@ -5,6 +5,7 @@ import { getFilterDisplayText } from '@/utils/filterFunctions';
 import type { FilterValue } from '@/utils/filterFunctions';
 import clsx from 'clsx';
 import { FaFilter, FaTimes } from 'react-icons/fa';
+import { useTextDirection } from '@/hooks/useTextDirection';
 
 interface ColumnFilterProps<T extends object> {
   column: Column<T, unknown>;
@@ -14,6 +15,7 @@ interface ColumnFilterProps<T extends object> {
 export function ColumnFilter<T extends object>({ column, enableAdvancedFiltering = true }: ColumnFilterProps<T>) {
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
   const columnFilterValue = column.getFilterValue() as FilterValue | string | undefined;
+  const { isRTL } = useTextDirection();
 
   const handleClearFilter = () => {
     column.setFilterValue(undefined);
@@ -46,7 +48,10 @@ export function ColumnFilter<T extends object>({ column, enableAdvancedFiltering
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2">
+      <div className={clsx(
+        "flex items-center gap-2",
+        isRTL ? "flex-row-reverse" : "flex-row"
+      )}>
         <input
           type="text"
           value={filterText}
@@ -55,11 +60,15 @@ export function ColumnFilter<T extends object>({ column, enableAdvancedFiltering
           placeholder={isAdvancedFilter ? "Advanced filter active" : `Filter ${typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id}...`}
           className={clsx(
             "w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400",
-            isAdvancedFilter && 'bg-gray-100 text-gray-600 cursor-not-allowed'
+            isAdvancedFilter && 'bg-gray-100 text-gray-600 cursor-not-allowed',
+            isRTL ? "text-right" : "text-left"
           )}
         />
         
-        <div className="flex items-center gap-1">
+        <div className={clsx(
+          "flex items-center gap-1",
+          isRTL ? "flex-row-reverse" : "flex-row"
+        )}>
           {enableAdvancedFiltering && (column.columnDef.meta as Record<string, unknown>)?.enableAdvancedFilter !== false && (
             <button
               onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}

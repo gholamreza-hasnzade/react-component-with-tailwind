@@ -1,9 +1,15 @@
-import  { useMemo } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
-import { FaEye, FaEdit, FaTrash, FaShoppingCart, FaHeart } from 'react-icons/fa';
-import { DataTable } from '../dataTable';
-import { Badge } from '@/components/atoms/badge';
-import type { Action } from '../types';
+import { useMemo } from "react";
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  FaEye,
+  FaEdit,
+  FaTrash,
+  FaShoppingCart,
+  FaHeart,
+} from "react-icons/fa";
+import { DataTable } from "../dataTable";
+import { Badge } from "@/components/atoms/badge";
+import type { Action } from "../types";
 
 // Define the Product interface based on the DummyJSON API structure
 export interface Product {
@@ -48,73 +54,73 @@ export interface Product {
 
 // Helper function to format currency
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
   }).format(amount);
 };
 
 // Helper function to format rating
 const formatRating = (rating: number) => {
-  return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+  return "★".repeat(Math.floor(rating)) + "☆".repeat(5 - Math.floor(rating));
 };
 
 // Helper function to get stock status color
 const getStockStatusColor = (stock: number) => {
-  if (stock === 0) return 'bg-red-100 text-red-800';
-  if (stock < 10) return 'bg-yellow-100 text-yellow-800';
-  if (stock < 50) return 'bg-orange-100 text-orange-800';
-  return 'bg-green-100 text-green-800';
+  if (stock === 0) return "bg-red-100 text-red-800";
+  if (stock < 10) return "bg-yellow-100 text-yellow-800";
+  if (stock < 50) return "bg-orange-100 text-orange-800";
+  return "bg-green-100 text-green-800";
 };
 
 // Helper function to get stock status text
 const getStockStatusText = (stock: number) => {
-  if (stock === 0) return 'Out of Stock';
-  if (stock < 10) return 'Low Stock';
-  if (stock < 50) return 'Limited Stock';
-  return 'In Stock';
+  if (stock === 0) return "Out of Stock";
+  if (stock < 10) return "Low Stock";
+  if (stock < 50) return "Limited Stock";
+  return "In Stock";
 };
 
 export function ProductsDataTableExample() {
   // Define actions for each product row
   const actions: Action<Product>[] = [
     {
-      label: 'View Details',
+      label: "View Details",
       icon: <FaEye className="w-3 h-3" />,
       onClick: (product) => {
-        console.log('Viewing product:', product.title);
+        console.log("Viewing product:", product.title);
         alert(`Viewing details for: ${product.title}`);
       },
     },
     {
-      label: 'Edit',
+      label: "Edit",
       icon: <FaEdit className="w-3 h-3" />,
       onClick: (product) => {
-        console.log('Editing product:', product.title);
+        console.log("Editing product:", product.title);
         alert(`Editing: ${product.title}`);
       },
     },
     {
-      label: 'Add to Cart',
+      label: "Add to Cart",
       icon: <FaShoppingCart className="w-3 h-3" />,
       onClick: (product) => {
-        console.log('Adding to cart:', product.title);
+        console.log("Adding to cart:", product.title);
         alert(`Added to cart: ${product.title}`);
       },
     },
     {
-      label: 'Add to Wishlist',
+      label: "Add to Wishlist",
       icon: <FaHeart className="w-3 h-3" />,
       onClick: (product) => {
-        console.log('Adding to wishlist:', product.title);
+        console.log("Adding to wishlist:", product.title);
         alert(`Added to wishlist: ${product.title}`);
       },
     },
     {
-      label: 'Delete',
+      label: "Delete",
       icon: <FaTrash className="w-3 h-3" />,
       onClick: (product) => {
-        console.log('Deleting product:', product.title);
+        console.log("Deleting product:", product.title);
         if (confirm(`Are you sure you want to delete "${product.title}"?`)) {
           alert(`Deleted: ${product.title}`);
         }
@@ -125,9 +131,9 @@ export function ProductsDataTableExample() {
   // Define columns for the DataTable
   const columns: ColumnDef<Product>[] = useMemo(
     () => [
-      {
-        accessorKey: 'thumbnail',
-        header: 'Image',
+      /* {
+        accessorKey: "thumbnail",
+        header: "Image",
         cell: ({ getValue }) => {
           const thumbnail = getValue() as string;
           return (
@@ -137,7 +143,8 @@ export function ProductsDataTableExample() {
                 alt="Product"
                 className="w-12 h-12 object-cover rounded-lg border border-gray-200"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://via.placeholder.com/48x48?text=No+Image';
+                  e.currentTarget.src =
+                    "https://via.placeholder.com/48x48?text=No+Image";
                 }}
               />
             </div>
@@ -145,32 +152,36 @@ export function ProductsDataTableExample() {
         },
         size: 80,
         enableSorting: false,
-      },
+      }, */
       {
-        accessorKey: 'title',
-        header: 'Product Name',
+        accessorKey: "title",
+        header: "Product Name",
         cell: ({ getValue, row }) => {
           const title = getValue() as string;
           const product = row.original;
           return (
             <div className="space-y-1">
-              <div className="font-medium text-gray-900 truncate max-w-xs" title={title}>
+              <div
+                className="font-medium text-gray-900 truncate max-w-xs"
+                title={title}
+              >
                 {title}
               </div>
-              <div className="text-xs text-gray-500 truncate max-w-xs" title={product.brand}>
+              <div
+                className="text-xs text-gray-500 truncate max-w-xs"
+                title={product.brand}
+              >
                 {product.brand}
               </div>
-              <div className="text-xs text-gray-400">
-                SKU: {product.sku}
-              </div>
+              <div className="text-xs text-gray-400">SKU: {product.sku}</div>
             </div>
           );
         },
         size: 250,
       },
       {
-        accessorKey: 'category',
-        header: 'Category',
+        accessorKey: "category",
+        header: "Category",
         cell: ({ getValue }) => {
           const category = getValue() as string;
           return (
@@ -182,13 +193,14 @@ export function ProductsDataTableExample() {
         size: 120,
       },
       {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: "price",
+        header: "Price",
         cell: ({ getValue, row }) => {
           const price = getValue() as number;
           const product = row.original;
-          const discountedPrice = price * (1 - product.discountPercentage / 100);
-          
+          const discountedPrice =
+            price * (1 - product.discountPercentage / 100);
+
           return (
             <div className="space-y-1">
               <div className="font-medium text-gray-900">
@@ -210,8 +222,8 @@ export function ProductsDataTableExample() {
         size: 120,
       },
       {
-        accessorKey: 'rating',
-        header: 'Rating',
+        accessorKey: "rating",
+        header: "Rating",
         cell: ({ getValue }) => {
           const rating = getValue() as number;
           return (
@@ -228,8 +240,8 @@ export function ProductsDataTableExample() {
         size: 100,
       },
       {
-        accessorKey: 'stock',
-        header: 'Stock',
+        accessorKey: "stock",
+        header: "Stock",
         cell: ({ getValue }) => {
           const stock = getValue() as number;
           return (
@@ -237,17 +249,15 @@ export function ProductsDataTableExample() {
               <Badge className={getStockStatusColor(stock)}>
                 {getStockStatusText(stock)}
               </Badge>
-              <div className="text-xs text-gray-500">
-                {stock} units
-              </div>
+              <div className="text-xs text-gray-500">{stock} units</div>
             </div>
           );
         },
         size: 120,
       },
       {
-        accessorKey: 'tags',
-        header: 'Tags',
+        accessorKey: "tags",
+        header: "Tags",
         cell: ({ getValue }) => {
           const tags = getValue() as string[];
           return (
@@ -269,17 +279,22 @@ export function ProductsDataTableExample() {
         enableSorting: false,
       },
       {
-        accessorKey: 'availabilityStatus',
-        header: 'Status',
+        accessorKey: "availabilityStatus",
+        header: "Status",
         cell: ({ getValue }) => {
           const status = getValue() as string;
           const statusColors = {
-            'In Stock': 'bg-green-100 text-green-800',
-            'Out of Stock': 'bg-red-100 text-red-800',
-            'Limited Stock': 'bg-yellow-100 text-yellow-800',
+            "In Stock": "bg-green-100 text-green-800",
+            "Out of Stock": "bg-red-100 text-red-800",
+            "Limited Stock": "bg-yellow-100 text-yellow-800",
           };
           return (
-            <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
+            <Badge
+              className={
+                statusColors[status as keyof typeof statusColors] ||
+                "bg-gray-100 text-gray-800"
+              }
+            >
               {status}
             </Badge>
           );
@@ -292,26 +307,31 @@ export function ProductsDataTableExample() {
 
   // Handle row selection
   const handleRowSelectionChange = (selectedRows: Product[]) => {
-    console.log('Selected products:', selectedRows);
+    console.log("Selected products:", selectedRows);
   };
 
   // Handle single row selection
   const handleSelectSingleRow = (selectedRow: Product) => {
-    console.log('Selected product:', selectedRow);
+    console.log("Selected product:", selectedRow);
   };
 
   // Handle density change
-  const handleDensityChange = (density: 'compact' | 'normal' | 'comfortable') => {
-    console.log('Density changed to:', density);
+  const handleDensityChange = (
+    density: "compact" | "normal" | "comfortable"
+  ) => {
+    console.log("Density changed to:", density);
   };
 
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">Products Data Table</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Products Data Table
+        </h1>
         <p className="text-gray-600">
-          A comprehensive example of the DataTable component using the DummyJSON products API.
-          Features include sorting, filtering, pagination, row selection, and more.
+          A comprehensive example of the DataTable component using the DummyJSON
+          products API. Features include sorting, filtering, pagination, row
+          selection, and more.
         </p>
       </div>
 
@@ -339,34 +359,66 @@ export function ProductsDataTableExample() {
           emptyStateDescription="Try adjusting your search or filters to find products."
           enableAdvancedFiltering={true}
           getRowId={(product) => product.id.toString()}
-           getRowClassName={(product) => {
-             // Example: Highlight products with low stock
-             if (product.stock < 10) {
-               return 'bg-yellow-50 border-l-4 border-yellow-400';
-             }
-             // Example: Highlight products with high ratings
-             if (product.rating >= 4.5) {
-               return 'bg-green-50 border-l-4 border-green-400';
-             }
-             return '';
-           }}
+          getRowClassName={(product) => {
+            // Example: Highlight products with low stock
+            if (product.stock < 10) {
+              return "bg-yellow-50 border-l-4 border-yellow-400";
+            }
+            // Example: Highlight products with high ratings
+            if (product.rating >= 4.5) {
+              return "bg-green-50 border-l-4 border-green-400";
+            }
+            return "";
+          }}
         />
       </div>
 
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Features Demonstrated:</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          Features Demonstrated:
+        </h3>
         <ul className="space-y-1 text-sm text-gray-600">
-          <li>• <strong>API Integration:</strong> Fetches data from DummyJSON products API</li>
-          <li>• <strong>Column Management:</strong> Show/hide columns, resize, pin columns</li>
-          <li>• <strong>Filtering:</strong> Global search and column-specific filters</li>
-          <li>• <strong>Sorting:</strong> Click column headers to sort data</li>
-          <li>• <strong>Pagination:</strong> Navigate through large datasets</li>
-          <li>• <strong>Row Selection:</strong> Select single or multiple rows</li>
-          <li>• <strong>Actions:</strong> Custom actions for each row (view, edit, delete, etc.)</li>
-          <li>• <strong>Density Control:</strong> Adjust row height (compact, normal, comfortable)</li>
-          <li>• <strong>Custom Row Styling:</strong> Dynamic row classes based on data</li>
-          <li>• <strong>Responsive Design:</strong> Works on different screen sizes</li>
-          <li>• <strong>Loading States:</strong> Shows skeleton loading and error states</li>
+          <li>
+            • <strong>API Integration:</strong> Fetches data from DummyJSON
+            products API
+          </li>
+          <li>
+            • <strong>Column Management:</strong> Show/hide columns, resize, pin
+            columns
+          </li>
+          <li>
+            • <strong>Filtering:</strong> Global search and column-specific
+            filters
+          </li>
+          <li>
+            • <strong>Sorting:</strong> Click column headers to sort data
+          </li>
+          <li>
+            • <strong>Pagination:</strong> Navigate through large datasets
+          </li>
+          <li>
+            • <strong>Row Selection:</strong> Select single or multiple rows
+          </li>
+          <li>
+            • <strong>Actions:</strong> Custom actions for each row (view, edit,
+            delete, etc.)
+          </li>
+          <li>
+            • <strong>Density Control:</strong> Adjust row height (compact,
+            normal, comfortable)
+          </li>
+          <li>
+            • <strong>Custom Row Styling:</strong> Dynamic row classes based on
+            data
+          </li>
+          <li>
+            • <strong>Responsive Design:</strong> Works on different screen
+            sizes
+          </li>
+          <li>
+            • <strong>Loading States:</strong> Shows skeleton loading and error
+            states
+          </li>
         </ul>
       </div>
     </div>

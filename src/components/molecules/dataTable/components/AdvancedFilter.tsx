@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { Column } from '@tanstack/react-table';
 import type { FilterValue } from '../../../../utils/filterFunctions';
 import clsx from 'clsx';
 import { FaTimes } from 'react-icons/fa';
+import { useTextDirection } from '@/hooks/useTextDirection';
 
 export type FilterType = 
   | 'equals' 
@@ -45,8 +46,10 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
   const [value, setValue] = useState<string>('');
   const [value2, setValue2] = useState<string>('');
   const [listValues, setListValues] = useState<string>('');
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const currentFilter = column.getFilterValue() as FilterValue | undefined;
+  const { isRTL } = useTextDirection();
 
   React.useEffect(() => {
     if (currentFilter) {
@@ -63,6 +66,23 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
       }
     }
   }, [currentFilter]);
+
+  // Handle click outside to close filter
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    // Add event listener when component mounts
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup event listener when component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const selectedFilterType = filterTypes.find(ft => ft.value === filterType);
 
@@ -106,6 +126,11 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
   const renderValueInput = () => {
     if (!selectedFilterType?.requiresValue) return null;
 
+    const inputClassName = clsx(
+      "px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+      isRTL ? "text-right" : "text-left"
+    );
+
     switch (filterType) {
       case 'between':
         return (
@@ -115,14 +140,14 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
               placeholder="Min value"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={clsx(inputClassName, "flex-1")}
             />
             <input
               type="text"
               placeholder="Max value"
               value={value2}
               onChange={(e) => setValue2(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={clsx(inputClassName, "flex-1")}
             />
           </div>
         );
@@ -135,7 +160,7 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
             placeholder="Enter values separated by commas"
             value={listValues}
             onChange={(e) => setListValues(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={clsx(inputClassName, "w-full")}
           />
         );
       
@@ -146,19 +171,32 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
             placeholder={`Enter ${filterType} value`}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={clsx(inputClassName, "w-full")}
           />
         );
     }
   };
 
   return (
-    <div className="absolute top-full left-0 mt-1 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4">
+    <div 
+      ref={filterRef} 
+      className={clsx(
+        "absolute top-full mt-1 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4",
+        isRTL ? "right-0" : "left-0"
+      )}
+    >
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-900">Filter {column.columnDef.header as string}</h3>
+        <h3 className={clsx(
+          "text-sm font-medium text-gray-900",
+          isRTL ? "text-right" : "text-left"
+        )}>
+          Filter {column.columnDef.header as string}
+        </h3>
         <button
           onClick={onClose}
           className={clsx("text-gray-400 hover:text-gray-600")}
+          title="Close filter"
+          aria-label="Close filter"
         >
           <FaTimes className="w-4 h-4" />
         </button>
@@ -166,11 +204,20 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
 
       <div className="space-y-3">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Filter Type</label>
+          <label className={clsx(
+            "block text-xs font-medium text-gray-700 mb-1",
+            isRTL ? "text-right" : "text-left"
+          )}>
+            Filter Type
+          </label>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as FilterType)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={clsx(
+              "w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              isRTL ? "text-right" : "text-left"
+            )}
+            aria-label="Filter type"
           >
             {filterTypes.map((type) => (
               <option key={type.value} value={type.value}>
@@ -182,7 +229,12 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
 
         {selectedFilterType?.requiresValue && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Value</label>
+            <label className={clsx(
+              "block text-xs font-medium text-gray-700 mb-1",
+              isRTL ? "text-right" : "text-left"
+            )}>
+              Value
+            </label>
             {renderValueInput()}
           </div>
         )}
@@ -204,4 +256,4 @@ export function AdvancedFilter<T extends object>({ column, onClose }: AdvancedFi
       </div>
     </div>
   );
-} 
+}
