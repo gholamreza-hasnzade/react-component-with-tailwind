@@ -307,7 +307,13 @@ export function ProductsDataTableExample() {
 
   return (
     <div className="p-6 space-y-6">
-
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-gray-900">Products Data Table</h1>
+        <p className="text-gray-600">
+          A comprehensive example of the DataTable component using the DummyJSON products API.
+          Features include sorting, filtering, pagination, row selection, and more.
+        </p>
+      </div>
 
       <div className="space-y-4">
         <DataTable<Product>
@@ -333,10 +339,36 @@ export function ProductsDataTableExample() {
           emptyStateDescription="Try adjusting your search or filters to find products."
           enableAdvancedFiltering={true}
           getRowId={(product) => product.id.toString()}
+           getRowClassName={(product) => {
+             // Example: Highlight products with low stock
+             if (product.stock < 10) {
+               return 'bg-yellow-50 border-l-4 border-yellow-400';
+             }
+             // Example: Highlight products with high ratings
+             if (product.rating >= 4.5) {
+               return 'bg-green-50 border-l-4 border-green-400';
+             }
+             return '';
+           }}
         />
       </div>
 
-      
+      <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Features Demonstrated:</h3>
+        <ul className="space-y-1 text-sm text-gray-600">
+          <li>• <strong>API Integration:</strong> Fetches data from DummyJSON products API</li>
+          <li>• <strong>Column Management:</strong> Show/hide columns, resize, pin columns</li>
+          <li>• <strong>Filtering:</strong> Global search and column-specific filters</li>
+          <li>• <strong>Sorting:</strong> Click column headers to sort data</li>
+          <li>• <strong>Pagination:</strong> Navigate through large datasets</li>
+          <li>• <strong>Row Selection:</strong> Select single or multiple rows</li>
+          <li>• <strong>Actions:</strong> Custom actions for each row (view, edit, delete, etc.)</li>
+          <li>• <strong>Density Control:</strong> Adjust row height (compact, normal, comfortable)</li>
+          <li>• <strong>Custom Row Styling:</strong> Dynamic row classes based on data</li>
+          <li>• <strong>Responsive Design:</strong> Works on different screen sizes</li>
+          <li>• <strong>Loading States:</strong> Shows skeleton loading and error states</li>
+        </ul>
+      </div>
     </div>
   );
 }
