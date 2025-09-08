@@ -1,4 +1,2 @@
-export { DataTableExample } from './dataTable.example';
-export { SimpleDataTableExample } from './simple.example';
-export { ApiDataTableExample } from './api.example';
-export { DataTableDemo } from './demo';
+export { ProductsDataTableExample } from './ProductsDataTableExample';
+export type { Product } from './ProductsDataTableExample';
