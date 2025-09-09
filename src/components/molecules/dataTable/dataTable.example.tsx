@@ -427,13 +427,6 @@ export function DataTableExample() {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">DataTable Example</h1>
-        <p className="text-gray-600">
-          A comprehensive data table with all TanStack Table v8 features
-        </p>
-      </div>
-
       <div className="space-y-4">
         <div className="flex gap-2">
           <Button onClick={handleRefresh} loading={loading}>

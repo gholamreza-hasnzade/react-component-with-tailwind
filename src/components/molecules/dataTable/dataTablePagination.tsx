@@ -13,6 +13,7 @@ interface DataTablePaginationProps<TData> {
   className?: string;
   variant?: 'default' | 'bordered' | 'striped' | 'hover';
   totalCount?: number;
+  isLoading?: boolean;
 }
 
 export function DataTablePagination<TData>({
@@ -21,6 +22,7 @@ export function DataTablePagination<TData>({
   className,
   variant = 'default',
   totalCount,
+  isLoading = false,
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.getState().pagination;
   const pageCount = table.getPageCount();
@@ -74,7 +76,7 @@ export function DataTablePagination<TData>({
           {/* First page */}
           <button
             onClick={() => table.setPageIndex(0)}
-            disabled={!canPreviousPage}
+            disabled={!canPreviousPage || isLoading}
             title="First page"
             className={cn(
               "hidden sm:flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
@@ -90,7 +92,7 @@ export function DataTablePagination<TData>({
           {/* Previous page */}
           <button
             onClick={() => table.previousPage()}
-            disabled={!canPreviousPage}
+            disabled={!canPreviousPage || isLoading}
             title="Previous page"
             className={cn(
               "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
@@ -155,6 +157,7 @@ export function DataTablePagination<TData>({
                   <button
                     key={i}
                     onClick={() => table.setPageIndex(i - 1)}
+                    disabled={isLoading}
                     className={cn(
                       "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
                       "border rounded-lg text-sm font-medium transition-all duration-200",
@@ -203,7 +206,7 @@ export function DataTablePagination<TData>({
           {/* Next page */}
           <button
             onClick={() => table.nextPage()}
-            disabled={!canNextPage}
+            disabled={!canNextPage || isLoading}
             title="Next page"
             className={cn(
               "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
@@ -219,7 +222,7 @@ export function DataTablePagination<TData>({
           {/* Last page */}
           <button
             onClick={() => table.setPageIndex(pageCount - 1)}
-            disabled={!canNextPage}
+            disabled={!canNextPage || isLoading}
             title="Last page"
             className={cn(
               "hidden sm:flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",

@@ -1,5 +1,5 @@
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
-import { DataTableExample, DataTableApiExample } from "./components/molecules/dataTable/dataTable.example";
+import { DataTableApiExample } from "./components/molecules/dataTable/dataTableApi.example";
 
 function App() {
   return (

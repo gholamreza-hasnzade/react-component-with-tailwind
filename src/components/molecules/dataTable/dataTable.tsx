@@ -40,6 +40,7 @@ import { DataTableExport, type ExportFormat } from "./dataTableExport";
 import { DataTableSearch, type SearchConfig } from "./dataTableSearch";
 import { DataTableGrouping, type GroupingConfig } from "./dataTableGrouping";
 import { useDataTablePagination } from "./useDataTableApi";
+import { DataTableSkeleton } from "./dataTableSkeleton";
 
 // Types
 export interface DataTableProps<TData, TValue> {
@@ -509,8 +510,8 @@ export function DataTable<TData, TValue>({
     return acc;
   }, {} as Record<string, number>);
 
-  // Loading state
-  if (loading || loadingProp) {
+  // Loading state - only show full loading when no data and no API mode
+  if ((loading || loadingProp) && data.length === 0 && !isApiMode) {
     return (
       <div className={cn("w-full", className)}>
         {renderToolbar && renderToolbar(table)}
@@ -547,8 +548,8 @@ export function DataTable<TData, TValue>({
     );
   }
 
-  // Empty state
-  if (data.length === 0) {
+  // Empty state - only show when not loading and not in API mode
+  if (data.length === 0 && !(loading || loadingProp) && !isApiMode) {
     return (
       <div className={cn("w-full", className)}>
         {renderToolbar && renderToolbar(table)}
@@ -708,21 +709,31 @@ export function DataTable<TData, TValue>({
               {/* Scrollable Body */}
               <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
                 <table className={tableClasses} style={{ minWidth: '100%' }}>
-                  <DataTableBody
-                    table={table}
-                    bodyClassName={bodyClassName}
-                    rowClassName={rowClassName}
-                    cellClassName={cellClassName}
-                    size={size}
-                    density={density}
-                    onRowClick={handleRowClick}
-                    onRowDoubleClick={handleRowDoubleClick}
-                    actions={actions}
-                    showActions={showActions}
-                    statusConfig={statusConfig}
-                    columnStatusConfig={columnStatusConfig}
-                    columnWidths={columnWidths}
-                  />
+                  {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
+                    <DataTableSkeleton 
+                      rows={pagination.pageSize} 
+                      columns={memoizedColumns.length}
+                      className={bodyClassName}
+                      hasActions={showActions}
+                      hasSelection={enableRowSelection}
+                    />
+                  ) : (
+                    <DataTableBody
+                      table={table}
+                      bodyClassName={bodyClassName}
+                      rowClassName={rowClassName}
+                      cellClassName={cellClassName}
+                      size={size}
+                      density={density}
+                      onRowClick={handleRowClick}
+                      onRowDoubleClick={handleRowDoubleClick}
+                      actions={actions}
+                      showActions={showActions}
+                      statusConfig={statusConfig}
+                      columnStatusConfig={columnStatusConfig}
+                      columnWidths={columnWidths}
+                    />
+                  )}
                 </table>
               </div>
             </>
@@ -738,20 +749,30 @@ export function DataTable<TData, TValue>({
                   showActions={showActions}
                   actionsLabel={actionsLabel}
                 />
-                <DataTableBody
-                  table={table}
-                  bodyClassName={bodyClassName}
-                  rowClassName={rowClassName}
-                  cellClassName={cellClassName}
-                  size={size}
-                  density={density}
-                  onRowClick={handleRowClick}
-                  onRowDoubleClick={handleRowDoubleClick}
-                  actions={actions}
-                  showActions={showActions}
-                  statusConfig={statusConfig}
-                  columnStatusConfig={columnStatusConfig}
-                />
+                {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
+                  <DataTableSkeleton 
+                    rows={pagination.pageSize} 
+                    columns={memoizedColumns.length}
+                    className={bodyClassName}
+                    hasActions={showActions}
+                    hasSelection={enableRowSelection}
+                  />
+                ) : (
+                  <DataTableBody
+                    table={table}
+                    bodyClassName={bodyClassName}
+                    rowClassName={rowClassName}
+                    cellClassName={cellClassName}
+                    size={size}
+                    density={density}
+                    onRowClick={handleRowClick}
+                    onRowDoubleClick={handleRowDoubleClick}
+                    actions={actions}
+                    showActions={showActions}
+                    statusConfig={statusConfig}
+                    columnStatusConfig={columnStatusConfig}
+                  />
+                )}
               </table>
             </div>
           )}
@@ -781,6 +802,7 @@ export function DataTable<TData, TValue>({
                 pageSizeOptions={pageSizeOptions}
                 variant={variant}
                 totalCount={totalCount}
+                isLoading={loading || loadingProp}
               />
             )}
           </div>

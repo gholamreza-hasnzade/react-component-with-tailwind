@@ -35,6 +35,8 @@ export function useDataTableApi<T>(
       if (sortOrder) params.append('sortOrder', sortOrder);
 
       const response = await axios.get(`${url}?${params.toString()}`);
+      console.log(response.data);
+      
       return response.data;
     },
     enabled,
