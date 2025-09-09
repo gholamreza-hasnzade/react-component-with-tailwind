@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import { cn } from '@/lib/utils';
 import { GripVerticalIcon, XIcon } from 'lucide-react';
@@ -36,6 +36,21 @@ export function DataTableSettings<TData>({
   const columns = table.getAllColumns();
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close sidebar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        onClose?.();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
 
   const handleDragStart = (e: React.DragEvent, columnId: string) => {
@@ -84,13 +99,12 @@ export function DataTableSettings<TData>({
   };
 
   return (
-    <div className={cn('absolute inset-y-0 left-0 z-50 w-80 bg-white shadow-xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out', className)}>
+    <div 
+      ref={sidebarRef}
+      className={cn('absolute inset-y-0 left-0 z-50 w-72 sm:w-80 md:w-96 bg-white shadow-xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out', className)}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">Table Settings</h2>
-          <p className="text-sm text-gray-600">Configure columns and display</p>
-        </div>
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
         {onClose && (
           <button
             onClick={onClose}
@@ -103,57 +117,61 @@ export function DataTableSettings<TData>({
       </div>
       
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 bg-white">
+      <div className="flex border-b border-gray-200 bg-white overflow-x-auto">
         {showColumnVisibility && (
           <button
             onClick={() => setActiveTab('visibility')}
             className={cn(
-              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
               activeTab === 'visibility'
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             )}
           >
-            Visibility
+            <span className="hidden sm:inline">Visibility</span>
+            <span className="sm:hidden">View</span>
           </button>
         )}
         {showColumnOrdering && (
           <button
             onClick={() => setActiveTab('ordering')}
             className={cn(
-              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
               activeTab === 'ordering'
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             )}
           >
-            Order
+            <span className="hidden sm:inline">Order</span>
+            <span className="sm:hidden">Sort</span>
           </button>
         )}
         {showColumnPinning && (
           <button
             onClick={() => setActiveTab('pinning')}
             className={cn(
-              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
               activeTab === 'pinning'
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             )}
           >
-            Pinning
+            <span className="hidden sm:inline">Pinning</span>
+            <span className="sm:hidden">Pin</span>
           </button>
         )}
         {showColumnSizing && (
           <button
             onClick={() => setActiveTab('sizing')}
             className={cn(
-              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
               activeTab === 'sizing'
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             )}
           >
-            Sizing
+            <span className="hidden sm:inline">Sizing</span>
+            <span className="sm:hidden">Size</span>
           </button>
         )}
       </div>
@@ -165,8 +183,8 @@ export function DataTableSettings<TData>({
         )}
         
         {activeTab === 'visibility' && showColumnVisibility && (
-          <div className="p-4 space-y-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Visibility</h3>
+          <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">Column Visibility</h3>
             <div className="space-y-2">
               {columns.map((column) => (
                 <div key={column.id} className="flex items-center gap-2">
@@ -175,7 +193,7 @@ export function DataTableSettings<TData>({
                     label={getColumnDisplayName(column)}
                     checked={column.getIsVisible()}
                     onCheckedChange={(checked) => column.toggleVisibility(!!checked)}
-                    className="text-sm"
+                    className="text-xs sm:text-sm"
                   />
                 </div>
               ))}
@@ -183,165 +201,11 @@ export function DataTableSettings<TData>({
           </div>
         )}
         
-        {showColumnOrdering && (
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Ordering</h3>
-            <div className="text-xs text-gray-500 mb-3">
-              Drag to reorder columns
-            </div>
-            <div className="space-y-1">
-              {table.getState().columnOrder.length > 0 
-                ? table.getState().columnOrder
-                    .map(columnId => columns.find(col => col.id === columnId))
-                    .filter((column): column is NonNullable<typeof column> => Boolean(column))
-                    .map((column) => (
-                <div
-                  key={column.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, column.id)}
-                  onDragOver={(e) => handleDragOver(e, column.id)}
-                  onDragEnd={handleDragEnd}
-                  onDrop={(e) => handleDrop(e, column.id)}
-                  className={cn(
-                    "flex items-center gap-2 p-2 bg-white rounded border text-xs cursor-move transition-colors",
-                    {
-                      "opacity-50": draggedColumn === column.id,
-                      "border-blue-500 bg-blue-50": dragOverColumn === column.id && draggedColumn !== column.id,
-                    }
-                  )}
-                >
-                  <GripVerticalIcon className="w-4 h-4 text-gray-400" />
-                  <span className="flex-1">{getColumnDisplayName(column)}</span>
-                </div>
-              ))
-                : columns.map((column) => (
-                <div
-                  key={column.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, column.id)}
-                  onDragOver={(e) => handleDragOver(e, column.id)}
-                  onDragEnd={handleDragEnd}
-                  onDrop={(e) => handleDrop(e, column.id)}
-                  className={cn(
-                    "flex items-center gap-2 p-2 bg-white rounded border text-xs cursor-move transition-colors",
-                    {
-                      "opacity-50": draggedColumn === column.id,
-                      "border-blue-500 bg-blue-50": dragOverColumn === column.id && draggedColumn !== column.id,
-                    }
-                  )}
-                >
-                  <GripVerticalIcon className="w-4 h-4 text-gray-400" />
-                  <span className="flex-1">{getColumnDisplayName(column)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {showColumnPinning && (
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Pinning</h3>
-            <div className="text-sm text-gray-500 mb-2">
-              Pin columns to left or right
-            </div>
-            <div className="space-y-2">
-              {columns.map((column) => {
-                const isPinned = column.getIsPinned();
-                const pinStatus = isPinned === 'left' ? 'Left' : isPinned === 'right' ? 'Right' : 'None';
-                
-                return (
-                  <div key={column.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
-                    <span className="text-sm text-gray-700 min-w-0 flex-1 truncate">
-                      {getColumnDisplayName(column)}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {/* Current Status Indicator */}
-                      <span className={`px-2 py-1 text-xs rounded font-medium ${
-                        isPinned === 'left' 
-                          ? 'bg-green-100 text-green-800' 
-                          : isPinned === 'right' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {pinStatus}
-                      </span>
-                      
-                      {/* Action Buttons */}
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => column.pin('left')}
-                          className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
-                            isPinned === 'left'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}
-                        >
-                          Left
-                        </button>
-                        <button
-                          onClick={() => column.pin('right')}
-                          className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
-                            isPinned === 'right'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}
-                        >
-                          Right
-                        </button>
-                        <button
-                          onClick={() => column.pin(false)}
-                          className={`px-2 py-1 text-xs rounded hover:bg-gray-200 transition-colors ${
-                            !isPinned
-                              ? 'bg-green-500 text-white'
-                              : 'bg-gray-100 text-gray-700'
-                          }`}
-                        >
-                          None
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
-        {showColumnSizing && (
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Sizing</h3>
-            <div className="text-sm text-gray-500 mb-2">
-              Adjust column widths
-            </div>
-            <div className="space-y-2">
-              {columns.map((column) => (
-                <div key={column.id} className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">{typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id}</span>
-                    <span className="text-xs text-gray-500">
-                      {Math.round(column.getSize())}px
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="50"
-                    max="500"
-                    value={column.getSize()}
-                    onChange={(e) => table.setColumnSizing(prev => ({
-                      ...prev,
-                      [column.id]: Number(e.target.value)
-                    }))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    aria-label={`Adjust width for ${column.id} column`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
         
         {activeTab === 'pinning' && showColumnPinning && (
-          <div className="p-4 space-y-6">
+          <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
             <h3 className="text-sm font-medium text-gray-900 mb-3">Column Pinning</h3>
             <div className="text-sm text-gray-500 mb-2">
               Pin columns to left or right
@@ -414,7 +278,7 @@ export function DataTableSettings<TData>({
         )}
         
         {activeTab === 'sizing' && showColumnSizing && (
-          <div className="p-4 space-y-6">
+          <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
             <h3 className="text-sm font-medium text-gray-900 mb-3">Column Sizing</h3>
             <div className="text-sm text-gray-500 mb-2">
               Adjust column widths
