@@ -5,4 +5,7 @@ export { DataTablePagination } from './dataTablePagination';
 export { DataTableSettings } from './dataTableSettings';
 export { DataTableHeader } from './dataTableHeader';
 export { DataTableBody } from './dataTableBody';
+export { DataTableExample, DataTableApiExample } from './dataTable.example';
+export { useDataTableApi, useDataTablePagination } from './useDataTableApi';
 export type { DataTableProps } from './dataTable';
+export type { ApiResponse, DataTableApiConfig } from './useDataTableApi';

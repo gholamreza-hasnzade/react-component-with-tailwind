@@ -39,11 +39,13 @@ import { type RowDensity } from "./dataTableDensity.utils";
 import { DataTableExport, type ExportFormat } from "./dataTableExport";
 import { DataTableSearch, type SearchConfig } from "./dataTableSearch";
 import { DataTableGrouping, type GroupingConfig } from "./dataTableGrouping";
+import { useDataTablePagination } from "./useDataTableApi";
 
 // Types
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data?: TData[];
+  urlDatas?: string;
   enableSorting?: boolean;
   enableFiltering?: boolean;
   enableGlobalFilter?: boolean;
@@ -210,7 +212,8 @@ const fuzzySort = (value: string, items: unknown[]) => {
 // Main DataTable component
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  data: staticData,
+  urlDatas,
   enableSorting = true,
   enableFiltering = true,
   enableGlobalFilter = true,
@@ -254,8 +257,8 @@ export function DataTable<TData, TValue>({
   onPaginationChange,
   onRowSelectionChange,
   onGlobalFilterChange,
-  loading = false,
-  error,
+  loading: loadingProp = false,
+  error: errorProp,
   emptyMessage = "No data available",
   loadingMessage = "Loading...",
   errorMessage = "An error occurred",
@@ -305,6 +308,23 @@ export function DataTable<TData, TValue>({
     Record<string, unknown>
   >({});
   const [groupingState, setGroupingState] = useState<string[]>([]);
+
+  // API Integration
+  const isApiMode = !!urlDatas;
+  const { data: apiData, isLoading: apiLoading, error: apiError } = useDataTablePagination<TData>(
+    urlDatas || '',
+    pagination.pageIndex,
+    pagination.pageSize,
+    globalFilter,
+    sorting[0]?.id,
+    sorting[0]?.desc ? 'desc' : 'asc'
+  );
+
+  // Determine data source
+  const data = isApiMode ? (apiData?.products || []) : (staticData || []);
+  const loading = isApiMode ? apiLoading : false;
+  const error = isApiMode ? apiError : null;
+  const totalCount = isApiMode ? (apiData?.total || 0) : (staticData?.length || 0);
 
   // Memoized columns with selection column
   const memoizedColumns = useMemo(() => {
@@ -363,7 +383,8 @@ export function DataTable<TData, TValue>({
     enableSorting,
     enableFilters: enableFiltering,
     enableGlobalFilter,
-    manualPagination: !enablePagination,
+    manualPagination: isApiMode || !enablePagination,
+    pageCount: isApiMode ? Math.ceil(totalCount / pagination.pageSize) : undefined,
     enableColumnResizing: enableColumnSizing,
     enableColumnPinning,
     enableGrouping,
@@ -489,7 +510,7 @@ export function DataTable<TData, TValue>({
   }, {} as Record<string, number>);
 
   // Loading state
-  if (loading) {
+  if (loading || loadingProp) {
     return (
       <div className={cn("w-full", className)}>
         {renderToolbar && renderToolbar(table)}
@@ -508,17 +529,17 @@ export function DataTable<TData, TValue>({
   }
 
   // Error state
-  if (error) {
+  if (error || errorProp) {
     return (
       <div className={cn("w-full", className)}>
         {renderToolbar && renderToolbar(table)}
         <div className="flex items-center justify-center h-64">
           {renderErrorState ? (
-            renderErrorState(error)
+            renderErrorState(error?.message || errorProp || 'An error occurred')
           ) : (
             <div className="text-center">
               <div className="text-red-500 mb-2">{errorMessage}</div>
-              <div className="text-sm text-gray-500">{error}</div>
+              <div className="text-sm text-gray-500">{error?.message || errorProp}</div>
             </div>
           )}
         </div>
@@ -759,6 +780,7 @@ export function DataTable<TData, TValue>({
                 table={table}
                 pageSizeOptions={pageSizeOptions}
                 variant={variant}
+                totalCount={totalCount}
               />
             )}
           </div>

@@ -12,6 +12,7 @@ interface DataTablePaginationProps<TData> {
   pageSizeOptions?: number[];
   className?: string;
   variant?: 'default' | 'bordered' | 'striped' | 'hover';
+  totalCount?: number;
 }
 
 export function DataTablePagination<TData>({
@@ -19,6 +20,7 @@ export function DataTablePagination<TData>({
   pageSizeOptions = [5, 10, 20, 50, 100],
   className,
   variant = 'default',
+  totalCount,
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.getState().pagination;
   const pageCount = table.getPageCount();
@@ -63,7 +65,7 @@ export function DataTablePagination<TData>({
             <span className="font-semibold text-gray-900">
               {Math.min((pageIndex + 1) * pageSize, table.getFilteredRowModel().rows.length)}
             </span>{' '}
-            of <span className="font-semibold text-gray-900">{table.getFilteredRowModel().rows.length}</span> results
+            of <span className="font-semibold text-gray-900">{totalCount || table.getFilteredRowModel().rows.length}</span> results
           </span>
         </div>
         
