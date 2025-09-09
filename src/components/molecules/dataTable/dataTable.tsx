@@ -149,6 +149,7 @@ export interface DataTableProps<TData, TValue> {
   // Advanced Features
   filterConfigs?: Record<string, FilterConfig>;
   groupingConfig?: GroupingConfig;
+  renderExpandedContent?: (row: TData) => React.ReactNode;
   density?: RowDensity;
   onDensityChange?: (density: RowDensity) => void;
   exportConfig?: {
@@ -276,6 +277,7 @@ export function DataTable<TData, TValue>({
   // Advanced Features
   filterConfigs,
   groupingConfig,
+  renderExpandedContent,
   density: densityProp = "normal",
   onDensityChange,
   exportConfig,
@@ -717,6 +719,7 @@ export function DataTable<TData, TValue>({
                       onRowDoubleClick={handleRowDoubleClick}
                       actions={actions}
                       showActions={showActions}
+                      renderExpandedContent={renderExpandedContent}
                       statusConfig={statusConfig}
                       columnStatusConfig={columnStatusConfig}
                       columnWidths={columnWidths}
@@ -761,6 +764,7 @@ export function DataTable<TData, TValue>({
                     onRowDoubleClick={handleRowDoubleClick}
                     actions={actions}
                     showActions={showActions}
+                    renderExpandedContent={renderExpandedContent}
                     statusConfig={statusConfig}
                     columnStatusConfig={columnStatusConfig}
                   />

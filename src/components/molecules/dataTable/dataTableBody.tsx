@@ -25,6 +25,7 @@ interface DataTableBodyProps<TData> {
     disabled?: (row: Row<TData>) => boolean;
   }>;
   showActions?: boolean;
+  renderExpandedContent?: (row: TData) => React.ReactNode;
   statusConfig?: {
     field: keyof TData;
     colors: {
@@ -60,6 +61,7 @@ export function DataTableBody<TData>({
   onRowDoubleClick,
   actions = [],
   showActions = false,
+  renderExpandedContent,
   statusConfig,
   columnStatusConfig,
   columnWidths = {},
@@ -380,33 +382,37 @@ export function DataTableBody<TData>({
           {row.getVisibleCells().map((cell) => renderCell(cell))}
           {renderActions(row)}
         </tr>
-        {row.getIsExpanded() && row.subRows && row.subRows.length > 0 && (
+        {row.getIsExpanded() && (
           <tr key={`${row.id}-expanded`} className="bg-gray-50">
             <td
               colSpan={row.getVisibleCells().length + (showActions ? 1 : 0)}
-              className="px-4 py-2"
+              className="px-0 py-0"
             >
-              <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                <div className="text-sm text-gray-600 mb-2">
-                  Expanded Details:
+              {renderExpandedContent ? (
+                renderExpandedContent(row.original)
+              ) : (
+                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm m-4">
+                  <div className="text-sm text-gray-600 mb-2">
+                    Expanded Details:
+                  </div>
+                  <div className="space-y-2">
+                    {Object.entries(row.original as Record<string, unknown>).map(
+                      ([key, value]) => (
+                        <div key={key} className="flex">
+                          <span className="font-medium text-gray-700 w-32 capitalize">
+                            {key.replace(/([A-Z])/g, " $1").trim()}:
+                          </span>
+                          <span className="text-gray-900">
+                            {typeof value === "object"
+                              ? JSON.stringify(value)
+                              : String(value)}
+                          </span>
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  {Object.entries(row.original as Record<string, unknown>).map(
-                    ([key, value]) => (
-                      <div key={key} className="flex">
-                        <span className="font-medium text-gray-700 w-32 capitalize">
-                          {key.replace(/([A-Z])/g, " $1").trim()}:
-                        </span>
-                        <span className="text-gray-900">
-                          {typeof value === "object"
-                            ? JSON.stringify(value)
-                            : String(value)}
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
+              )}
             </td>
           </tr>
         )}
