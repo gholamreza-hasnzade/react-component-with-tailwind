@@ -350,7 +350,7 @@ export function DataTableExample() {
   }, []);
 
   // Custom toolbar component
-  const CustomToolbar = () => (
+  /* const CustomToolbar = () => (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-b border-gray-200 gap-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
         <div className="flex items-center gap-2">
@@ -389,7 +389,7 @@ export function DataTableExample() {
         </Button>
       </div>
     </div>
-  );
+  ); */
 
   // Dynamic actions for each row
   const actions = [

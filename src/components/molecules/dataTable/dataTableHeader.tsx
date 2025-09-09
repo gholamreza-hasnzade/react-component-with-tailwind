@@ -26,8 +26,8 @@ interface DataTableHeaderProps<TData> {
   columnWidths?: Record<string, number>;
   enableColumnOrdering?: boolean;
   filterConfigs?: Record<string, FilterConfig>;
-  columnFilters?: Record<string, any>;
-  setColumnFilters?: (filters: Record<string, any>) => void;
+  columnFilters?: Record<string, unknown>;
+  setColumnFilters?: (filters: Record<string, unknown>) => void;
 }
 
 export function DataTableHeader<TData>({
@@ -51,7 +51,7 @@ export function DataTableHeader<TData>({
     return columnFilters[columnId] || '';
   };
 
-  const setColumnFilterValue = (columnId: string, value: any) => {
+  const setColumnFilterValue = (columnId: string, value: unknown) => {
     if (!setColumnFilters) return;
     setColumnFilters({
       ...columnFilters,
@@ -111,7 +111,7 @@ export function DataTableHeader<TData>({
         return (
           <input
             type="text"
-            value={currentValue || ''}
+            value={String(currentValue || '')}
             onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
             placeholder={filterConfig.placeholder || 'Filter...'}
             className={baseInputClasses}
@@ -121,8 +121,9 @@ export function DataTableHeader<TData>({
       case 'select':
         return (
           <select
-            value={currentValue || ''}
+            value={String(currentValue || '')}
             onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+            aria-label="Filter options"
             className={baseInputClasses}
           >
             <option value="">All</option>
@@ -134,7 +135,7 @@ export function DataTableHeader<TData>({
           </select>
         );
 
-      case 'multiselect':
+      case 'multiselect': {
         const selectedValues = Array.isArray(currentValue) ? currentValue : [];
         return (
           <div className="space-y-1 max-h-20 overflow-y-auto">
@@ -149,6 +150,7 @@ export function DataTableHeader<TData>({
                       : selectedValues.filter(v => v !== option.value);
                     setColumnFilterValue(columnId, newValues);
                   }}
+                  aria-label={`Select ${option.label}`}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-3 h-3"
                 />
                 <span className="truncate">{option.label}</span>
@@ -159,14 +161,16 @@ export function DataTableHeader<TData>({
             )}
           </div>
         );
+      }
 
       case 'date':
         return (
           <div className="relative">
             <input
               type="date"
-              value={currentValue || ''}
+              value={String(currentValue || '')}
               onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              aria-label="Filter by date"
               className={`${baseInputClasses} pr-6`}
             />
             <CalendarIcon className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
@@ -178,8 +182,9 @@ export function DataTableHeader<TData>({
           <div className="relative">
             <input
               type="datetime-local"
-              value={currentValue || ''}
+              value={String(currentValue || '')}
               onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              aria-label="Filter by date and time"
               className={`${baseInputClasses} pr-6`}
             />
             <CalendarIcon className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
@@ -190,8 +195,9 @@ export function DataTableHeader<TData>({
         return (
           <input
             type="time"
-            value={currentValue || ''}
+            value={String(currentValue || '')}
             onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+            aria-label="Filter by time"
             className={baseInputClasses}
           />
         );
@@ -200,7 +206,7 @@ export function DataTableHeader<TData>({
         return (
           <input
             type="number"
-            value={currentValue || ''}
+            value={String(currentValue || '')}
             onChange={(e) => setColumnFilterValue(columnId, e.target.value ? Number(e.target.value) : '')}
             placeholder={filterConfig.placeholder || 'Filter...'}
             min={filterConfig.min}
@@ -210,14 +216,15 @@ export function DataTableHeader<TData>({
           />
         );
 
-      case 'range':
+      case 'range': {
+        const rangeValue = currentValue as { min?: number; max?: number } || {};
         return (
           <div className="flex space-x-1">
             <input
               type="number"
-              value={currentValue?.min || ''}
+              value={String(rangeValue.min || '')}
               onChange={(e) => setColumnFilterValue(columnId, {
-                ...currentValue,
+                ...rangeValue,
                 min: e.target.value ? Number(e.target.value) : undefined,
               })}
               placeholder="Min"
@@ -228,9 +235,9 @@ export function DataTableHeader<TData>({
             />
             <input
               type="number"
-              value={currentValue?.max || ''}
+              value={String(rangeValue.max || '')}
               onChange={(e) => setColumnFilterValue(columnId, {
-                ...currentValue,
+                ...rangeValue,
                 max: e.target.value ? Number(e.target.value) : undefined,
               })}
               placeholder="Max"
@@ -241,10 +248,11 @@ export function DataTableHeader<TData>({
             />
           </div>
         );
+      }
 
-      case 'rating':
+      case 'rating': {
         const maxRating = filterConfig.maxRating || 5;
-        const ratingValue = currentValue || 0;
+        const ratingValue = Number(currentValue) || 0;
         return (
           <div className="flex items-center space-x-1">
             {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
@@ -252,6 +260,7 @@ export function DataTableHeader<TData>({
                 key={star}
                 type="button"
                 onClick={() => setColumnFilterValue(columnId, star)}
+                aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                 className={cn(
                   "p-0.5 transition-colors",
                   star <= ratingValue
@@ -273,12 +282,14 @@ export function DataTableHeader<TData>({
             )}
           </div>
         );
+      }
 
       case 'boolean':
         return (
           <select
             value={currentValue === '' ? '' : String(currentValue)}
             onChange={(e) => setColumnFilterValue(columnId, e.target.value === '' ? '' : e.target.value === 'true')}
+            aria-label="Filter boolean values"
             className={baseInputClasses}
           >
             <option value="">All</option>
@@ -295,10 +306,13 @@ export function DataTableHeader<TData>({
   const renderSortIcon = (header: Header<TData, unknown>) => {
     if (!header.column.getCanSort()) return null;
     
+    const filterConfig = filterConfigs[header.column.id];
+    if (filterConfig?.disableSorting) return null;
+    
     const sorted = header.column.getIsSorted();
-    if (sorted === 'asc') return <ArrowUpIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
-    if (sorted === 'desc') return <ArrowDownIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
-    return <ArrowUpDownIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
+    if (sorted === 'asc') return <ArrowUpIcon className="w-4 h-4 cursor-pointer hover:text-blue-600" onClick={header.column.getToggleSortingHandler()}/>;
+    if (sorted === 'desc') return <ArrowDownIcon className="w-4 h-4 cursor-pointer hover:text-blue-600" onClick={header.column.getToggleSortingHandler()}/>;
+    return <ArrowUpDownIcon className="w-4 h-4 cursor-pointer hover:text-blue-600" onClick={header.column.getToggleSortingHandler()}/>;
   };
 
   const renderColumnHeader = (header: Header<TData, unknown>) => {
@@ -392,7 +406,7 @@ export function DataTableHeader<TData>({
             )}
           </div>
           {/* Inline Filter */}
-          {filterConfigs[header.column.id] && (
+          {filterConfigs[header.column.id] && filterConfigs[header.column.id].showFilter !== false && (
             <div className="mt-1">
               {renderInlineFilter(header.column.id, filterConfigs[header.column.id])}
             </div>

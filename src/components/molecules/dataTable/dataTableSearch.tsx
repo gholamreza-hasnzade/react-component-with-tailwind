@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import type { Table } from '@tanstack/react-table';
-import { SearchIcon, XIcon, FilterIcon } from 'lucide-react';
+import { SearchIcon, XIcon } from 'lucide-react';
 
 export interface SearchConfig {
   enabled: boolean;
@@ -21,7 +21,7 @@ export interface DataTableSearchProps<TData> {
   onSearchChange?: (query: string, results: TData[]) => void;
 }
 
-const highlightText = (text: string, query: string, config: SearchConfig, searchOptions: { caseSensitive: boolean; wholeWord: boolean; regex: boolean; }) => {
+export const highlightText = (text: string, query: string, config: SearchConfig, searchOptions: { caseSensitive: boolean; wholeWord: boolean; regex: boolean; }) => {
   if (!config.highlightMatches || !query) return text;
   
   const regex = new RegExp(
@@ -58,8 +58,7 @@ export function DataTableSearch<TData>({
   },
   onSearchChange,
 }: DataTableSearchProps<TData>) {
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [searchOptions, setSearchOptions] = useState({
+  const [searchOptions] = useState({
     caseSensitive: config.caseSensitive || false,
     wholeWord: config.wholeWord || false,
     regex: config.regex || false,
@@ -78,7 +77,7 @@ export function DataTableSearch<TData>({
         // Only search in specified columns if provided
         if (config.searchInColumns && !config.searchInColumns.includes(column.id)) return false;
         
-        const cellValue = column.accessorFn ? column.accessorFn(row.original, 0) : (row.original as unknown)[column.id];
+        const cellValue = column.accessorFn ? column.accessorFn(row.original, 0) : (row.original as Record<string, unknown>)[column.id];
         if (cellValue == null) return false;
         
         const cellString = String(cellValue);
@@ -139,64 +138,9 @@ export function DataTableSearch<TData>({
             </button>
           )}
           
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-            title="Advanced search options"
-          >
-            <FilterIcon className="w-4 h-4" />
-          </button>
         </div>
       </div>
 
-      {/* Advanced Search Options */}
-      {showAdvanced && (
-        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium text-gray-700">Search Options</h4>
-              <button
-                onClick={() => setShowAdvanced(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <XIcon className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={searchOptions.caseSensitive}
-                  onChange={(e) => setSearchOptions(prev => ({ ...prev, caseSensitive: e.target.checked }))}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Case sensitive</span>
-              </label>
-              
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={searchOptions.wholeWord}
-                  onChange={(e) => setSearchOptions(prev => ({ ...prev, wholeWord: e.target.checked }))}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Whole word</span>
-              </label>
-              
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={searchOptions.regex}
-                  onChange={(e) => setSearchOptions(prev => ({ ...prev, regex: e.target.checked }))}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Regular expression</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Search Results Info */}
       {globalFilter && (
@@ -208,4 +152,6 @@ export function DataTableSearch<TData>({
   );
 }
 
-export { highlightText };
+
+
+

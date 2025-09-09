@@ -585,10 +585,7 @@ export function DataTable<TData, TValue>({
         ) : (
           <DataTableToolbar
             table={table}
-            globalFilter={globalFilter}
-            onGlobalFilterChange={setGlobalFilter}
-            showGlobalFilter={showGlobalFilter}
-            showRowCount={showRowCount}
+          
             showSelectedCount={showSelectedCount}
             showExportButtons={showExportButtons}
             showRefreshButton={showRefreshButton}
@@ -712,8 +709,8 @@ export function DataTable<TData, TValue>({
                     columnWidths={columnWidths}
                     enableColumnOrdering={enableColumnOrdering}
                     filterConfigs={filterConfigs}
-                    columnFilters={columnFilters}
-                    setColumnFilters={setColumnFilters}
+                    columnFilters={columnFiltersState}
+                    setColumnFilters={setColumnFiltersState}
                   />
                 </table>
               </div>
@@ -763,8 +760,8 @@ export function DataTable<TData, TValue>({
                   actionsLabel={actionsLabel}
                   enableColumnOrdering={enableColumnOrdering}
                   filterConfigs={filterConfigs}
-                  columnFilters={columnFilters}
-                  setColumnFilters={setColumnFilters}
+                  columnFilters={columnFiltersState}
+                  setColumnFilters={setColumnFiltersState}
                 />
                 {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
                   <DataTableSkeleton
@@ -820,6 +817,7 @@ export function DataTable<TData, TValue>({
                 variant={variant}
                 totalCount={totalCount}
                 isLoading={loading || loadingProp}
+                showRowCount={showRowCount}
               />
             )}
           </div>

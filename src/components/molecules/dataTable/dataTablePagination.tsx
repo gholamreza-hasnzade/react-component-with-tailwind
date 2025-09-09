@@ -1,48 +1,57 @@
-import { 
+import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { Table } from '@tanstack/react-table';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Table } from "@tanstack/react-table";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   pageSizeOptions?: number[];
   className?: string;
-  variant?: 'default' | 'bordered' | 'striped' | 'hover';
+  variant?: "default" | "bordered" | "striped" | "hover";
   totalCount?: number;
   isLoading?: boolean;
+  showRowCount?: boolean;
 }
 
 export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [5, 10, 20, 50, 100],
   className,
-  variant = 'default',
+  variant = "default",
   totalCount,
   isLoading = false,
+
+  showRowCount = true,
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.getState().pagination;
   const pageCount = table.getPageCount();
   const canPreviousPage = table.getCanPreviousPage();
   const canNextPage = table.getCanNextPage();
-  
+  const filteredRowCount = table.getFilteredRowModel().rows.length;
+  const totalRowCount = table.getCoreRowModel().rows.length;
   // Maintain stable page count during loading to prevent flickering
-  const stablePageCount = isLoading && pageCount === 0 ? Math.max(1, Math.ceil((totalCount || 0) / pageSize)) : Math.max(1, pageCount);
-  
+  const stablePageCount =
+    isLoading && pageCount === 0
+      ? Math.max(1, Math.ceil((totalCount || 0) / pageSize))
+      : Math.max(1, pageCount);
+
   // Don't show pagination if no data and not loading, or if page count is invalid
   if (stablePageCount <= 0 || (!isLoading && totalCount === 0)) {
     return null;
   }
 
   const paginationClasses = cn(
-    'flex flex-col sm:flex-row items-center justify-between px-4 py-3 gap-4',
+    "flex flex-col sm:flex-row items-center justify-between px-4 py-3 gap-4",
     {
-      'bg-white border-t border-gray-200': variant === 'default' || variant === 'hover',
-      'bg-white border border-gray-200 border-t-0 rounded-b-lg': variant === 'bordered',
-      'bg-gray-50 border-t border-gray-200': variant === 'striped',
+      "bg-white border-t border-gray-200":
+        variant === "default" || variant === "hover",
+      "bg-white border border-gray-200 border-t-0 rounded-b-lg":
+        variant === "bordered",
+      "bg-gray-50 border-t border-gray-200": variant === "striped",
     },
     className
   );
@@ -51,7 +60,9 @@ export function DataTablePagination<TData>({
     <div className={paginationClasses}>
       {/* Rows per page selector */}
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-gray-600">Rows per page:</span>
+        <span className="text-sm font-medium text-gray-600">
+          Rows per page:
+        </span>
         <select
           value={pageSize}
           onChange={(e) => table.setPageSize(Number(e.target.value))}
@@ -71,14 +82,22 @@ export function DataTablePagination<TData>({
         {/* Page info */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
-            Showing <span className="font-semibold text-gray-900">{pageIndex * pageSize + 1}</span> to{' '}
             <span className="font-semibold text-gray-900">
-              {Math.min((pageIndex + 1) * pageSize, table.getFilteredRowModel().rows.length)}
-            </span>{' '}
-            of <span className="font-semibold text-gray-900">{totalCount || table.getFilteredRowModel().rows.length}</span> results
+              {table.getFilteredRowModel().rows.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900">
+              {totalCount || table.getFilteredRowModel().rows.length}
+            </span>{" "}
+            rows
           </span>
         </div>
-        
+
+        {showRowCount && (
+          <div className="text-sm text-gray-500">
+            {filteredRowCount} of {totalRowCount} rows
+          </div>
+        )}
         {/* Navigation buttons */}
         <div className="flex items-center gap-1">
           {/* First page */}
@@ -96,7 +115,7 @@ export function DataTablePagination<TData>({
           >
             <ChevronsLeftIcon className="w-4 h-4" />
           </button>
-          
+
           {/* Previous page */}
           <button
             onClick={() => table.previousPage()}
@@ -112,7 +131,7 @@ export function DataTablePagination<TData>({
           >
             <ChevronLeftIcon className="w-4 h-4" />
           </button>
-          
+
           {/* Page numbers */}
           <div className="flex items-center gap-1 mx-2">
             {/* Generate page number buttons */}
@@ -120,16 +139,16 @@ export function DataTablePagination<TData>({
               const pages: React.ReactNode[] = [];
               const currentPage = pageIndex + 1;
               const totalPages = stablePageCount;
-              
+
               // Ensure we have valid page numbers
               if (totalPages <= 0 || currentPage <= 0) {
                 return pages;
               }
-              
+
               // Show max 5 page numbers
               let startPage = Math.max(1, currentPage - 2);
               let endPage = Math.min(totalPages, currentPage + 2);
-              
+
               // Adjust if we're near the beginning or end
               if (endPage - startPage < 4) {
                 if (startPage === 1) {
@@ -138,11 +157,11 @@ export function DataTablePagination<TData>({
                   startPage = Math.max(1, endPage - 4);
                 }
               }
-              
+
               // Ensure startPage doesn't exceed totalPages
               startPage = Math.min(startPage, totalPages);
               endPage = Math.min(endPage, totalPages);
-              
+
               // Add first page and ellipsis if needed
               if (startPage > 1) {
                 pages.push(
@@ -163,11 +182,16 @@ export function DataTablePagination<TData>({
                 );
                 if (startPage > 2) {
                   pages.push(
-                    <span key="ellipsis1" className="px-2 text-gray-400 text-sm">...</span>
+                    <span
+                      key="ellipsis1"
+                      className="px-2 text-gray-400 text-sm"
+                    >
+                      ...
+                    </span>
                   );
                 }
               }
-              
+
               // Add page numbers
               for (let i = startPage; i <= endPage; i++) {
                 pages.push(
@@ -188,12 +212,15 @@ export function DataTablePagination<TData>({
                   </button>
                 );
               }
-              
+
               // Add ellipsis and last page if needed
               if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                   pages.push(
-                    <span key="ellipsis2" className="px-2 text-gray-400 text-sm">
+                    <span
+                      key="ellipsis2"
+                      className="px-2 text-gray-400 text-sm"
+                    >
                       ...
                     </span>
                   );
@@ -215,11 +242,11 @@ export function DataTablePagination<TData>({
                   </button>
                 );
               }
-              
+
               return pages;
             })()}
           </div>
-          
+
           {/* Next page */}
           <button
             onClick={() => table.nextPage()}
@@ -235,7 +262,7 @@ export function DataTablePagination<TData>({
           >
             <ChevronRightIcon className="w-4 h-4" />
           </button>
-          
+
           {/* Last page */}
           <button
             onClick={() => table.setPageIndex(stablePageCount - 1)}

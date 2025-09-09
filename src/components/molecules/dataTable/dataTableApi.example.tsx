@@ -17,6 +17,7 @@ interface Product {
   category: string;
   thumbnail: string;
   images: string[];
+  createdAt?: string; // Add datetime field for filtering example
 }
 
 // Product columns for API data
@@ -62,6 +63,7 @@ const productColumns: ColumnDef<Product, any>[] = [
   }),
   productColumnHelper.accessor('stock', {
     header: 'Stock',
+    enableSorting: false, // Disable sorting for this column
     cell: (info) => (
       <span className={`px-2 py-1 rounded-full text-xs ${
         info.getValue() > 50 
@@ -73,6 +75,14 @@ const productColumns: ColumnDef<Product, any>[] = [
         {info.getValue()}
       </span>
     ),
+  }),
+  productColumnHelper.accessor('createdAt', {
+    header: 'Created At',
+    cell: (info) => {
+      const value = info.getValue();
+      if (!value) return <span className="text-gray-400">-</span>;
+      return new Date(value).toLocaleString();
+    },
   }),
 ];
 
@@ -125,13 +135,19 @@ export function DataTableApiExample() {
       placeholder: 'Filter by ID',
       min: 1,
       max: 100,
+      showFilter: true,
+      disableSorting: false,
     },
     title: {
       type: 'text',
       placeholder: 'Search by title...',
+      showFilter: false,
+      disableSorting: true, // Test: Hide sort icons for this column
     },
     brand: {
       type: 'select',
+      showFilter: false,
+      disableSorting: false,
       options: [
         { label: 'Apple', value: 'Apple' },
         { label: 'Samsung', value: 'Samsung' },
@@ -199,18 +215,21 @@ export function DataTableApiExample() {
       placeholder: 'Filter by stock',
       min: 0,
       max: 200,
+      showFilter: false, // Hide filter for this column
+      disableSorting: true, // Hide sort icons for this column
     },
+    // Example: Add a datetime column to demonstrate datetime filtering
+    createdAt: {
+      type: 'datetime',
+      placeholder: 'Filter by creation date',
+      showFilter: true,
+      disableSorting: false,
+    },
+    
   };
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">DataTable with Advanced Filtering</h1>
-        <p className="text-gray-600">
-          Data table with comprehensive filtering options including text, select, multiselect, date, datetime, time, number, range, radio, checkbox, rating, and boolean filters
-        </p>
-      </div>
-
       <DataTable
         columns={productColumns}
         urlDatas="https://dummyjson.com/products"

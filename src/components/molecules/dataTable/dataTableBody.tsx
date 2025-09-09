@@ -77,7 +77,7 @@ export function DataTableBody<TData>({
   };
 
   // Helper function to get column status colors
-  const getColumnStatusColors = (cell: Cell<TData, any>) => {
+  const getColumnStatusColors = (cell: Cell<TData, unknown>) => {
     if (!columnStatusConfig || !columnStatusConfig[cell.column.id])
       return { bg: undefined, text: undefined };
 
@@ -106,7 +106,7 @@ export function DataTableBody<TData>({
     bodyClassName
   );
 
-  const renderCell = (cell: Cell<TData, any>) => {
+  const renderCell = (cell: Cell<TData, unknown>) => {
     // Special handling for select column
     if (cell.column.id === "select") {
       return (
@@ -391,7 +391,7 @@ export function DataTableBody<TData>({
                   Expanded Details:
                 </div>
                 <div className="space-y-2">
-                  {Object.entries(row.original as Record<string, any>).map(
+                  {Object.entries(row.original as Record<string, unknown>).map(
                     ([key, value]) => (
                       <div key={key} className="flex">
                         <span className="font-medium text-gray-700 w-32 capitalize">

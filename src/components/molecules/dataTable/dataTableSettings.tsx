@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Checkbox } from '@/components/atoms/checkbox/checkbox';
-import { cn } from '@/lib/utils';
-import { GripVerticalIcon, XIcon } from 'lucide-react';
-import type { Table, Column } from '@tanstack/react-table';
-import { DataTableColumnOrdering } from './dataTableColumnOrdering';
+import { useState, useEffect, useRef } from "react";
+import { Checkbox } from "@/components/atoms/checkbox/checkbox";
+import { cn } from "@/lib/utils";
+import { XIcon } from "lucide-react";
+import type { Table, Column } from "@tanstack/react-table";
+import { DataTableColumnOrdering } from "./dataTableColumnOrdering";
 
 // Helper function to get display name for columns
-const getColumnDisplayName = <TData,>(column: Column<TData, unknown>): string => {
-  if (typeof column.columnDef.header === 'string') {
+const getColumnDisplayName = <TData,>(
+  column: Column<TData, unknown>
+): string => {
+  if (typeof column.columnDef.header === "string") {
     return column.columnDef.header;
   }
   return column.id;
@@ -32,76 +34,37 @@ export function DataTableSettings<TData>({
   className,
   onClose,
 }: DataTableSettingsProps<TData>) {
-  const [activeTab, setActiveTab] = useState<'visibility' | 'ordering' | 'pinning' | 'sizing'>('visibility');
+  const [activeTab, setActiveTab] = useState<
+    "visibility" | "ordering" | "pinning" | "sizing"
+  >("visibility");
   const columns = table.getAllColumns();
-  const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
-  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         onClose?.();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
 
-
-  const handleDragStart = (e: React.DragEvent, columnId: string) => {
-    setDraggedColumn(columnId);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent, columnId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOverColumn(columnId);
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDragEnd = () => {
-    setDraggedColumn(null);
-    setDragOverColumn(null);
-  };
-
-  const handleDrop = (e: React.DragEvent, targetColumnId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!draggedColumn || draggedColumn === targetColumnId) {
-      setDraggedColumn(null);
-      setDragOverColumn(null);
-      return;
-    }
-
-    const currentOrder = table.getState().columnOrder.length > 0 
-      ? table.getState().columnOrder 
-      : columns.map(col => col.id);
-    
-    const draggedIndex = currentOrder.indexOf(draggedColumn);
-    const targetIndex = currentOrder.indexOf(targetColumnId);
-    
-    if (draggedIndex === -1 || targetIndex === -1) return;
-
-    const newOrder = [...currentOrder];
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIndex, 0, draggedColumn);
-    
-    table.setColumnOrder(newOrder);
-    setDraggedColumn(null);
-    setDragOverColumn(null);
-  };
-
   return (
-    <div 
+    <div
       ref={sidebarRef}
-      className={cn('absolute inset-y-0 left-0 z-50 w-72 sm:w-80 md:w-96 bg-white shadow-xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out', className)}
+      className={cn(
+        "absolute inset-y-0 left-0 z-50 w-72 sm:w-80 md:w-96 bg-white shadow-xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out",
+        className
+      )}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
@@ -115,17 +78,17 @@ export function DataTableSettings<TData>({
           </button>
         )}
       </div>
-      
+
       {/* Tabs */}
       <div className="flex border-b border-gray-200 bg-white overflow-x-auto">
         {showColumnVisibility && (
           <button
-            onClick={() => setActiveTab('visibility')}
+            onClick={() => setActiveTab("visibility")}
             className={cn(
-              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
-              activeTab === 'visibility'
-                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              "flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap",
+              activeTab === "visibility"
+                ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             )}
           >
             <span className="hidden sm:inline">Visibility</span>
@@ -134,12 +97,12 @@ export function DataTableSettings<TData>({
         )}
         {showColumnOrdering && (
           <button
-            onClick={() => setActiveTab('ordering')}
+            onClick={() => setActiveTab("ordering")}
             className={cn(
-              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
-              activeTab === 'ordering'
-                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              "flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap",
+              activeTab === "ordering"
+                ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             )}
           >
             <span className="hidden sm:inline">Order</span>
@@ -148,12 +111,12 @@ export function DataTableSettings<TData>({
         )}
         {showColumnPinning && (
           <button
-            onClick={() => setActiveTab('pinning')}
+            onClick={() => setActiveTab("pinning")}
             className={cn(
-              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
-              activeTab === 'pinning'
-                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              "flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap",
+              activeTab === "pinning"
+                ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             )}
           >
             <span className="hidden sm:inline">Pinning</span>
@@ -162,12 +125,12 @@ export function DataTableSettings<TData>({
         )}
         {showColumnSizing && (
           <button
-            onClick={() => setActiveTab('sizing')}
+            onClick={() => setActiveTab("sizing")}
             className={cn(
-              'flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap',
-              activeTab === 'sizing'
-                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              "flex-shrink-0 px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap",
+              activeTab === "sizing"
+                ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             )}
           >
             <span className="hidden sm:inline">Sizing</span>
@@ -175,16 +138,18 @@ export function DataTableSettings<TData>({
           </button>
         )}
       </div>
-      
+
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto">
-        {activeTab === 'ordering' && showColumnOrdering && (
+        {activeTab === "ordering" && showColumnOrdering && (
           <DataTableColumnOrdering table={table} />
         )}
-        
-        {activeTab === 'visibility' && showColumnVisibility && (
+
+        {activeTab === "visibility" && showColumnVisibility && (
           <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
-            <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">Column Visibility</h3>
+            <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">
+              Column Visibility
+            </h3>
             <div className="space-y-2">
               {columns.map((column) => (
                 <div key={column.id} className="flex items-center gap-2">
@@ -192,7 +157,9 @@ export function DataTableSettings<TData>({
                     id={`visibility-${column.id}`}
                     label={getColumnDisplayName(column)}
                     checked={column.getIsVisible()}
-                    onCheckedChange={(checked) => column.toggleVisibility(!!checked)}
+                    onCheckedChange={(checked) =>
+                      column.toggleVisibility(!!checked)
+                    }
                     className="text-xs sm:text-sm"
                   />
                 </div>
@@ -200,23 +167,30 @@ export function DataTableSettings<TData>({
             </div>
           </div>
         )}
-        
 
-
-        
-        {activeTab === 'pinning' && showColumnPinning && (
+        {activeTab === "pinning" && showColumnPinning && (
           <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Pinning</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Column Pinning
+            </h3>
             <div className="text-sm text-gray-500 mb-2">
               Pin columns to left or right
             </div>
             <div className="space-y-2">
               {columns.map((column) => {
                 const isPinned = column.getIsPinned();
-                const pinStatus = isPinned === 'left' ? 'Pinned Left' : isPinned === 'right' ? 'Pinned Right' : 'Not Pinned';
-                
+                const pinStatus =
+                  isPinned === "left"
+                    ? "Pinned Left"
+                    : isPinned === "right"
+                    ? "Pinned Right"
+                    : "Not Pinned";
+
                 return (
-                  <div key={column.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={column.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  >
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-gray-900 truncate">
                         {getColumnDisplayName(column)}
@@ -225,35 +199,37 @@ export function DataTableSettings<TData>({
                         ID: {column.id}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 text-xs rounded ${
-                        isPinned === 'left' 
-                          ? 'bg-green-100 text-green-800' 
-                          : isPinned === 'right' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded ${
+                          isPinned === "left"
+                            ? "bg-green-100 text-green-800"
+                            : isPinned === "right"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
                         {pinStatus}
                       </span>
-                      
+
                       <div className="flex gap-1">
                         <button
-                          onClick={() => column.pin('left')}
+                          onClick={() => column.pin("left")}
                           className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
-                            isPinned === 'left'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-100 text-blue-700'
+                            isPinned === "left"
+                              ? "bg-green-500 text-white"
+                              : "bg-blue-100 text-blue-700"
                           }`}
                         >
                           Left
                         </button>
                         <button
-                          onClick={() => column.pin('right')}
+                          onClick={() => column.pin("right")}
                           className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
-                            isPinned === 'right'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-100 text-blue-700'
+                            isPinned === "right"
+                              ? "bg-green-500 text-white"
+                              : "bg-blue-100 text-blue-700"
                           }`}
                         >
                           Right
@@ -262,8 +238,8 @@ export function DataTableSettings<TData>({
                           onClick={() => column.pin(false)}
                           className={`px-2 py-1 text-xs rounded hover:bg-gray-200 transition-colors ${
                             !isPinned
-                              ? 'bg-gray-500 text-white'
-                              : 'bg-gray-100 text-gray-700'
+                              ? "bg-gray-500 text-white"
+                              : "bg-gray-100 text-gray-700"
                           }`}
                         >
                           Unpin
@@ -276,10 +252,12 @@ export function DataTableSettings<TData>({
             </div>
           </div>
         )}
-        
-        {activeTab === 'sizing' && showColumnSizing && (
+
+        {activeTab === "sizing" && showColumnSizing && (
           <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Column Sizing</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Column Sizing
+            </h3>
             <div className="text-sm text-gray-500 mb-2">
               Adjust column widths
             </div>
@@ -299,10 +277,12 @@ export function DataTableSettings<TData>({
                     min="50"
                     max="500"
                     value={column.getSize()}
-                    onChange={(e) => table.setColumnSizing(prev => ({
-                      ...prev,
-                      [column.id]: Number(e.target.value)
-                    }))}
+                    onChange={(e) =>
+                      table.setColumnSizing((prev) => ({
+                        ...prev,
+                        [column.id]: Number(e.target.value),
+                      }))
+                    }
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     aria-label={`Adjust width for ${column.id} column`}
                   />
