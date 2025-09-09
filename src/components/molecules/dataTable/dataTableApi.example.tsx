@@ -9,15 +9,40 @@ interface Product {
   id: number;
   title: string;
   description: string;
+  category: string;
   price: number;
   discountPercentage: number;
   rating: number;
   stock: number;
+  tags: string[];
   brand: string;
-  category: string;
-  thumbnail: string;
+  sku: string;
+  weight: number;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation: string;
+  shippingInformation: string;
+  availabilityStatus: string;
+  reviews: Array<{
+    rating: number;
+    comment: string;
+    date: string;
+    reviewerName: string;
+    reviewerEmail: string;
+  }>;
+  returnPolicy: string;
+  minimumOrderQuantity: number;
+  meta: {
+    createdAt: string;
+    updatedAt: string;
+    barcode: string;
+    qrCode: string;
+  };
   images: string[];
-  createdAt?: string; // Add datetime field for filtering example
+  thumbnail: string;
 }
 
 // Product columns for API data
@@ -27,6 +52,32 @@ const productColumns: ColumnDef<Product, any>[] = [
   productColumnHelper.accessor('id', {
     header: 'ID',
     cell: (info) => info.getValue(),
+  }),
+  productColumnHelper.accessor('thumbnail', {
+    header: 'Image',
+    cell: (info) => {
+      const thumbnail = info.getValue();
+      const row = info.row.original;
+      return (
+        <div className="flex items-center space-x-2">
+          <div className="relative">
+            <img
+              src={thumbnail}
+              alt={row.title}
+              className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+              onError={(e) => {
+                e.currentTarget.src = 'https://via.placeholder.com/48x48?text=No+Image';
+              }}
+            />
+            {row.images && row.images.length > 1 && (
+              <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {row.images.length}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    },
   }),
   productColumnHelper.accessor('title', {
     header: 'Title',
@@ -47,6 +98,122 @@ const productColumns: ColumnDef<Product, any>[] = [
         {info.getValue()}
       </span>
     ),
+  }),
+  productColumnHelper.accessor('sku', {
+    header: 'SKU',
+    cell: (info) => (
+      <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+        {info.getValue()}
+      </span>
+    ),
+  }),
+  productColumnHelper.accessor('tags', {
+    header: 'Tags',
+    cell: (info) => {
+      const tags = info.getValue();
+      return (
+        <div className="flex flex-wrap gap-1">
+          {tags.slice(0, 2).map((tag, index) => (
+            <span
+              key={index}
+              className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs"
+            >
+              {tag}
+            </span>
+          ))}
+          {tags.length > 2 && (
+            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+              +{tags.length - 2}
+            </span>
+          )}
+        </div>
+      );
+    },
+  }),
+  productColumnHelper.accessor('dimensions', {
+    header: 'Dimensions',
+    cell: (info) => {
+      const dims = info.getValue();
+      return (
+        <div className="text-xs">
+          <div>{dims.width} × {dims.height} × {dims.depth}</div>
+          <div className="text-gray-500">cm</div>
+        </div>
+      );
+    },
+  }),
+  productColumnHelper.accessor('reviews', {
+    header: 'Reviews',
+    cell: (info) => {
+      const reviews = info.getValue();
+      const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+      return (
+        <div className="text-center">
+          <div className="text-sm font-semibold">{avgRating.toFixed(1)}</div>
+          <div className="text-xs text-gray-500">{reviews.length} reviews</div>
+        </div>
+      );
+    },
+  }),
+  productColumnHelper.accessor('availabilityStatus', {
+    header: 'Status',
+    cell: (info) => {
+      const status = info.getValue();
+      const statusColors = {
+        'In Stock': 'bg-green-100 text-green-800',
+        'Out of Stock': 'bg-red-100 text-red-800',
+        'Low Stock': 'bg-yellow-100 text-yellow-800',
+      };
+      return (
+        <span className={`px-2 py-1 rounded-full text-xs ${statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}`}>
+          {status}
+        </span>
+      );
+    },
+  }),
+  productColumnHelper.accessor('meta.createdAt', {
+    header: 'Created',
+    cell: (info) => {
+      const date = info.getValue();
+      return new Date(date).toLocaleDateString();
+    },
+  }),
+  productColumnHelper.accessor('images', {
+    header: 'Gallery',
+    cell: (info) => {
+      const images = info.getValue();
+      const row = info.row.original;
+      
+      if (!images || images.length === 0) {
+        return (
+          <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+            <span className="text-xs text-gray-400">No images</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex space-x-1">
+          {images.slice(0, 3).map((image, index) => (
+            <div key={index} className="relative">
+              <img
+                src={image}
+                alt={`${row.title} - Image ${index + 1}`}
+                className="w-8 h-8 object-cover rounded border border-gray-200"
+                onError={(e) => {
+                  e.currentTarget.src = 'https://via.placeholder.com/32x32?text=!';
+                }}
+              />
+              {index === 2 && images.length > 3 && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">+{images.length - 3}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    },
   }),
   productColumnHelper.accessor('price', {
     header: 'Price',
@@ -225,7 +392,29 @@ export function DataTableApiExample() {
       showFilter: true,
       disableSorting: false,
     },
-    
+    // New complex field filters
+    sku: {
+      type: 'text',
+      placeholder: 'Search by SKU...',
+      showFilter: true,
+      disableSorting: false,
+    },
+    availabilityStatus: {
+      type: 'select',
+      showFilter: true,
+      disableSorting: false,
+      options: [
+        { label: 'In Stock', value: 'In Stock' },
+        { label: 'Out of Stock', value: 'Out of Stock' },
+        { label: 'Low Stock', value: 'Low Stock' },
+      ],
+    },
+    'meta.createdAt': {
+      type: 'datetime',
+      placeholder: 'Filter by creation date',
+      showFilter: true,
+      disableSorting: false,
+    },
   };
 
   return (
@@ -271,7 +460,7 @@ export function DataTableApiExample() {
         actions={productActions}
         showActions={true}
         actionsLabel="Actions"
-        filterConfigs={filterConfigs}
+      /*   filterConfigs={filterConfigs} */
       />
     </div>
   );
