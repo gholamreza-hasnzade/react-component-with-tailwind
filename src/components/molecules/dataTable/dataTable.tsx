@@ -385,7 +385,7 @@ export function DataTable<TData, TValue>({
     enableFilters: enableFiltering,
     enableGlobalFilter,
     manualPagination: isApiMode || !enablePagination,
-    pageCount: isApiMode ? Math.ceil(totalCount / pagination.pageSize) : undefined,
+    pageCount: isApiMode ? Math.max(1, Math.ceil(totalCount / pagination.pageSize)) : undefined,
     enableColumnResizing: enableColumnSizing,
     enableColumnPinning,
     enableGrouping,

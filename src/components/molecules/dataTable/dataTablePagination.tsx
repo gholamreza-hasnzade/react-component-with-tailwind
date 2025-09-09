@@ -28,6 +28,14 @@ export function DataTablePagination<TData>({
   const pageCount = table.getPageCount();
   const canPreviousPage = table.getCanPreviousPage();
   const canNextPage = table.getCanNextPage();
+  
+  // Maintain stable page count during loading to prevent flickering
+  const stablePageCount = isLoading && pageCount === 0 ? Math.max(1, Math.ceil((totalCount || 0) / pageSize)) : Math.max(1, pageCount);
+  
+  // Don't show pagination if no data and not loading, or if page count is invalid
+  if (stablePageCount <= 0 || (!isLoading && totalCount === 0)) {
+    return null;
+  }
 
   const paginationClasses = cn(
     'flex flex-col sm:flex-row items-center justify-between px-4 py-3 gap-4',
@@ -111,7 +119,12 @@ export function DataTablePagination<TData>({
             {(() => {
               const pages = [];
               const currentPage = pageIndex + 1;
-              const totalPages = pageCount;
+              const totalPages = stablePageCount;
+              
+              // Ensure we have valid page numbers
+              if (totalPages <= 0 || currentPage <= 0) {
+                return pages;
+              }
               
               // Show max 5 page numbers
               let startPage = Math.max(1, currentPage - 2);
@@ -125,6 +138,10 @@ export function DataTablePagination<TData>({
                   startPage = Math.max(1, endPage - 4);
                 }
               }
+              
+              // Ensure startPage doesn't exceed totalPages
+              startPage = Math.min(startPage, totalPages);
+              endPage = Math.min(endPage, totalPages);
               
               // Add first page and ellipsis if needed
               if (startPage > 1) {
@@ -221,7 +238,7 @@ export function DataTablePagination<TData>({
           
           {/* Last page */}
           <button
-            onClick={() => table.setPageIndex(pageCount - 1)}
+            onClick={() => table.setPageIndex(stablePageCount - 1)}
             disabled={!canNextPage || isLoading}
             title="Last page"
             className={cn(
