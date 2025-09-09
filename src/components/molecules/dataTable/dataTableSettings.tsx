@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import { cn } from '@/lib/utils';
 import { GripVerticalIcon, XIcon } from 'lucide-react';
-import type { Table } from '@tanstack/react-table';
+import type { Table, Column } from '@tanstack/react-table';
+
+// Helper function to get display name for columns
+const getColumnDisplayName = <TData,>(column: Column<TData, unknown>): string => {
+  if (typeof column.columnDef.header === 'string') {
+    return column.columnDef.header;
+  }
+  return column.id;
+};
 
 interface DataTableSettingsProps<TData> {
   table: Table<TData>;
@@ -74,11 +82,12 @@ export function DataTableSettings<TData>({
   };
 
   return (
-    <div className={cn('p-4 border-b border-gray-200 bg-gray-50 shadow-lg', className)}>
-      <div className="mb-4 flex items-center justify-between">
+    <div className={cn('fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out', className)}>
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Table Settings</h2>
-          <p className="text-sm text-gray-600">Configure your table columns and display options</p>
+          <p className="text-sm text-gray-600">Configure columns and display</p>
         </div>
         {onClose && (
           <button
@@ -90,16 +99,18 @@ export function DataTableSettings<TData>({
           </button>
         )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {showColumnVisibility && (
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">Column Visibility</h3>
-            <div className="space-y-2 max-h-48 overflow-y-auto">
+            <div className="space-y-2">
               {columns.map((column) => (
                 <div key={column.id} className="flex items-center gap-2">
                   <Checkbox
                     id={`visibility-${column.id}`}
-                    label={column.id}
+                    label={getColumnDisplayName(column)}
                     checked={column.getIsVisible()}
                     onCheckedChange={(checked) => column.toggleVisibility(!!checked)}
                     className="text-sm"
@@ -113,10 +124,10 @@ export function DataTableSettings<TData>({
         {showColumnOrdering && (
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">Column Ordering</h3>
-            <div className="text-sm text-gray-500 mb-2">
-              Drag and drop columns to reorder them
+            <div className="text-xs text-gray-500 mb-3">
+              Drag to reorder columns
             </div>
-            <div className="mt-2 space-y-1">
+            <div className="space-y-1">
               {table.getState().columnOrder.length > 0 
                 ? table.getState().columnOrder
                     .map(columnId => columns.find(col => col.id === columnId))
@@ -130,7 +141,7 @@ export function DataTableSettings<TData>({
                   onDragEnd={handleDragEnd}
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
-                    "flex items-center gap-2 p-2 bg-white rounded border text-sm cursor-move transition-colors",
+                    "flex items-center gap-2 p-2 bg-white rounded border text-xs cursor-move transition-colors",
                     {
                       "opacity-50": draggedColumn === column.id,
                       "border-blue-500 bg-blue-50": dragOverColumn === column.id && draggedColumn !== column.id,
@@ -138,7 +149,7 @@ export function DataTableSettings<TData>({
                   )}
                 >
                   <GripVerticalIcon className="w-4 h-4 text-gray-400" />
-                  <span className="flex-1">{column.id}</span>
+                  <span className="flex-1">{getColumnDisplayName(column)}</span>
                 </div>
               ))
                 : columns.map((column) => (
@@ -150,7 +161,7 @@ export function DataTableSettings<TData>({
                   onDragEnd={handleDragEnd}
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
-                    "flex items-center gap-2 p-2 bg-white rounded border text-sm cursor-move transition-colors",
+                    "flex items-center gap-2 p-2 bg-white rounded border text-xs cursor-move transition-colors",
                     {
                       "opacity-50": draggedColumn === column.id,
                       "border-blue-500 bg-blue-50": dragOverColumn === column.id && draggedColumn !== column.id,
@@ -158,7 +169,7 @@ export function DataTableSettings<TData>({
                   )}
                 >
                   <GripVerticalIcon className="w-4 h-4 text-gray-400" />
-                  <span className="flex-1">{column.id}</span>
+                  <span className="flex-1">{getColumnDisplayName(column)}</span>
                 </div>
               ))}
             </div>
@@ -175,7 +186,7 @@ export function DataTableSettings<TData>({
               {columns.map((column) => (
                 <div key={column.id} className="flex items-center gap-2">
                   <span className="text-sm text-gray-700 min-w-0 flex-1 truncate">
-                    {column.id}
+                    {getColumnDisplayName(column)}
                   </span>
                   <div className="flex gap-1">
                     <button
@@ -216,7 +227,7 @@ export function DataTableSettings<TData>({
               {columns.map((column) => (
                 <div key={column.id} className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">{column.id}</span>
+                    <span className="text-sm text-gray-700">{typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id}</span>
                     <span className="text-xs text-gray-500">
                       {Math.round(column.getSize())}px
                     </span>

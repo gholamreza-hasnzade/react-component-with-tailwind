@@ -501,61 +501,79 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn('w-full', className)}>
       {/* Toolbar */}
-      {renderToolbar ? (
-        renderToolbar(table)
-      ) : (
-        <DataTableToolbar
-          table={table}
-          globalFilter={globalFilter}
-          onGlobalFilterChange={setGlobalFilter}
-          showGlobalFilter={showGlobalFilter}
-          showRowCount={showRowCount}
-          showSelectedCount={showSelectedCount}
-          showExportButtons={showExportButtons}
-          showRefreshButton={showRefreshButton}
-          showSettingsButton={showSettingsButton}
-          loading={loading}
-          onSettingsToggle={() => setShowSettings(!showSettings)}
-        />
-      )}
+      <div className={cn("transition-all duration-300 ease-in-out", {
+        "ml-80": showSettings
+      })}>
+        {renderToolbar ? (
+          renderToolbar(table)
+        ) : (
+          <DataTableToolbar
+            table={table}
+            globalFilter={globalFilter}
+            onGlobalFilterChange={setGlobalFilter}
+            showGlobalFilter={showGlobalFilter}
+            showRowCount={showRowCount}
+            showSelectedCount={showSelectedCount}
+            showExportButtons={showExportButtons}
+            showRefreshButton={showRefreshButton}
+            showSettingsButton={showSettingsButton}
+            loading={loading}
+            onSettingsToggle={() => setShowSettings(!showSettings)}
+          />
+        )}
+      </div>
 
       {/* Advanced Search */}
       {searchConfig?.enabled && (
-        <DataTableSearch
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          config={searchConfig}
-        />
+        <div className={cn("transition-all duration-300 ease-in-out", {
+          "ml-80": showSettings
+        })}>
+          <DataTableSearch
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            config={searchConfig}
+          />
+        </div>
       )}
 
       {/* Advanced Filters */}
       {filterConfigs && Object.keys(filterConfigs).length > 0 && (
-        <DataTableFilters
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          columnFilters={columnFiltersState}
-          setColumnFilters={setColumnFiltersState}
-          filterConfigs={filterConfigs}
-        />
+        <div className={cn("transition-all duration-300 ease-in-out", {
+          "ml-80": showSettings
+        })}>
+          <DataTableFilters
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            columnFilters={columnFiltersState}
+            setColumnFilters={setColumnFiltersState}
+            filterConfigs={filterConfigs}
+          />
+        </div>
       )}
 
       {/* Grouping */}
       {groupingConfig?.enabled && (
-        <DataTableGrouping
-          table={table}
-          config={{
-            ...groupingConfig,
-            groupBy: groupingState,
-            onGroupByChange: setGroupingState,
-          }}
-          data={data}
-        />
+        <div className={cn("transition-all duration-300 ease-in-out", {
+          "ml-80": showSettings
+        })}>
+          <DataTableGrouping
+            table={table}
+            config={{
+              ...groupingConfig,
+              groupBy: groupingState,
+              onGroupByChange: setGroupingState,
+            }}
+            data={data}
+          />
+        </div>
       )}
 
       {/* Density and Fullscreen Controls */}
-      <div className="flex items-center justify-between mb-4">
+      <div className={cn("flex items-center justify-between mb-4 transition-all duration-300 ease-in-out", {
+        "ml-80": showSettings
+      })}>
         <DataTableDensity
           table={table}
           density={density}
@@ -579,7 +597,7 @@ export function DataTable<TData, TValue>({
         )}
       </div>
 
-      {/* Column Settings */}
+      {/* Column Settings Sidebar */}
       {showSettings && (
         <DataTableSettings
           table={table}
@@ -594,8 +612,11 @@ export function DataTable<TData, TValue>({
       
 
       {/* Table */}
-      <div className="relative">
+      <div className={cn("relative transition-all duration-300 ease-in-out", {
+        "ml-80": showSettings
+      })}>
         <div className="overflow-x-auto overflow-y-auto max-h-[70vh] border border-gray-200 rounded-lg">
+         
           <table className={tableClasses}>
           <DataTableHeader
             table={table}
@@ -632,14 +653,18 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination */}
       {showPagination && enablePagination && (
-        renderPagination ? (
-          renderPagination(table)
-        ) : (
-          <DataTablePagination
-            table={table}
-            pageSizeOptions={pageSizeOptions}
-          />
-        )
+        <div className={cn("transition-all duration-300 ease-in-out", {
+          "ml-80": showSettings
+        })}>
+          {renderPagination ? (
+            renderPagination(table)
+          ) : (
+            <DataTablePagination
+              table={table}
+              pageSizeOptions={pageSizeOptions}
+            />
+          )}
+        </div>
       )}
     </div>
   );
