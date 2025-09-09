@@ -1,22 +1,18 @@
 import React from 'react';
 import type   { Table } from '@tanstack/react-table';
-import { MinusIcon, SquareIcon, MaximizeIcon, MinimizeIcon } from 'lucide-react';
+import { MinusIcon, SquareIcon, MaximizeIcon } from 'lucide-react';
 import type { RowDensity } from './dataTableDensity.utils';
 
 export interface DataTableDensityProps<TData> {
   table: Table<TData>;
   density: RowDensity;
   onDensityChange: (density: RowDensity) => void;
-  isFullscreen: boolean;
-  onFullscreenToggle: () => void;
 }
 
 export function DataTableDensity<TData>({
   table,
   density,
   onDensityChange,
-  isFullscreen,
-  onFullscreenToggle,
 }: DataTableDensityProps<TData>) {
   const densityOptions: { value: RowDensity; label: string; icon: React.ReactNode }[] = [
     {
@@ -59,22 +55,6 @@ export function DataTableDensity<TData>({
           </button>
         ))}
       </div>
-
-      {/* Fullscreen Toggle */}
-      <button
-        onClick={onFullscreenToggle}
-        className="flex items-center space-x-1 px-3 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-      >
-        {isFullscreen ? (
-          <MinimizeIcon className="w-4 h-4" />
-        ) : (
-          <MaximizeIcon className="w-4 h-4" />
-        )}
-        <span className="hidden sm:inline">
-          {isFullscreen ? 'Exit' : 'Fullscreen'}
-        </span>
-      </button>
     </div>
   );
 }

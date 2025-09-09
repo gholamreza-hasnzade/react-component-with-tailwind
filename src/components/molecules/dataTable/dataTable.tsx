@@ -37,7 +37,6 @@ import { DataTableFilters, type FilterConfig } from "./dataTableFilters";
 import { DataTableDensity } from "./dataTableDensity";
 import { type RowDensity } from "./dataTableDensity.utils";
 import { DataTableExport, type ExportFormat } from "./dataTableExport";
-import { DataTableSearch, type SearchConfig } from "./dataTableSearch";
 import { DataTableGrouping, type GroupingConfig } from "./dataTableGrouping";
 import { useDataTablePagination } from "./useDataTableApi";
 import { DataTableSkeleton } from "./dataTableSkeleton";
@@ -149,12 +148,9 @@ export interface DataTableProps<TData, TValue> {
   };
   // Advanced Features
   filterConfigs?: Record<string, FilterConfig>;
-  searchConfig?: SearchConfig;
   groupingConfig?: GroupingConfig;
   density?: RowDensity;
   onDensityChange?: (density: RowDensity) => void;
-  isFullscreen?: boolean;
-  onFullscreenToggle?: () => void;
   exportConfig?: {
     enabled?: boolean;
     filename?: string;
@@ -233,8 +229,7 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
-  /*   showColumnOrdering = true,
-   */ showGlobalFilter = true,
+  showGlobalFilter = true,
   showRowCount = true,
   showSelectedCount = true,
   showExportButtons = true,
@@ -280,12 +275,9 @@ export function DataTable<TData, TValue>({
   columnStatusConfig,
   // Advanced Features
   filterConfigs,
-  searchConfig,
   groupingConfig,
   density: densityProp = "normal",
   onDensityChange,
-  isFullscreen = false,
-  onFullscreenToggle,
   exportConfig,
 }: DataTableProps<TData, TValue>) {
   // State management
@@ -579,63 +571,51 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("w-full", className)}>
       {/* Toolbar */}
-      <div className={cn("transition-all duration-300 ease-in-out")}>
-        {renderToolbar ? (
-          renderToolbar(table)
-        ) : (
-          <DataTableToolbar
-            table={table}
-          
-            showSelectedCount={showSelectedCount}
-            showExportButtons={showExportButtons}
-            showRefreshButton={showRefreshButton}
-            showSettingsButton={showSettingsButton}
-            loading={loading}
-            onSettingsToggle={() => setShowSettings(!showSettings)}
-          />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-b border-gray-200 gap-4">
+        <div className={cn("transition-all duration-300 ease-in-out")}>
+          {renderToolbar ? (
+            renderToolbar(table)
+          ) : (
+            <DataTableToolbar
+              table={table}
+              showSelectedCount={showSelectedCount}
+              showExportButtons={showExportButtons}
+              showRefreshButton={showRefreshButton}
+              showSettingsButton={showSettingsButton}
+              loading={loading}
+              onSettingsToggle={() => setShowSettings(!showSettings)}
+            />
+          )}
+        </div>
+        {/* Advanced Filters */}
+        {filterConfigs && Object.keys(filterConfigs).length > 0 && (
+          <div className={cn("transition-all duration-300 ease-in-out")}>
+            <DataTableFilters
+              table={table}
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              columnFilters={columnFiltersState}
+              setColumnFilters={setColumnFiltersState}
+              filterConfigs={filterConfigs}
+            />
+          </div>
+        )}
+
+        {/* Grouping */}
+        {groupingConfig?.enabled && (
+          <div className={cn("transition-all duration-300 ease-in-out")}>
+            <DataTableGrouping
+              table={table}
+              config={{
+                ...groupingConfig,
+                groupBy: groupingState,
+                onGroupByChange: setGroupingState,
+              }}
+              data={data}
+            />
+          </div>
         )}
       </div>
-
-      {/* Advanced Search */}
-      {searchConfig?.enabled && (
-        <div className={cn("transition-all duration-300 ease-in-out")}>
-          <DataTableSearch
-            table={table}
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            config={searchConfig}
-          />
-        </div>
-      )}
-
-      {/* Advanced Filters */}
-      {filterConfigs && Object.keys(filterConfigs).length > 0 && (
-        <div className={cn("transition-all duration-300 ease-in-out")}>
-          <DataTableFilters
-            table={table}
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            columnFilters={columnFiltersState}
-            setColumnFilters={setColumnFiltersState}
-            filterConfigs={filterConfigs}
-          />
-        </div>
-      )}
-
-      {/* Grouping */}
-      {groupingConfig?.enabled && (
-        <div className={cn("transition-all duration-300 ease-in-out")}>
-          <DataTableGrouping
-            table={table}
-            config={{
-              ...groupingConfig,
-              groupBy: groupingState,
-              onGroupByChange: setGroupingState,
-            }}
-            data={data}
-          />
-        </div>
-      )}
 
       {/* Density and Fullscreen Controls */}
       <div
@@ -650,8 +630,6 @@ export function DataTable<TData, TValue>({
             setDensity(newDensity);
             onDensityChange?.(newDensity);
           }}
-          isFullscreen={isFullscreen}
-          onFullscreenToggle={onFullscreenToggle || (() => {})}
         />
 
         {/* Export */}

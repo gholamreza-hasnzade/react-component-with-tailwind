@@ -76,7 +76,7 @@ const productColumns: ColumnDef<Product, any>[] = [
       </span>
     ),
   }),
-  productColumnHelper.accessor('createdAt', {
+  productColumnHelper.accessor('reviews.date', {
     header: 'Created At',
     cell: (info) => {
       const value = info.getValue();
