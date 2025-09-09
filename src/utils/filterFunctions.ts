@@ -4,7 +4,15 @@ type BetweenFilterValue = { min: string | number; max: string | number };
 
 export interface FilterValue {
   type: FilterType;
-  value: string | number | boolean | null | undefined | BetweenFilterValue | (string | number)[];
+  value:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | BetweenFilterValue
+    | (string | number)[];
+  filterFn?: (row: any) => boolean;
 }
 
 export function createAdvancedFilterFn<T extends object>(
@@ -12,8 +20,6 @@ export function createAdvancedFilterFn<T extends object>(
   columnId: string,
   filterValue: FilterValue
 ) {
-
-
   const value = (row as Record<string, unknown>)[columnId];
   const { type, value: filterVal } = filterValue;
 
@@ -26,11 +32,19 @@ export function createAdvancedFilterFn<T extends object>(
   const stringValue = String(value).toLowerCase();
   const filterStringValue = String(filterVal).toLowerCase();
 
- 
-
   let result = false;
 
   switch (type) {
+    case "custom":
+      // Use custom filter function if provided
+      if (filterValue.filterFn) {
+        return filterValue.filterFn({
+          getValue: (id: string) => (row as Record<string, unknown>)[id],
+        });
+      }
+      result = true;
+      break;
+
     case "equals":
       result = stringValue === filterStringValue;
       break;
@@ -61,10 +75,9 @@ export function createAdvancedFilterFn<T extends object>(
         const max = parseFloat(betweenVal.max as string);
 
         if (isNaN(numValue) || isNaN(min) || isNaN(max)) {
-          result = (
+          result =
             stringValue >= (betweenVal.min as string).toLowerCase() &&
-            stringValue <= (betweenVal.max as string).toLowerCase()
-          );
+            stringValue <= (betweenVal.max as string).toLowerCase();
         } else {
           result = numValue >= min && numValue <= max;
         }
@@ -128,7 +141,9 @@ export function createAdvancedFilterFn<T extends object>(
 
     case "notIn":
       if (Array.isArray(filterVal)) {
-        result = !filterVal.some((v) => String(v).toLowerCase() === stringValue);
+        result = !filterVal.some(
+          (v) => String(v).toLowerCase() === stringValue
+        );
       } else {
         result = true;
       }
@@ -146,8 +161,6 @@ export function createAdvancedFilterFn<T extends object>(
       result = true;
   }
 
-
-
   return result;
 }
 
@@ -155,6 +168,9 @@ export function getFilterDisplayText(filterValue: FilterValue): string {
   const { type, value } = filterValue;
 
   switch (type) {
+    case "custom":
+      return String(value);
+
     case "equals":
       return `= ${value}`;
 
