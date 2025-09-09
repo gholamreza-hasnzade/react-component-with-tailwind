@@ -631,21 +631,10 @@ export function DataTable<TData, TValue>({
         )}
       </div>
 
-      {/* Column Settings Sidebar */}
-      {/*       {showSettings && (
-        <DataTableSettings
-          table={table}
-          showColumnVisibility={enableColumnVisibility}
-          showColumnOrdering={enableColumnOrdering}
-          showColumnPinning={enableColumnPinning}
-          showColumnSizing={enableColumnSizing}
-          onClose={() => setShowSettings(false)}
-        />
-      )} */}
 
       {/* Table */}
       <div className={cn("relative transition-all duration-300 ease-in-out")}>
-        <div className="overflow-x-auto overflow-y-auto max-h-[70vh] border border-gray-200 rounded-lg">
+        <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh] border border-gray-200 rounded-lg">
           {/* Settings Sidebar - Shows here when opened */}
           {showSettings && (
             <DataTableSettings
