@@ -132,15 +132,27 @@ export function DataTableBody<TData>({
     }
 
     const columnColors = getColumnStatusColors(cell);
+    const isPinned = cell.column.getIsPinned();
+    
+    // Get all visible columns to determine if this is the last pinned column
+    const visibleColumns = table.getVisibleLeafColumns();
+    const pinnedColumns = visibleColumns.filter(col => col.getIsPinned());
+    const isLastPinnedLeft = isPinned === 'left' && pinnedColumns.filter(col => col.getIsPinned() === 'left').pop()?.id === cell.column.id;
+    const isLastPinnedRight = isPinned === 'right' && pinnedColumns.filter(col => col.getIsPinned() === 'right').pop()?.id === cell.column.id;
     
     return (
       <td
         key={cell.id}
         className={cn(
-          'text-gray-900 whitespace-nowrap transition-colors duration-200',
+          'text-gray-900 whitespace-nowrap transition-colors duration-200 relative',
           densityClasses.cell,
           !columnColors.bg && 'hover:bg-gray-50',
-          typeof cellClassName === 'function' ? cellClassName(cell) : cellClassName
+          typeof cellClassName === 'function' ? cellClassName(cell) : cellClassName,
+          // Pinned column styling - only last pinned column gets border
+          {
+            'border-r-2 border-r-blue-300': isLastPinnedLeft,
+            'border-l-2 border-l-blue-300': isLastPinnedRight,
+          }
         )}
         style={{
           backgroundColor: columnColors.bg || undefined,

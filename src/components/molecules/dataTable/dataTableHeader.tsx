@@ -3,6 +3,7 @@ import {
   ArrowUpDownIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  PinIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
@@ -66,12 +67,20 @@ export function DataTableHeader<TData>({
       );
     }
 
+    const isPinned = header.column.getIsPinned();
+    
+    // Get all visible columns to determine if this is the last pinned column
+    const visibleColumns = table.getVisibleLeafColumns();
+    const pinnedColumns = visibleColumns.filter(col => col.getIsPinned());
+    const isLastPinnedLeft = isPinned === 'left' && pinnedColumns.filter(col => col.getIsPinned() === 'left').pop()?.id === header.column.id;
+    const isLastPinnedRight = isPinned === 'right' && pinnedColumns.filter(col => col.getIsPinned() === 'right').pop()?.id === header.column.id;
+    
     return (
       <th
         key={header.id}
         colSpan={header.colSpan}
         className={cn(
-          'text-left font-medium text-gray-900 whitespace-nowrap transition-colors duration-200',
+          'text-left font-medium text-gray-900 whitespace-nowrap transition-colors duration-200 relative',
           densityClasses.header,
           {
             'cursor-pointer select-none hover:bg-gray-100 hover:text-gray-700': header.column.getCanSort(),
@@ -79,6 +88,9 @@ export function DataTableHeader<TData>({
             'text-xs': size === 'sm',
             'text-sm': size === 'md',
             'text-base': size === 'lg',
+            // Pinned column styling - only last pinned column gets border
+            'border-r-2 border-r-blue-300': isLastPinnedLeft,
+            'border-l-2 border-l-blue-300': isLastPinnedRight,
           }
         )}
         style={{ 
@@ -92,6 +104,12 @@ export function DataTableHeader<TData>({
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
           {renderSortIcon(header)}
+          {/* Pin indicator */}
+          {isPinned && (
+            <div title={`Pinned ${isPinned}`}>
+              <PinIcon className="w-3 h-3 text-blue-600" />
+            </div>
+          )}
         </div>
       </th>
     );

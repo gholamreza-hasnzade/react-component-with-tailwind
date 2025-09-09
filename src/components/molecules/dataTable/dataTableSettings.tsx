@@ -183,36 +183,64 @@ export function DataTableSettings<TData>({
               Pin columns to left or right
             </div>
             <div className="space-y-2">
-              {columns.map((column) => (
-                <div key={column.id} className="flex items-center gap-2">
-                  <span className="text-sm text-gray-700 min-w-0 flex-1 truncate">
-                    {getColumnDisplayName(column)}
-                  </span>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => column.pin('left')}
-                      className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                      disabled={column.getIsPinned() === 'left'}
-                    >
-                      Left
-                    </button>
-                    <button
-                      onClick={() => column.pin('right')}
-                      className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                      disabled={column.getIsPinned() === 'right'}
-                    >
-                      Right
-                    </button>
-                    <button
-                      onClick={() => column.pin(false)}
-                      className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                      disabled={!column.getIsPinned()}
-                    >
-                      None
-                    </button>
+              {columns.map((column) => {
+                const isPinned = column.getIsPinned();
+                const pinStatus = isPinned === 'left' ? 'Left' : isPinned === 'right' ? 'Right' : 'None';
+                
+                return (
+                  <div key={column.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
+                    <span className="text-sm text-gray-700 min-w-0 flex-1 truncate">
+                      {getColumnDisplayName(column)}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {/* Current Status Indicator */}
+                      <span className={`px-2 py-1 text-xs rounded font-medium ${
+                        isPinned === 'left' 
+                          ? 'bg-green-100 text-green-800' 
+                          : isPinned === 'right' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {pinStatus}
+                      </span>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => column.pin('left')}
+                          className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
+                            isPinned === 'left'
+                              ? 'bg-green-500 text-white'
+                              : 'bg-blue-100 text-blue-700'
+                          }`}
+                        >
+                          Left
+                        </button>
+                        <button
+                          onClick={() => column.pin('right')}
+                          className={`px-2 py-1 text-xs rounded hover:bg-blue-200 transition-colors ${
+                            isPinned === 'right'
+                              ? 'bg-green-500 text-white'
+                              : 'bg-blue-100 text-blue-700'
+                          }`}
+                        >
+                          Right
+                        </button>
+                        <button
+                          onClick={() => column.pin(false)}
+                          className={`px-2 py-1 text-xs rounded hover:bg-gray-200 transition-colors ${
+                            !isPinned
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          None
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
