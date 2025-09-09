@@ -18,6 +18,7 @@ interface DataTableHeaderProps<TData> {
   density?: RowDensity;
   showActions?: boolean;
   actionsLabel?: string;
+  columnWidths?: Record<string, number>;
 }
 
 export function DataTableHeader<TData>({
@@ -27,6 +28,7 @@ export function DataTableHeader<TData>({
   density = 'normal',
   showActions = false,
   actionsLabel = 'Actions',
+  columnWidths = {},
 }: DataTableHeaderProps<TData>) {
   const densityClasses = getDensityClasses(density);
   const renderSortIcon = (header: Header<TData, unknown>) => {
@@ -94,7 +96,7 @@ export function DataTableHeader<TData>({
           }
         )}
         style={{ 
-          width: `${header.getSize()}px`, 
+          width: `${columnWidths[header.column.id] || header.getSize()}px`, 
           minWidth: '100px' 
         }}
         onClick={header.column.getToggleSortingHandler()}

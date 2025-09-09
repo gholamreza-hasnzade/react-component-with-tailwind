@@ -46,6 +46,7 @@ interface DataTableBodyProps<TData> {
       };
     };
   };
+  columnWidths?: Record<string, number>;
 }
 
 export function DataTableBody<TData>({
@@ -61,6 +62,7 @@ export function DataTableBody<TData>({
   showActions = false,
   statusConfig,
   columnStatusConfig,
+  columnWidths = {},
 }: DataTableBodyProps<TData>) {
   // Helper function to get row status colors
   const getRowStatusColors = (row: Row<TData>) => {
@@ -157,6 +159,8 @@ export function DataTableBody<TData>({
         style={{
           backgroundColor: columnColors.bg || undefined,
           color: columnColors.text || undefined,
+          width: `${columnWidths[cell.column.id] || cell.column.getSize()}px`,
+          minWidth: '100px',
         }}
         onMouseEnter={(e) => {
           if (columnColors.bg) {

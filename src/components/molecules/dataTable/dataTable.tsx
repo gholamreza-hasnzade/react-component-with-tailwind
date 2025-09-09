@@ -26,7 +26,7 @@ import {
   type Cell,
 } from "@tanstack/react-table";
 import { Checkbox } from "@/components/atoms/checkbox/checkbox";
-import { RefreshCwIcon, XIcon, GripVerticalIcon } from "lucide-react";
+import { RefreshCwIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DataTableToolbar } from "./dataTableToolbar";
 import { DataTablePagination } from "./dataTablePagination";
@@ -63,6 +63,7 @@ export interface DataTableProps<TData, TValue> {
   enableFuzzyFiltering?: boolean;
   enableColumnFaceting?: boolean;
   enableGlobalFaceting?: boolean;
+  enableStickyHeader?: boolean;
   pageSize?: number;
   pageSizeOptions?: number[];
   showPagination?: boolean;
@@ -223,6 +224,7 @@ export function DataTable<TData, TValue>({
   enableExpanding = true,
   enableMultiSort = true,
   enableFuzzyFiltering = true,
+  enableStickyHeader = true,
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
@@ -480,6 +482,12 @@ export function DataTable<TData, TValue>({
     tableClassName
   );
 
+  // Get column widths for consistent alignment
+  const columnWidths = table.getAllColumns().reduce((acc, column) => {
+    acc[column.id] = column.getSize();
+    return acc;
+  }, {} as Record<string, number>);
+
   // Loading state
   if (loading) {
     return (
@@ -634,7 +642,7 @@ export function DataTable<TData, TValue>({
 
       {/* Table */}
       <div className={cn("relative transition-all duration-300 ease-in-out")}>
-        <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh] border border-gray-200 rounded-lg">
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
           {/* Settings Sidebar - Shows here when opened */}
           {showSettings && (
             <DataTableSettings
@@ -646,30 +654,74 @@ export function DataTable<TData, TValue>({
               onClose={() => setShowSettings(false)}
             />
           )}
-          <table className={tableClasses}>
-            <DataTableHeader
-              table={table}
-              headerClassName={headerClassName}
-              size={size}
-              density={density}
-              showActions={showActions}
-              actionsLabel={actionsLabel}
-            />
-            <DataTableBody
-              table={table}
-              bodyClassName={bodyClassName}
-              rowClassName={rowClassName}
-              cellClassName={cellClassName}
-              size={size}
-              density={density}
-              onRowClick={handleRowClick}
-              onRowDoubleClick={handleRowDoubleClick}
-              actions={actions}
-              showActions={showActions}
-              statusConfig={statusConfig}
-              columnStatusConfig={columnStatusConfig}
-            />
-          </table>
+          
+          {enableStickyHeader ? (
+            <>
+              {/* Sticky Header */}
+              <div className="overflow-x-auto border-b border-gray-200">
+                <table className={tableClasses} style={{ minWidth: '100%' }}>
+                  <DataTableHeader
+                    table={table}
+                    headerClassName={headerClassName}
+                    size={size}
+                    density={density}
+                    showActions={showActions}
+                    actionsLabel={actionsLabel}
+                    columnWidths={columnWidths}
+                  />
+                </table>
+              </div>
+              
+              {/* Scrollable Body */}
+              <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
+                <table className={tableClasses} style={{ minWidth: '100%' }}>
+                  <DataTableBody
+                    table={table}
+                    bodyClassName={bodyClassName}
+                    rowClassName={rowClassName}
+                    cellClassName={cellClassName}
+                    size={size}
+                    density={density}
+                    onRowClick={handleRowClick}
+                    onRowDoubleClick={handleRowDoubleClick}
+                    actions={actions}
+                    showActions={showActions}
+                    statusConfig={statusConfig}
+                    columnStatusConfig={columnStatusConfig}
+                    columnWidths={columnWidths}
+                  />
+                </table>
+              </div>
+            </>
+          ) : (
+            /* Traditional Table */
+            <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
+              <table className={tableClasses}>
+                <DataTableHeader
+                  table={table}
+                  headerClassName={headerClassName}
+                  size={size}
+                  density={density}
+                  showActions={showActions}
+                  actionsLabel={actionsLabel}
+                />
+                <DataTableBody
+                  table={table}
+                  bodyClassName={bodyClassName}
+                  rowClassName={rowClassName}
+                  cellClassName={cellClassName}
+                  size={size}
+                  density={density}
+                  onRowClick={handleRowClick}
+                  onRowDoubleClick={handleRowDoubleClick}
+                  actions={actions}
+                  showActions={showActions}
+                  statusConfig={statusConfig}
+                  columnStatusConfig={columnStatusConfig}
+                />
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Scroll indicators */}

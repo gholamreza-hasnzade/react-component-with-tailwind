@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { DataTable } from './dataTable';
 import { Button } from '@/components/atoms/button/button';
-import { createColumnHelper, type ColumnDef, type CellContext } from '@tanstack/react-table';
-import { EditIcon, TrashIcon, EyeIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import { EditIcon, TrashIcon, EyeIcon, SearchIcon } from 'lucide-react';
 
 // Sample data type
 interface Person {
@@ -155,6 +155,86 @@ const sampleData: Person[] = [
     priority: 'high',
     subRows: [],
   },
+  {
+    id: '6',
+    firstName: 'David',
+    lastName: 'Lee',
+    age: 31,
+    email: 'david.lee@example.com',
+    status: 'active',
+    role: 'Senior Developer',
+    department: 'Engineering',
+    salary: 95000,
+    joinDate: '2021-08-15',
+    isRead: false,
+    isLiked: false,
+    priority: 'medium',
+    subRows: [],
+  },
+  {
+    id: '7',
+    firstName: 'Emma',
+    lastName: 'Davis',
+    age: 27,
+    email: 'emma.davis@example.com',
+    status: 'active',
+    role: 'UX Designer',
+    department: 'Design',
+    salary: 70000,
+    joinDate: '2022-06-10',
+    isRead: true,
+    isLiked: true,
+    priority: 'low',
+    subRows: [],
+  },
+  {
+    id: '8',
+    firstName: 'Frank',
+    lastName: 'Miller',
+    age: 33,
+    email: 'frank.miller@example.com',
+    status: 'inactive',
+    role: 'Product Manager',
+    department: 'Product',
+    salary: 110000,
+    joinDate: '2021-03-22',
+    isRead: false,
+    isLiked: false,
+    priority: 'high',
+    subRows: [],
+  },
+  {
+    id: '9',
+    firstName: 'Grace',
+    lastName: 'Taylor',
+    age: 26,
+    email: 'grace.taylor@example.com',
+    status: 'pending',
+    role: 'Marketing Specialist',
+    department: 'Marketing',
+    salary: 60000,
+    joinDate: '2022-09-05',
+    isRead: true,
+    isLiked: false,
+    priority: 'medium',
+    subRows: [],
+  },
+  {
+    id: '10',
+    firstName: 'Henry',
+    lastName: 'Anderson',
+    age: 35,
+    email: 'henry.anderson@example.com',
+    status: 'active',
+    role: 'DevOps Engineer',
+    department: 'Engineering',
+    salary: 105000,
+    joinDate: '2020-11-18',
+    isRead: true,
+    isLiked: true,
+    priority: 'high',
+    subRows: [],
+  },
 ];
 
 // Column definitions
@@ -231,7 +311,7 @@ const columns: ColumnDef<Person, any>[] = [
   columnHelper.accessor('priority', {
     header: 'Priority',
     cell: (info) => {
-      const priority = info.getValue();
+      const priority = info.getValue() as 'high' | 'medium' | 'low';
       const colors = {
         high: 'bg-red-100 text-red-800',
         medium: 'bg-yellow-100 text-yellow-800',
@@ -391,6 +471,7 @@ export function DataTableExample() {
           enableFuzzyFiltering={true}
           enableColumnFaceting={true}
           enableGlobalFaceting={true}
+          enableStickyHeader={true}
           showPagination={true}
           showColumnVisibility={true}
           showGlobalFilter={false}
