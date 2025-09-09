@@ -8,6 +8,7 @@ export { DataTableBody } from './dataTableBody';
 export { DataTableExample } from './dataTable.example';
 export { DataTableApiExample } from './dataTableApi.example';
 export { DataTableSkeleton } from './dataTableSkeleton';
+export { DataTableColumnOrdering } from './dataTableColumnOrdering';
 export { useDataTableApi, useDataTablePagination } from './useDataTableApi';
 export type { DataTableProps } from './dataTable';
 export type { ApiResponse, DataTableApiConfig } from './useDataTableApi';

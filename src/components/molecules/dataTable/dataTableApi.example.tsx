@@ -155,6 +155,7 @@ export function DataTableApiExample() {
         enableStickyHeader={true}
         showPagination={true}
         showColumnVisibility={true}
+        showColumnOrdering={true}
         showGlobalFilter={true}
         showRowCount={true}
         showSelectedCount={true}

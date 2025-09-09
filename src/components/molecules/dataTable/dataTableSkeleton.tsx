@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils';
 
 interface DataTableSkeletonProps {
   rows?: number;
@@ -16,7 +16,7 @@ export function DataTableSkeleton({
   hasSelection = false
 }: DataTableSkeletonProps) {
   // Calculate actual data columns (excluding selection and actions)
-  const dataColumns = columns - (hasSelection ? 1 : 0) - (hasActions ? 1 : 0);
+  // const dataColumns = columns - (hasSelection ? 1 : 0) - (hasActions ? 1 : 0);
   
   return (
     <tbody className={className}>

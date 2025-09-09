@@ -117,7 +117,7 @@ export function DataTablePagination<TData>({
           <div className="flex items-center gap-1 mx-2">
             {/* Generate page number buttons */}
             {(() => {
-              const pages = [];
+              const pages: React.ReactNode[] = [];
               const currentPage = pageIndex + 1;
               const totalPages = stablePageCount;
               

@@ -71,6 +71,7 @@ export interface DataTableProps<TData, TValue> {
   pageSizeOptions?: number[];
   showPagination?: boolean;
   showColumnVisibility?: boolean;
+  showColumnOrdering?: boolean;
   showGlobalFilter?: boolean;
   showRowCount?: boolean;
   showSelectedCount?: boolean;
@@ -232,6 +233,7 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
+  showColumnOrdering = true,
   showGlobalFilter = true,
   showRowCount = true,
   showSelectedCount = true,
@@ -702,6 +704,7 @@ export function DataTable<TData, TValue>({
                     showActions={showActions}
                     actionsLabel={actionsLabel}
                     columnWidths={columnWidths}
+                    enableColumnOrdering={enableColumnOrdering}
                   />
                 </table>
               </div>
@@ -748,6 +751,7 @@ export function DataTable<TData, TValue>({
                   density={density}
                   showActions={showActions}
                   actionsLabel={actionsLabel}
+                  enableColumnOrdering={enableColumnOrdering}
                 />
                 {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
                   <DataTableSkeleton 

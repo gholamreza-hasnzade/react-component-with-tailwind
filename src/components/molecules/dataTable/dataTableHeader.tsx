@@ -4,11 +4,13 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   PinIcon,
+  GripVerticalIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import type { Table, Header, HeaderGroup } from '@tanstack/react-table';
 import { getDensityClasses, type RowDensity } from './dataTableDensity.utils';
+import { useState } from 'react';
 
 interface DataTableHeaderProps<TData> {
   table: Table<TData>;
@@ -19,6 +21,7 @@ interface DataTableHeaderProps<TData> {
   showActions?: boolean;
   actionsLabel?: string;
   columnWidths?: Record<string, number>;
+  enableColumnOrdering?: boolean;
 }
 
 export function DataTableHeader<TData>({
@@ -29,8 +32,52 @@ export function DataTableHeader<TData>({
   showActions = false,
   actionsLabel = 'Actions',
   columnWidths = {},
+  enableColumnOrdering = false,
 }: DataTableHeaderProps<TData>) {
+  const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const densityClasses = getDensityClasses(density);
+
+  const handleDragStart = (e: React.DragEvent, columnId: string) => {
+    if (!enableColumnOrdering) return;
+    setDraggedColumn(columnId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', columnId);
+  };
+
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+    if (!enableColumnOrdering || !draggedColumn) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverColumn(columnId);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverColumn(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetColumnId: string) => {
+    if (!enableColumnOrdering || !draggedColumn) return;
+    e.preventDefault();
+    
+    if (draggedColumn !== targetColumnId) {
+      const columnOrder = table.getState().columnOrder;
+      const draggedIndex = columnOrder.findIndex(id => id === draggedColumn);
+      const targetIndex = columnOrder.findIndex(id => id === targetColumnId);
+      
+      if (draggedIndex !== -1 && targetIndex !== -1) {
+        const newColumnOrder = [...columnOrder];
+        const draggedCol = newColumnOrder[draggedIndex];
+        newColumnOrder.splice(draggedIndex, 1);
+        newColumnOrder.splice(targetIndex, 0, draggedCol);
+        
+        table.setColumnOrder(newColumnOrder);
+      }
+    }
+    
+    setDraggedColumn(null);
+    setDragOverColumn(null);
+  };
   const renderSortIcon = (header: Header<TData, unknown>) => {
     if (!header.column.getCanSort()) return null;
     
@@ -93,6 +140,10 @@ export function DataTableHeader<TData>({
             // Pinned column styling - only last pinned column gets border
             'border-r-2 border-r-blue-300': isLastPinnedLeft,
             'border-l-2 border-l-blue-300': isLastPinnedRight,
+            // Drag and drop styling
+            'cursor-grab active:cursor-grabbing': enableColumnOrdering && !header.column.getIsPinned(),
+            'opacity-50': draggedColumn === header.column.id,
+            'bg-blue-50 border-blue-200': dragOverColumn === header.column.id,
           }
         )}
         style={{ 
@@ -100,8 +151,19 @@ export function DataTableHeader<TData>({
           minWidth: '100px' 
         }}
         onClick={header.column.getToggleSortingHandler()}
+        draggable={enableColumnOrdering && !header.column.getIsPinned()}
+        onDragStart={(e) => handleDragStart(e, header.column.id)}
+        onDragOver={(e) => handleDragOver(e, header.column.id)}
+        onDragLeave={handleDragLeave}
+        onDrop={(e) => handleDrop(e, header.column.id)}
       >
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Drag handle */}
+          {enableColumnOrdering && !header.column.getIsPinned() && (
+            <div className="cursor-grab active:cursor-grabbing">
+              <GripVerticalIcon className="w-3 h-3 text-gray-400 hover:text-gray-600" />
+            </div>
+          )}
           {header.isPlaceholder
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
