@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { DataTable } from './dataTable';
 import { Button } from '@/components/atoms/button/button';
 import { createColumnHelper, type ColumnDef, type CellContext } from '@tanstack/react-table';
-import { EditIcon, TrashIcon, EyeIcon, MoreHorizontalIcon } from 'lucide-react';
+import { EditIcon, TrashIcon, EyeIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react';
 
 // Sample data type
 interface Person {
@@ -134,27 +134,7 @@ const sampleData: Person[] = [
 const columnHelper = createColumnHelper<Person>();
 
 const columns: ColumnDef<Person, any>[] = [
-  {
-    id: 'expander',
-    header: () => null,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        {row.getCanExpand() ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              row.toggleExpanded();
-            }}
-            className="p-1 hover:bg-gray-200 rounded"
-          >
-            {row.getIsExpanded() ? '▼' : '▶'}
-          </button>
-        ) : null}
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  
   columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
@@ -206,6 +186,7 @@ const columns: ColumnDef<Person, any>[] = [
 export function DataTableExample() {
   const [data, setData] = useState<Person[]>(sampleData);
   const [loading, setLoading] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<Person[]>([]);
 
   const handleRefresh = () => {
     setLoading(true);
@@ -220,9 +201,52 @@ export function DataTableExample() {
     console.log('Row clicked:', row.original);
   };
 
-  const handleRowSelect = (selectedRows: { original: Person }[]) => {
+  const handleRowSelect = useCallback((selectedRows: { original: Person }[]) => {
     console.log('Selected rows:', selectedRows);
-  };
+    setSelectedRows(selectedRows.map(row => row.original));
+  }, []);
+
+  // Custom toolbar component
+  const CustomToolbar = () => (
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-b border-gray-200 gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+        <div className="flex items-center gap-2">
+          <SearchIcon className="w-4 h-4 text-gray-400" />
+          <input
+            placeholder="Search all columns..."
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-64"
+          />
+        </div>
+        {selectedRows.length > 0 && (
+          <div className="flex items-center gap-2 px-3 py-2 bg-blue-100 text-blue-800 rounded-md">
+            <span className="text-sm font-medium">
+              {selectedRows.length} row{selectedRows.length !== 1 ? 's' : ''} selected
+            </span>
+            <button
+              onClick={() => setSelectedRows([])}
+              className="text-blue-600 hover:text-blue-800 text-sm"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        <Button variant="outlined" size="sm">
+          Export
+        </Button>
+        <Button variant="outlined" size="sm">
+          Import
+        </Button>
+        <Button onClick={handleRefresh} loading={loading} size="sm">
+          Refresh
+        </Button>
+        <Button variant="outlined" size="sm">
+          Settings
+        </Button>
+      </div>
+    </div>
+  );
 
   // Dynamic actions for each row
   const actions = [
@@ -306,12 +330,13 @@ export function DataTableExample() {
           enableGlobalFaceting={true}
           showPagination={true}
           showColumnVisibility={true}
-          showGlobalFilter={true}
+          showGlobalFilter={false}
           showRowCount={true}
           showSelectedCount={true}
-          showExportButtons={true}
-          showRefreshButton={true}
-          showSettingsButton={true}
+          showExportButtons={false}
+          showRefreshButton={false}
+          showSettingsButton={false}
+          renderToolbar={CustomToolbar}
           variant="hover"
           size="md"
           density="normal"

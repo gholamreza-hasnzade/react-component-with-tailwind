@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -76,7 +76,7 @@ export interface DataTableProps<TData, TValue> {
   cellClassName?: string | ((cell: Cell<TData, TValue>) => string);
   onRowClick?: (row: Row<TData>) => void;
   onRowDoubleClick?: (row: Row<TData>) => void;
-  onRowSelect?: (selectedRows: Row<TData>[]) => void;
+  onRowSelect?: (selectedRows: { original: TData }[]) => void;
   onSortingChange?: (sorting: SortingState) => void;
   onColumnFiltersChange?: (filters: ColumnFiltersState) => void;
   onColumnVisibilityChange?: (visibility: VisibilityState) => void;
@@ -342,7 +342,6 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: (updater) => {
       const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
       setRowSelection(newSelection);
-      onRowSelect?.(table.getFilteredSelectedRowModel().rows);
       onRowSelectionChange?.(newSelection);
     },
     onGlobalFilterChange: (updater) => {
@@ -371,6 +370,14 @@ export function DataTable<TData, TValue>({
   const handleRowDoubleClick = useCallback((row: Row<TData>) => {
     onRowDoubleClick?.(row);
   }, [onRowDoubleClick]);
+
+  // Handle row selection callback after state updates
+  useEffect(() => {
+    if (onRowSelect) {
+      const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => ({ original: row.original }));
+      onRowSelect(selectedRows);
+    }
+  }, [rowSelection, onRowSelect]);
 
   // Styling classes
   const tableClasses = cn(

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { flexRender } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import type { Table, Row, Cell } from '@tanstack/react-table';
 import { MoreHorizontalIcon, ChevronDownIcon } from 'lucide-react';
 
@@ -57,17 +58,44 @@ export function DataTableBody<TData>({
     bodyClassName
   );
 
-  const renderCell = (cell: Cell<TData, any>) => (
-    <td
-      key={cell.id}
-      className={cn(
-        'px-2 sm:px-4 py-3 text-gray-900 whitespace-nowrap',
-        typeof cellClassName === 'function' ? cellClassName(cell) : cellClassName
-      )}
-    >
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </td>
-  );
+  const renderCell = (cell: Cell<TData, any>) => {
+    // Special handling for select column
+    if (cell.column.id === 'select') {
+      return (
+        <td
+          key={cell.id}
+          className={cn(
+            'px-1 py-3 text-center',
+            'w-2'
+          )}
+          style={{ 
+            width: '32px', 
+            minWidth: '32px' 
+          }}
+        >
+          <div className="flex items-center justify-center">
+            <Checkbox
+              checked={cell.row.getIsSelected()}
+              onCheckedChange={(value) => cell.row.toggleSelected(!!value)}
+              aria-label={`Select row`}
+            />
+          </div>
+        </td>
+      );
+    }
+
+    return (
+      <td
+        key={cell.id}
+        className={cn(
+          'px-2 sm:px-4 py-3 text-gray-900 whitespace-nowrap',
+          typeof cellClassName === 'function' ? cellClassName(cell) : cellClassName
+        )}
+      >
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </td>
+    );
+  };
 
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });

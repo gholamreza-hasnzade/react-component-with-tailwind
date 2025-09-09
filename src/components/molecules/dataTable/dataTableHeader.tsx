@@ -7,6 +7,7 @@ import {
   MoreHorizontalIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import type { Table, Header, HeaderGroup } from '@tanstack/react-table';
 
 interface DataTableHeaderProps<TData> {
@@ -35,31 +36,61 @@ export function DataTableHeader<TData>({
     return <ArrowUpDownIcon className="w-4 h-4" />;
   };
 
-  const renderColumnHeader = (header: Header<TData, any>) => (
-    <th
-      key={header.id}
-      colSpan={header.colSpan}
-      className={cn(
-        'px-2 sm:px-4 py-3 text-left font-medium text-gray-900 whitespace-nowrap',
-        {
-          'cursor-pointer select-none hover:bg-gray-100': header.column.getCanSort(),
-          'w-12': header.id === 'select',
-          'text-xs': size === 'sm',
-          'text-sm': size === 'md',
-          'text-base': size === 'lg',
-        }
-      )}
-      style={{ width: `${header.getSize()}px`, minWidth: '100px' }}
-      onClick={header.column.getToggleSortingHandler()}
-    >
-      <div className="flex items-center gap-1 sm:gap-2">
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header, header.getContext())}
-        {renderSortIcon(header)}
-      </div>
-    </th>
-  );
+  const renderColumnHeader = (header: Header<TData, any>) => {
+    // Special handling for select column
+    if (header.id === 'select') {
+      return (
+        <th
+          key={header.id}
+          colSpan={header.colSpan}
+          className={cn(
+            'px-1 py-3 text-center font-medium text-gray-900 whitespace-nowrap',
+            'w-2'
+          )}
+          style={{ 
+            width: '32px', 
+            minWidth: '32px' 
+          }}
+        >
+          <div className="flex items-center justify-center">
+            <Checkbox
+              checked={table.getIsAllPageRowsSelected()}
+              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              aria-label="Select all"
+            />
+          </div>
+        </th>
+      );
+    }
+
+    return (
+      <th
+        key={header.id}
+        colSpan={header.colSpan}
+        className={cn(
+          'px-2 sm:px-4 py-3 text-left font-medium text-gray-900 whitespace-nowrap',
+          {
+            'cursor-pointer select-none hover:bg-gray-100': header.column.getCanSort(),
+            'text-xs': size === 'sm',
+            'text-sm': size === 'md',
+            'text-base': size === 'lg',
+          }
+        )}
+        style={{ 
+          width: `${header.getSize()}px`, 
+          minWidth: '100px' 
+        }}
+        onClick={header.column.getToggleSortingHandler()}
+      >
+        <div className="flex items-center gap-1 sm:gap-2">
+          {header.isPlaceholder
+            ? null
+            : flexRender(header.column.columnDef.header, header.getContext())}
+          {renderSortIcon(header)}
+        </div>
+      </th>
+    );
+  };
 
   return (
     <thead className={cn('bg-gray-50', headerClassName)}>
