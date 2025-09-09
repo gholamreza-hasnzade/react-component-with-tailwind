@@ -481,7 +481,7 @@ export function DataTableExample() {
           showRefreshButton={false}
           showSettingsButton={true}
           /* renderToolbar={CustomToolbar} */
-          variant="hover"
+          variant="bordered"
           size="md"
           density="normal"
           pageSize={5}

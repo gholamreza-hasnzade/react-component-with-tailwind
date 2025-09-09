@@ -640,9 +640,21 @@ export function DataTable<TData, TValue>({
       </div>
 
 
-      {/* Table */}
-      <div className={cn("relative transition-all duration-300 ease-in-out")}>
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
+      {/* Table and Pagination Container */}
+      <div className={cn(
+        "relative transition-all duration-300 ease-in-out",
+        {
+          "border border-gray-200 rounded-lg overflow-hidden": variant === "bordered",
+        }
+      )}>
+        {/* Table */}
+        <div className={cn(
+          "overflow-hidden",
+          {
+            "border border-gray-200 rounded-lg": variant !== "bordered",
+            "border-0": variant === "bordered",
+          }
+        )}>
           {/* Settings Sidebar - Shows here when opened */}
           {showSettings && (
             <DataTableSettings
@@ -733,24 +745,25 @@ export function DataTable<TData, TValue>({
           className="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-t from-white to-transparent pointer-events-none opacity-0 transition-opacity duration-200"
           id="scroll-indicator-bottom"
         ></div>
+
+        {/* Footer */}
+        {renderFooter && renderFooter(table)}
+
+        {/* Pagination */}
+        {showPagination && enablePagination && (
+          <div className={cn("transition-all duration-300 ease-in-out")}>
+            {renderPagination ? (
+              renderPagination(table)
+            ) : (
+              <DataTablePagination
+                table={table}
+                pageSizeOptions={pageSizeOptions}
+                variant={variant}
+              />
+            )}
+          </div>
+        )}
       </div>
-
-      {/* Footer */}
-      {renderFooter && renderFooter(table)}
-
-      {/* Pagination */}
-      {showPagination && enablePagination && (
-        <div className={cn("transition-all duration-300 ease-in-out")}>
-          {renderPagination ? (
-            renderPagination(table)
-          ) : (
-            <DataTablePagination
-              table={table}
-              pageSizeOptions={pageSizeOptions}
-            />
-          )}
-        </div>
-      )}
     </div>
   );
 }

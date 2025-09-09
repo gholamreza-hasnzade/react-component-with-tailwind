@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -12,27 +11,39 @@ interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   pageSizeOptions?: number[];
   className?: string;
+  variant?: 'default' | 'bordered' | 'striped' | 'hover';
 }
 
 export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [5, 10, 20, 50, 100],
   className,
+  variant = 'default',
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.getState().pagination;
   const pageCount = table.getPageCount();
   const canPreviousPage = table.getCanPreviousPage();
   const canNextPage = table.getCanNextPage();
 
+  const paginationClasses = cn(
+    'flex flex-col sm:flex-row items-center justify-between px-4 py-3 gap-4',
+    {
+      'bg-white border-t border-gray-200': variant === 'default' || variant === 'hover',
+      'bg-white border border-gray-200 border-t-0 rounded-b-lg': variant === 'bordered',
+      'bg-gray-50 border-t border-gray-200': variant === 'striped',
+    },
+    className
+  );
+
   return (
-    <div className={cn('flex flex-col sm:flex-row items-center justify-between px-4 py-4 bg-gray-50 border-t border-gray-200 gap-4', className)}>
+    <div className={paginationClasses}>
       {/* Rows per page selector */}
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-gray-700">Rows per page:</span>
+        <span className="text-sm font-medium text-gray-600">Rows per page:</span>
         <select
           value={pageSize}
           onChange={(e) => table.setPageSize(Number(e.target.value))}
-          className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
           aria-label="Rows per page"
         >
           {pageSizeOptions.map((size) => (
@@ -47,12 +58,12 @@ export function DataTablePagination<TData>({
       <div className="flex flex-col sm:flex-row items-center gap-4">
         {/* Page info */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-700">
-            Showing <span className="font-medium">{pageIndex * pageSize + 1}</span> to{' '}
-            <span className="font-medium">
+          <span className="text-sm text-gray-600">
+            Showing <span className="font-semibold text-gray-900">{pageIndex * pageSize + 1}</span> to{' '}
+            <span className="font-semibold text-gray-900">
               {Math.min((pageIndex + 1) * pageSize, table.getFilteredRowModel().rows.length)}
             </span>{' '}
-            of <span className="font-medium">{table.getFilteredRowModel().rows.length}</span> results
+            of <span className="font-semibold text-gray-900">{table.getFilteredRowModel().rows.length}</span> results
           </span>
         </div>
         
@@ -64,10 +75,10 @@ export function DataTablePagination<TData>({
             disabled={!canPreviousPage}
             title="First page"
             className={cn(
-              "hidden sm:flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-              "border border-gray-300 rounded-md text-sm font-medium",
-              "hover:bg-gray-50 hover:border-gray-400 transition-colors",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300",
+              "hidden sm:flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+              "border border-gray-300 rounded-lg text-sm font-medium text-gray-700",
+              "hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900 transition-all duration-200",
+              "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 disabled:hover:text-gray-700",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             )}
           >
@@ -80,10 +91,10 @@ export function DataTablePagination<TData>({
             disabled={!canPreviousPage}
             title="Previous page"
             className={cn(
-              "flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-              "border border-gray-300 rounded-md text-sm font-medium",
-              "hover:bg-gray-50 hover:border-gray-400 transition-colors",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300",
+              "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+              "border border-gray-300 rounded-lg text-sm font-medium text-gray-700",
+              "hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900 transition-all duration-200",
+              "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 disabled:hover:text-gray-700",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             )}
           >
@@ -118,12 +129,12 @@ export function DataTablePagination<TData>({
                     key={1}
                     onClick={() => table.setPageIndex(0)}
                     className={cn(
-                      "flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-                      "border rounded-md text-sm font-medium transition-colors",
+                      "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+                      "border rounded-lg text-sm font-medium transition-all duration-200",
                       "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                       pageIndex === 0
-                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 shadow-sm"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900"
                     )}
                   >
                     1
@@ -131,7 +142,7 @@ export function DataTablePagination<TData>({
                 );
                 if (startPage > 2) {
                   pages.push(
-                    <span key="ellipsis1" className="px-1 text-gray-500">...</span>
+                    <span key="ellipsis1" className="px-2 text-gray-400 text-sm">...</span>
                   );
                 }
               }
@@ -143,12 +154,12 @@ export function DataTablePagination<TData>({
                     key={i}
                     onClick={() => table.setPageIndex(i - 1)}
                     className={cn(
-                      "flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-                      "border rounded-md text-sm font-medium transition-colors",
+                      "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+                      "border rounded-lg text-sm font-medium transition-all duration-200",
                       "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                       pageIndex === i - 1
-                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 shadow-sm"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900"
                     )}
                   >
                     {i}
@@ -160,7 +171,7 @@ export function DataTablePagination<TData>({
               if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                   pages.push(
-                    <span key="ellipsis2" className="px-1 text-gray-500">
+                    <span key="ellipsis2" className="px-2 text-gray-400 text-sm">
                       ...
                     </span>
                   );
@@ -170,12 +181,12 @@ export function DataTablePagination<TData>({
                     key={totalPages}
                     onClick={() => table.setPageIndex(totalPages - 1)}
                     className={cn(
-                      "flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-                      "border rounded-md text-sm font-medium transition-colors",
+                      "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+                      "border rounded-lg text-sm font-medium transition-all duration-200",
                       "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                       pageIndex === totalPages - 1
-                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 shadow-sm"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900"
                     )}
                   >
                     {totalPages}
@@ -193,10 +204,10 @@ export function DataTablePagination<TData>({
             disabled={!canNextPage}
             title="Next page"
             className={cn(
-              "flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-              "border border-gray-300 rounded-md text-sm font-medium",
-              "hover:bg-gray-50 hover:border-gray-400 transition-colors",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300",
+              "flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+              "border border-gray-300 rounded-lg text-sm font-medium text-gray-700",
+              "hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900 transition-all duration-200",
+              "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 disabled:hover:text-gray-700",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             )}
           >
@@ -209,10 +220,10 @@ export function DataTablePagination<TData>({
             disabled={!canNextPage}
             title="Last page"
             className={cn(
-              "hidden sm:flex items-center justify-center px-2 py-1.5 h-8 min-w-[32px]",
-              "border border-gray-300 rounded-md text-sm font-medium",
-              "hover:bg-gray-50 hover:border-gray-400 transition-colors",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300",
+              "hidden sm:flex items-center justify-center px-3 py-2 h-9 min-w-[36px]",
+              "border border-gray-300 rounded-lg text-sm font-medium text-gray-700",
+              "hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900 transition-all duration-200",
+              "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 disabled:hover:text-gray-700",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             )}
           >
