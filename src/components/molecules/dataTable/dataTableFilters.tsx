@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import type { Column, Table } from '@tanstack/react-table';
-import { SearchIcon, FilterIcon, XIcon, CalendarIcon, ChevronDownIcon } from 'lucide-react';
+import { SearchIcon, FilterIcon, XIcon, CalendarIcon, ChevronDownIcon, StarIcon, CheckIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export interface FilterConfig {
-  type: 'text' | 'select' | 'date' | 'number' | 'range';
-  options?: { label: string; value: string | number }[];
+  type: 'text' | 'select' | 'multiselect' | 'date' | 'datetime' | 'time' | 'number' | 'range' | 'radio' | 'checkbox' | 'rating' | 'boolean';
+  options?: { label: string; value: string | number | boolean }[];
   placeholder?: string;
   min?: number;
   max?: number;
   step?: number;
+  multiple?: boolean;
+  allowCustom?: boolean;
+  format?: string;
+  trueLabel?: string;
+  falseLabel?: string;
+  maxRating?: number;
+  showLabels?: boolean;
+  autoSort?: boolean;
+  sortDirection?: 'asc' | 'desc';
 }
 
 export interface DataTableFiltersProps<TData> {
@@ -58,19 +68,22 @@ export function DataTableFilters<TData>({
 
     if (!filterConfig) return null;
 
+    const baseInputClasses = "w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
+    const labelClasses = "text-xs font-medium text-gray-700";
+
     switch (filterConfig.type) {
       case 'text':
         return (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-700">
+            <label className={labelClasses}>
               {column.columnDef.header as string}
             </label>
             <input
               type="text"
-              value={currentValue}
+              value={currentValue || ''}
               onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
               placeholder={filterConfig.placeholder || `Filter ${column.columnDef.header}`}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className={baseInputClasses}
             />
           </div>
         );
@@ -78,17 +91,17 @@ export function DataTableFilters<TData>({
       case 'select':
         return (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-700">
+            <label className={labelClasses}>
               {column.columnDef.header as string}
             </label>
             <select
-              value={currentValue}
+              value={currentValue || ''}
               onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className={baseInputClasses}
             >
               <option value="">All</option>
               {filterConfig.options?.map((option) => (
-                <option key={option.value} value={option.value}>
+                <option key={String(option.value)} value={String(option.value)}>
                   {option.label}
                 </option>
               ))}
@@ -96,39 +109,101 @@ export function DataTableFilters<TData>({
           </div>
         );
 
+      case 'multiselect': {
+        const selectedValues = Array.isArray(currentValue) ? currentValue : [];
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded p-2">
+              {filterConfig.options?.map((option) => (
+                <label key={String(option.value)} className="flex items-center space-x-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={selectedValues.includes(option.value)}
+                    onChange={(e) => {
+                      const newValues = e.target.checked
+                        ? [...selectedValues, option.value]
+                        : selectedValues.filter(v => v !== option.value);
+                      setColumnFilterValue(columnId, newValues);
+                    }}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
       case 'date':
         return (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-700">
+            <label className={labelClasses}>
               {column.columnDef.header as string}
             </label>
             <div className="relative">
               <input
                 type="date"
-                value={currentValue}
+                value={currentValue || ''}
                 onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
-                className="w-full px-2 py-1 pr-8 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={`${baseInputClasses} pr-8`}
               />
               <CalendarIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
           </div>
         );
 
+      case 'datetime':
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="relative">
+              <input
+                type="datetime-local"
+                value={currentValue || ''}
+                onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+                className={`${baseInputClasses} pr-8`}
+              />
+              <CalendarIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            </div>
+          </div>
+        );
+
+      case 'time':
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <input
+              type="time"
+              value={currentValue || ''}
+              onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              className={baseInputClasses}
+            />
+          </div>
+        );
+
       case 'number':
         return (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-700">
+            <label className={labelClasses}>
               {column.columnDef.header as string}
             </label>
             <input
               type="number"
-              value={currentValue}
-              onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              value={currentValue || ''}
+              onChange={(e) => setColumnFilterValue(columnId, e.target.value ? Number(e.target.value) : '')}
               placeholder={filterConfig.placeholder || `Filter ${column.columnDef.header}`}
               min={filterConfig.min}
               max={filterConfig.max}
               step={filterConfig.step}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className={baseInputClasses}
             />
           </div>
         );
@@ -136,7 +211,7 @@ export function DataTableFilters<TData>({
       case 'range':
         return (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-700">
+            <label className={labelClasses}>
               {column.columnDef.header as string}
             </label>
             <div className="flex space-x-2">
@@ -151,7 +226,7 @@ export function DataTableFilters<TData>({
                 min={filterConfig.min}
                 max={filterConfig.max}
                 step={filterConfig.step}
-                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={baseInputClasses}
               />
               <input
                 type="number"
@@ -164,8 +239,146 @@ export function DataTableFilters<TData>({
                 min={filterConfig.min}
                 max={filterConfig.max}
                 step={filterConfig.step}
-                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={baseInputClasses}
               />
+            </div>
+          </div>
+        );
+
+      case 'radio':
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="space-y-2">
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="radio"
+                  name={`filter-${columnId}`}
+                  checked={currentValue === ''}
+                  onChange={() => setColumnFilterValue(columnId, '')}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                <span>All</span>
+              </label>
+              {filterConfig.options?.map((option) => (
+                <label key={String(option.value)} className="flex items-center space-x-2 text-sm">
+                  <input
+                    type="radio"
+                    name={`filter-${columnId}`}
+                    checked={currentValue === option.value}
+                    onChange={() => setColumnFilterValue(columnId, option.value)}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'checkbox':
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="space-y-2">
+              {filterConfig.options?.map((option) => (
+                <label key={String(option.value)} className="flex items-center space-x-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={currentValue === option.value}
+                    onChange={(e) => setColumnFilterValue(columnId, e.target.checked ? option.value : '')}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'rating':
+        const maxRating = filterConfig.maxRating || 5;
+        const ratingValue = currentValue || 0;
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="flex items-center space-x-1">
+              {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setColumnFilterValue(columnId, star)}
+                  className={cn(
+                    "p-1 transition-colors",
+                    star <= ratingValue
+                      ? "text-yellow-400 hover:text-yellow-500"
+                      : "text-gray-300 hover:text-yellow-400"
+                  )}
+                >
+                  <StarIcon className="w-4 h-4 fill-current" />
+                </button>
+              ))}
+              {ratingValue > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setColumnFilterValue(columnId, '')}
+                  className="ml-2 text-xs text-gray-500 hover:text-gray-700"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            {filterConfig.showLabels && (
+              <div className="text-xs text-gray-500">
+                {ratingValue > 0 ? `${ratingValue} star${ratingValue > 1 ? 's' : ''}` : 'No rating'}
+              </div>
+            )}
+          </div>
+        );
+
+      case 'boolean':
+        return (
+          <div className="space-y-1">
+            <label className={labelClasses}>
+              {column.columnDef.header as string}
+            </label>
+            <div className="space-y-2">
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="radio"
+                  name={`filter-${columnId}`}
+                  checked={currentValue === ''}
+                  onChange={() => setColumnFilterValue(columnId, '')}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                <span>All</span>
+              </label>
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="radio"
+                  name={`filter-${columnId}`}
+                  checked={currentValue === true}
+                  onChange={() => setColumnFilterValue(columnId, true)}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                <span>{filterConfig.trueLabel || 'Yes'}</span>
+              </label>
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="radio"
+                  name={`filter-${columnId}`}
+                  checked={currentValue === false}
+                  onChange={() => setColumnFilterValue(columnId, false)}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                <span>{filterConfig.falseLabel || 'No'}</span>
+              </label>
             </div>
           </div>
         );

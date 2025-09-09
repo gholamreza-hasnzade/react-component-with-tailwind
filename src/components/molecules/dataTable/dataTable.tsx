@@ -711,6 +711,9 @@ export function DataTable<TData, TValue>({
                     actionsLabel={actionsLabel}
                     columnWidths={columnWidths}
                     enableColumnOrdering={enableColumnOrdering}
+                    filterConfigs={filterConfigs}
+                    columnFilters={columnFilters}
+                    setColumnFilters={setColumnFilters}
                   />
                 </table>
               </div>
@@ -759,6 +762,9 @@ export function DataTable<TData, TValue>({
                   showActions={showActions}
                   actionsLabel={actionsLabel}
                   enableColumnOrdering={enableColumnOrdering}
+                  filterConfigs={filterConfigs}
+                  columnFilters={columnFilters}
+                  setColumnFilters={setColumnFilters}
                 />
                 {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
                   <DataTableSkeleton

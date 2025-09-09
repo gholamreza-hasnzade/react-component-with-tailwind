@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CellContext, Column } from '@tanstack/react-table';
+import { type CellContext, type Column } from '@tanstack/react-table';
 import { CheckIcon, XIcon, EditIcon } from 'lucide-react';
 
 export interface InlineEditConfig {
@@ -223,18 +223,3 @@ export function EditableCell<TData>({
   );
 }
 
-export function createEditableColumn<TData>(
-  column: Column<TData, unknown>,
-  config: InlineEditConfig
-) {
-  return {
-    ...column,
-    cell: (cell: CellContext<TData, unknown>) => (
-      <EditableCell
-        cell={cell}
-        column={column}
-        config={config}
-      />
-    ),
-  };
-}

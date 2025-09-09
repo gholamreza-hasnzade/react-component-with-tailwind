@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { DataTable } from './dataTable';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
 import { EditIcon, TrashIcon, EyeIcon } from 'lucide-react';
+import type { FilterConfig } from './dataTableFilters';
 
 // DummyJSON Product type
 interface Product {
@@ -117,12 +118,96 @@ export function DataTableApiExample() {
     },
   ];
 
+  // Comprehensive filter configurations demonstrating all filter types
+  const filterConfigs: Record<string, FilterConfig> = {
+    id: {
+      type: 'number',
+      placeholder: 'Filter by ID',
+      min: 1,
+      max: 100,
+    },
+    title: {
+      type: 'text',
+      placeholder: 'Search by title...',
+    },
+    brand: {
+      type: 'select',
+      options: [
+        { label: 'Apple', value: 'Apple' },
+        { label: 'Samsung', value: 'Samsung' },
+        { label: 'OPPO', value: 'OPPO' },
+        { label: 'Huawei', value: 'Huawei' },
+        { label: 'Microsoft', value: 'Microsoft' },
+        { label: 'Infinix', value: 'Infinix' },
+        { label: 'HP Pavilion', value: 'HP Pavilion' },
+        { label: 'Impression', value: 'Impression' },
+        { label: 'Royal_Mirage', value: 'Royal_Mirage' },
+        { label: 'Fog Scent Xpressio', value: 'Fog Scent Xpressio' },
+        { label: 'Al Munakh', value: 'Al Munakh' },
+        { label: 'Lord - Al-Rehab', value: 'Lord - Al-Rehab' },
+        { label: 'L\'Oreal Paris', value: 'L\'Oreal Paris' },
+        { label: 'Hemani Tea', value: 'Hemani Tea' },
+        { label: 'Dermive', value: 'Dermive' },
+        { label: 'ROREC White Rice', value: 'ROREC White Rice' },
+        { label: 'Fair & Clear', value: 'Fair & Clear' },
+        { label: 'Saaf & Khaas', value: 'Saaf & Khaas' },
+        { label: 'Bake Parlor Big', value: 'Bake Parlor Big' },
+        { label: 'Baking Food Items', value: 'Baking Food Items' },
+        { label: 'fauji', value: 'fauji' },
+        { label: 'Dry Rose', value: 'Dry Rose' },
+        { label: 'Highlands', value: 'Highlands' },
+      ],
+    },
+    category: {
+      type: 'select',
+      options: [
+        { label: 'Smartphones', value: 'smartphones' },
+        { label: 'Laptops', value: 'laptops' },
+        { label: 'Fragrances', value: 'fragrances' },
+        { label: 'Skincare', value: 'skincare' },
+        { label: 'Groceries', value: 'groceries' },
+        { label: 'Home Decoration', value: 'home-decoration' },
+        { label: 'Furniture', value: 'furniture' },
+        { label: 'Tops', value: 'tops' },
+        { label: 'Womens Dresses', value: 'womens-dresses' },
+        { label: 'Womens Shoes', value: 'womens-shoes' },
+        { label: 'Mens Shirts', value: 'mens-shirts' },
+        { label: 'Mens Shoes', value: 'mens-shoes' },
+        { label: 'Mens Watches', value: 'mens-watches' },
+        { label: 'Womens Watches', value: 'womens-watches' },
+        { label: 'Womens Bags', value: 'womens-bags' },
+        { label: 'Womens Jewellery', value: 'womens-jewellery' },
+        { label: 'Sunglasses', value: 'sunglasses' },
+        { label: 'Automotive', value: 'automotive' },
+        { label: 'Motorcycle', value: 'motorcycle' },
+        { label: 'Lighting', value: 'lighting' },
+      ],
+    },
+    price: {
+      type: 'range',
+      min: 0,
+      max: 2000,
+      step: 0.01,
+    },
+    rating: {
+      type: 'rating',
+      maxRating: 5,
+      showLabels: true,
+    },
+    stock: {
+      type: 'number',
+      placeholder: 'Filter by stock',
+      min: 0,
+      max: 200,
+    },
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">DataTable with API Integration</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">DataTable with Advanced Filtering</h1>
         <p className="text-gray-600">
-          Data table with server-side pagination using DummyJSON API
+          Data table with comprehensive filtering options including text, select, multiselect, date, datetime, time, number, range, radio, checkbox, rating, and boolean filters
         </p>
       </div>
 
@@ -167,6 +252,7 @@ export function DataTableApiExample() {
         actions={productActions}
         showActions={true}
         actionsLabel="Actions"
+        filterConfigs={filterConfigs}
       />
     </div>
   );

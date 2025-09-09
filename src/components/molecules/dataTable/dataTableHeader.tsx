@@ -5,12 +5,15 @@ import {
   ArrowDownIcon,
   PinIcon,
   GripVerticalIcon,
+  CalendarIcon,
+  StarIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import type { Table, Header, HeaderGroup } from '@tanstack/react-table';
 import { getDensityClasses, type RowDensity } from './dataTableDensity.utils';
 import { useState } from 'react';
+import type { FilterConfig } from './dataTableFilters';
 
 interface DataTableHeaderProps<TData> {
   table: Table<TData>;
@@ -22,6 +25,9 @@ interface DataTableHeaderProps<TData> {
   actionsLabel?: string;
   columnWidths?: Record<string, number>;
   enableColumnOrdering?: boolean;
+  filterConfigs?: Record<string, FilterConfig>;
+  columnFilters?: Record<string, any>;
+  setColumnFilters?: (filters: Record<string, any>) => void;
 }
 
 export function DataTableHeader<TData>({
@@ -33,10 +39,27 @@ export function DataTableHeader<TData>({
   actionsLabel = 'Actions',
   columnWidths = {},
   enableColumnOrdering = false,
+  filterConfigs = {},
+  columnFilters = {},
+  setColumnFilters,
 }: DataTableHeaderProps<TData>) {
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const densityClasses = getDensityClasses(density);
+
+  const getColumnFilterValue = (columnId: string) => {
+    return columnFilters[columnId] || '';
+  };
+
+  const setColumnFilterValue = (columnId: string, value: any) => {
+    if (!setColumnFilters) return;
+    setColumnFilters({
+      ...columnFilters,
+      [columnId]: value,
+    });
+    
+    // Note: Auto-sorting removed - sorting should only happen when clicking sort icons
+  };
 
   const handleDragStart = (e: React.DragEvent, columnId: string) => {
     if (!enableColumnOrdering) return;
@@ -78,13 +101,204 @@ export function DataTableHeader<TData>({
     setDraggedColumn(null);
     setDragOverColumn(null);
   };
+
+  const renderInlineFilter = (columnId: string, filterConfig: FilterConfig) => {
+    const currentValue = getColumnFilterValue(columnId);
+    const baseInputClasses = "w-full px-1 py-0.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500";
+
+    switch (filterConfig.type) {
+      case 'text':
+        return (
+          <input
+            type="text"
+            value={currentValue || ''}
+            onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+            placeholder={filterConfig.placeholder || 'Filter...'}
+            className={baseInputClasses}
+          />
+        );
+
+      case 'select':
+        return (
+          <select
+            value={currentValue || ''}
+            onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+            className={baseInputClasses}
+          >
+            <option value="">All</option>
+            {filterConfig.options?.map((option) => (
+              <option key={String(option.value)} value={String(option.value)}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        );
+
+      case 'multiselect':
+        const selectedValues = Array.isArray(currentValue) ? currentValue : [];
+        return (
+          <div className="space-y-1 max-h-20 overflow-y-auto">
+            {filterConfig.options?.slice(0, 3).map((option) => (
+              <label key={String(option.value)} className="flex items-center space-x-1 text-xs">
+                <input
+                  type="checkbox"
+                  checked={selectedValues.includes(option.value)}
+                  onChange={(e) => {
+                    const newValues = e.target.checked
+                      ? [...selectedValues, option.value]
+                      : selectedValues.filter(v => v !== option.value);
+                    setColumnFilterValue(columnId, newValues);
+                  }}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-3 h-3"
+                />
+                <span className="truncate">{option.label}</span>
+              </label>
+            ))}
+            {filterConfig.options && filterConfig.options.length > 3 && (
+              <div className="text-xs text-gray-500">+{filterConfig.options.length - 3} more</div>
+            )}
+          </div>
+        );
+
+      case 'date':
+        return (
+          <div className="relative">
+            <input
+              type="date"
+              value={currentValue || ''}
+              onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              className={`${baseInputClasses} pr-6`}
+            />
+            <CalendarIcon className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
+          </div>
+        );
+
+      case 'datetime':
+        return (
+          <div className="relative">
+            <input
+              type="datetime-local"
+              value={currentValue || ''}
+              onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+              className={`${baseInputClasses} pr-6`}
+            />
+            <CalendarIcon className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
+          </div>
+        );
+
+      case 'time':
+        return (
+          <input
+            type="time"
+            value={currentValue || ''}
+            onChange={(e) => setColumnFilterValue(columnId, e.target.value)}
+            className={baseInputClasses}
+          />
+        );
+
+      case 'number':
+        return (
+          <input
+            type="number"
+            value={currentValue || ''}
+            onChange={(e) => setColumnFilterValue(columnId, e.target.value ? Number(e.target.value) : '')}
+            placeholder={filterConfig.placeholder || 'Filter...'}
+            min={filterConfig.min}
+            max={filterConfig.max}
+            step={filterConfig.step}
+            className={baseInputClasses}
+          />
+        );
+
+      case 'range':
+        return (
+          <div className="flex space-x-1">
+            <input
+              type="number"
+              value={currentValue?.min || ''}
+              onChange={(e) => setColumnFilterValue(columnId, {
+                ...currentValue,
+                min: e.target.value ? Number(e.target.value) : undefined,
+              })}
+              placeholder="Min"
+              min={filterConfig.min}
+              max={filterConfig.max}
+              step={filterConfig.step}
+              className={baseInputClasses}
+            />
+            <input
+              type="number"
+              value={currentValue?.max || ''}
+              onChange={(e) => setColumnFilterValue(columnId, {
+                ...currentValue,
+                max: e.target.value ? Number(e.target.value) : undefined,
+              })}
+              placeholder="Max"
+              min={filterConfig.min}
+              max={filterConfig.max}
+              step={filterConfig.step}
+              className={baseInputClasses}
+            />
+          </div>
+        );
+
+      case 'rating':
+        const maxRating = filterConfig.maxRating || 5;
+        const ratingValue = currentValue || 0;
+        return (
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setColumnFilterValue(columnId, star)}
+                className={cn(
+                  "p-0.5 transition-colors",
+                  star <= ratingValue
+                    ? "text-yellow-400 hover:text-yellow-500"
+                    : "text-gray-300 hover:text-yellow-400"
+                )}
+              >
+                <StarIcon className="w-3 h-3 fill-current" />
+              </button>
+            ))}
+            {ratingValue > 0 && (
+              <button
+                type="button"
+                onClick={() => setColumnFilterValue(columnId, '')}
+                className="ml-1 text-xs text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        );
+
+      case 'boolean':
+        return (
+          <select
+            value={currentValue === '' ? '' : String(currentValue)}
+            onChange={(e) => setColumnFilterValue(columnId, e.target.value === '' ? '' : e.target.value === 'true')}
+            className={baseInputClasses}
+          >
+            <option value="">All</option>
+            <option value="true">{filterConfig.trueLabel || 'Yes'}</option>
+            <option value="false">{filterConfig.falseLabel || 'No'}</option>
+          </select>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   const renderSortIcon = (header: Header<TData, unknown>) => {
     if (!header.column.getCanSort()) return null;
     
     const sorted = header.column.getIsSorted();
-    if (sorted === 'asc') return <ArrowUpIcon className="w-4 h-4" />;
-    if (sorted === 'desc') return <ArrowDownIcon className="w-4 h-4" />;
-    return <ArrowUpDownIcon className="w-4 h-4" />;
+    if (sorted === 'asc') return <ArrowUpIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
+    if (sorted === 'desc') return <ArrowDownIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
+    return <ArrowUpDownIcon className="w-4 h-4"   onClick={header.column.getToggleSortingHandler()}/>;
   };
 
   const renderColumnHeader = (header: Header<TData, unknown>) => {
@@ -150,28 +364,37 @@ export function DataTableHeader<TData>({
           width: `${columnWidths[header.column.id] || header.getSize()}px`, 
           minWidth: '100px' 
         }}
-        onClick={header.column.getToggleSortingHandler()}
+      
         draggable={enableColumnOrdering && !header.column.getIsPinned()}
         onDragStart={(e) => handleDragStart(e, header.column.id)}
         onDragOver={(e) => handleDragOver(e, header.column.id)}
         onDragLeave={handleDragLeave}
         onDrop={(e) => handleDrop(e, header.column.id)}
       >
-        <div className="flex items-center gap-1 sm:gap-2">
-          {/* Drag handle */}
-          {enableColumnOrdering && !header.column.getIsPinned() && (
-            <div className="cursor-grab active:cursor-grabbing">
-              <GripVerticalIcon className="w-3 h-3 text-gray-400 hover:text-gray-600" />
-            </div>
-          )}
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          {renderSortIcon(header)}
-          {/* Pin indicator */}
-          {isPinned && (
-            <div title={`Pinned ${isPinned}`}>
-              <PinIcon className="w-3 h-3 text-blue-600" />
+        <div className="space-y-1">
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Drag handle */}
+            {enableColumnOrdering && !header.column.getIsPinned() && (
+              <div className="cursor-grab active:cursor-grabbing" >
+                <GripVerticalIcon className="w-3 h-3 text-gray-400 hover:text-gray-600" />
+              </div>
+            )}
+
+            {header.isPlaceholder
+              ? null
+              : flexRender(header.column.columnDef.header, header.getContext())}
+            {renderSortIcon(header)}
+            {/* Pin indicator */}
+            {isPinned && (
+              <div title={`Pinned ${isPinned}`}>
+                <PinIcon className="w-3 h-3 text-blue-600" />
+              </div>
+            )}
+          </div>
+          {/* Inline Filter */}
+          {filterConfigs[header.column.id] && (
+            <div className="mt-1">
+              {renderInlineFilter(header.column.id, filterConfigs[header.column.id])}
             </div>
           )}
         </div>
