@@ -678,7 +678,10 @@ export function DataTable<TData, TValue>({
             <>
               {/* Sticky Header */}
               <div className="overflow-x-auto border-b border-gray-200">
-                <table className={tableClasses} style={{ minWidth: "100%" }}>
+                <table
+                  className={tableClasses}
+                  style={{ minWidth: "1200px", width: "100%" }}
+                >
                   <DataTableHeader
                     table={table}
                     headerClassName={headerClassName}
@@ -696,8 +699,11 @@ export function DataTable<TData, TValue>({
               </div>
 
               {/* Scrollable Body */}
-              <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
-                <table className={tableClasses} style={{ minWidth: "100%" }}>
+              <div
+                className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh] w-full"
+                style={{ overflow: "scroll", scrollbarWidth: "thin" }}
+              >
+                <table className={tableClasses}>
                   {(loading || loadingProp) &&
                   (data.length > 0 || isApiMode) ? (
                     <DataTableSkeleton
@@ -730,8 +736,14 @@ export function DataTable<TData, TValue>({
             </>
           ) : (
             /* Traditional Table */
-            <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
-              <table className={tableClasses}>
+            <div
+              className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh] w-full"
+              style={{ overflow: "scroll", scrollbarWidth: "thin" }}
+            >
+              <table
+                className={tableClasses}
+                style={{ minWidth: "max-content", width: "100%" }}
+              >
                 <DataTableHeader
                   table={table}
                   headerClassName={headerClassName}
