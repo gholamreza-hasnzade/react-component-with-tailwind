@@ -84,7 +84,6 @@ export function DataTableApiExample() {
   };
 
   const handleRowSelect = useCallback((selectedRows: { original: Product }[]) => {
-    console.log('Selected products:', selectedRows);
     setSelectedRows(selectedRows.map(row => row.original));
   }, []);
 
@@ -102,7 +101,6 @@ export function DataTableApiExample() {
       label: 'Edit',
       icon: <EditIcon className="w-3 h-3" />,
       onClick: (row: { original: Product }) => {
-        console.log('Edit product:', row.original);
         alert(`Editing ${row.original.title}`);
       },
       variant: 'default' as const,
@@ -111,7 +109,6 @@ export function DataTableApiExample() {
       label: 'Delete',
       icon: <TrashIcon className="w-3 h-3" />,
       onClick: (row: { original: Product }) => {
-        console.log('Delete product:', row.original);
         if (confirm(`Are you sure you want to delete ${row.original.title}?`)) {
           // Handle delete logic here
         }

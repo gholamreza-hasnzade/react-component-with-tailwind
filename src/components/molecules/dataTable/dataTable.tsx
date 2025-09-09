@@ -233,8 +233,8 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
-  showColumnOrdering = true,
-  showGlobalFilter = true,
+  /*   showColumnOrdering = true,
+   */ showGlobalFilter = true,
   showRowCount = true,
   showSelectedCount = true,
   showExportButtons = true,
@@ -314,20 +314,24 @@ export function DataTable<TData, TValue>({
 
   // API Integration
   const isApiMode = !!urlDatas;
-  const { data: apiData, isLoading: apiLoading, error: apiError } = useDataTablePagination<TData>(
-    urlDatas || '',
+  const {
+    data: apiData,
+    isLoading: apiLoading,
+    error: apiError,
+  } = useDataTablePagination<TData>(
+    urlDatas || "",
     pagination.pageIndex,
     pagination.pageSize,
     globalFilter,
     sorting[0]?.id,
-    sorting[0]?.desc ? 'desc' : 'asc'
+    sorting[0]?.desc ? "desc" : "asc"
   );
 
   // Determine data source
-  const data = isApiMode ? (apiData?.products || []) : (staticData || []);
+  const data = isApiMode ? apiData?.products || [] : staticData || [];
   const loading = isApiMode ? apiLoading : false;
   const error = isApiMode ? apiError : null;
-  const totalCount = isApiMode ? (apiData?.total || 0) : (staticData?.length || 0);
+  const totalCount = isApiMode ? apiData?.total || 0 : staticData?.length || 0;
 
   // Memoized columns with selection column
   const memoizedColumns = useMemo(() => {
@@ -387,7 +391,9 @@ export function DataTable<TData, TValue>({
     enableFilters: enableFiltering,
     enableGlobalFilter,
     manualPagination: isApiMode || !enablePagination,
-    pageCount: isApiMode ? Math.max(1, Math.ceil(totalCount / pagination.pageSize)) : undefined,
+    pageCount: isApiMode
+      ? Math.max(1, Math.ceil(totalCount / pagination.pageSize))
+      : undefined,
     enableColumnResizing: enableColumnSizing,
     enableColumnPinning,
     enableGrouping,
@@ -538,11 +544,13 @@ export function DataTable<TData, TValue>({
         {renderToolbar && renderToolbar(table)}
         <div className="flex items-center justify-center h-64">
           {renderErrorState ? (
-            renderErrorState(error?.message || errorProp || 'An error occurred')
+            renderErrorState(error?.message || errorProp || "An error occurred")
           ) : (
             <div className="text-center">
               <div className="text-red-500 mb-2">{errorMessage}</div>
-              <div className="text-sm text-gray-500">{error?.message || errorProp}</div>
+              <div className="text-sm text-gray-500">
+                {error?.message || errorProp}
+              </div>
             </div>
           )}
         </div>
@@ -663,22 +671,20 @@ export function DataTable<TData, TValue>({
         )}
       </div>
 
-
       {/* Table and Pagination Container */}
-      <div className={cn(
-        "relative transition-all duration-300 ease-in-out",
-        {
-          "border border-gray-200 rounded-lg overflow-hidden": variant === "bordered",
-        }
-      )}>
+      <div
+        className={cn("relative transition-all duration-300 ease-in-out", {
+          "border border-gray-200 rounded-lg overflow-hidden":
+            variant === "bordered",
+        })}
+      >
         {/* Table */}
-        <div className={cn(
-          "overflow-hidden",
-          {
+        <div
+          className={cn("overflow-hidden", {
             "border border-gray-200 rounded-lg": variant !== "bordered",
             "border-0": variant === "bordered",
-          }
-        )}>
+          })}
+        >
           {/* Settings Sidebar - Shows here when opened */}
           {showSettings && (
             <DataTableSettings
@@ -690,12 +696,12 @@ export function DataTable<TData, TValue>({
               onClose={() => setShowSettings(false)}
             />
           )}
-          
+
           {enableStickyHeader ? (
             <>
               {/* Sticky Header */}
               <div className="overflow-x-auto border-b border-gray-200">
-                <table className={tableClasses} style={{ minWidth: '100%' }}>
+                <table className={tableClasses} style={{ minWidth: "100%" }}>
                   <DataTableHeader
                     table={table}
                     headerClassName={headerClassName}
@@ -708,13 +714,14 @@ export function DataTable<TData, TValue>({
                   />
                 </table>
               </div>
-              
+
               {/* Scrollable Body */}
               <div className="overflow-x-auto overflow-y-auto h-[60vh] min-h-[400px] max-h-[80vh]">
-                <table className={tableClasses} style={{ minWidth: '100%' }}>
-                  {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
-                    <DataTableSkeleton 
-                      rows={pagination.pageSize} 
+                <table className={tableClasses} style={{ minWidth: "100%" }}>
+                  {(loading || loadingProp) &&
+                  (data.length > 0 || isApiMode) ? (
+                    <DataTableSkeleton
+                      rows={pagination.pageSize}
                       columns={memoizedColumns.length}
                       className={bodyClassName}
                       hasActions={showActions}
@@ -754,8 +761,8 @@ export function DataTable<TData, TValue>({
                   enableColumnOrdering={enableColumnOrdering}
                 />
                 {(loading || loadingProp) && (data.length > 0 || isApiMode) ? (
-                  <DataTableSkeleton 
-                    rows={pagination.pageSize} 
+                  <DataTableSkeleton
+                    rows={pagination.pageSize}
                     columns={memoizedColumns.length}
                     className={bodyClassName}
                     hasActions={showActions}

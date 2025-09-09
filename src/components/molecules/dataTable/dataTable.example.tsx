@@ -397,7 +397,6 @@ export function DataTableExample() {
       label: 'View',
       icon: <EyeIcon className="w-3 h-3" />,
       onClick: (row: { original: Person }) => {
-        console.log('View:', row.original);
         alert(`Viewing ${row.original.firstName} ${row.original.lastName}`);
       },
       variant: 'outline' as const,
@@ -406,7 +405,6 @@ export function DataTableExample() {
       label: 'Edit',
       icon: <EditIcon className="w-3 h-3" />,
       onClick: (row: { original: Person }) => {
-        console.log('Edit:', row.original);
         alert(`Editing ${row.original.firstName} ${row.original.lastName}`);
       },
       variant: 'default' as const,
@@ -415,7 +413,6 @@ export function DataTableExample() {
       label: 'Delete',
       icon: <TrashIcon className="w-3 h-3" />,
       onClick: (row: { original: Person }) => {
-        console.log('Delete:', row.original);
         if (confirm(`Are you sure you want to delete ${row.original.firstName} ${row.original.lastName}?`)) {
           setData(data.filter(person => person.id !== row.original.id));
         }

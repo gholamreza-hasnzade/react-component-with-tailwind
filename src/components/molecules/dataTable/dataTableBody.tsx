@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { flexRender } from '@tanstack/react-table';
-import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/atoms/checkbox/checkbox';
-import type { Table, Row, Cell } from '@tanstack/react-table';
-import { MoreHorizontalIcon } from 'lucide-react';
-import { getDensityClasses, type RowDensity } from './dataTableDensity.utils';
+import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { flexRender } from "@tanstack/react-table";
+import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/atoms/checkbox/checkbox";
+import type { Table, Row, Cell } from "@tanstack/react-table";
+import { MoreHorizontalIcon } from "lucide-react";
+import { getDensityClasses, type RowDensity } from "./dataTableDensity.utils";
 
 interface DataTableBodyProps<TData> {
   table: Table<TData>;
@@ -13,7 +13,7 @@ interface DataTableBodyProps<TData> {
   bodyClassName?: string;
   rowClassName?: string | ((row: Row<TData>) => string);
   cellClassName?: string | ((cell: Cell<TData, unknown>) => string);
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   density?: RowDensity;
   onRowClick?: (row: Row<TData>) => void;
   onRowDoubleClick?: (row: Row<TData>) => void;
@@ -21,7 +21,7 @@ interface DataTableBodyProps<TData> {
     label: string;
     icon?: React.ReactNode;
     onClick: (row: Row<TData>) => void;
-    variant?: 'default' | 'destructive' | 'outline';
+    variant?: "default" | "destructive" | "outline";
     disabled?: (row: Row<TData>) => boolean;
   }>;
   showActions?: boolean;
@@ -54,8 +54,8 @@ export function DataTableBody<TData>({
   bodyClassName,
   rowClassName,
   cellClassName,
-  size = 'md',
-  density = 'normal',
+  size = "md",
+  density = "normal",
   onRowClick,
   onRowDoubleClick,
   actions = [],
@@ -66,58 +66,60 @@ export function DataTableBody<TData>({
 }: DataTableBodyProps<TData>) {
   // Helper function to get row status colors
   const getRowStatusColors = (row: Row<TData>) => {
-    if (!statusConfig) return { bg: undefined, text: undefined, border: undefined };
-    
+    if (!statusConfig)
+      return { bg: undefined, text: undefined, border: undefined };
+
     const statusValue = row.original[statusConfig.field];
     const statusKey = String(statusValue);
     const colors = statusConfig.colors[statusKey];
-    
+
     return colors || { bg: undefined, text: undefined, border: undefined };
   };
 
   // Helper function to get column status colors
   const getColumnStatusColors = (cell: Cell<TData, any>) => {
-    if (!columnStatusConfig || !columnStatusConfig[cell.column.id]) return { bg: undefined, text: undefined };
-    
+    if (!columnStatusConfig || !columnStatusConfig[cell.column.id])
+      return { bg: undefined, text: undefined };
+
     const config = columnStatusConfig[cell.column.id];
     const statusValue = cell.row.original[config.field];
     const statusKey = String(statusValue);
     const colors = config.colors[statusKey];
-    
+
     return colors || { bg: undefined, text: undefined };
   };
 
   const densityClasses = getDensityClasses(density);
-  
+
   const rowClasses = cn(
-    'hover:bg-gray-50 transition-colors duration-200 cursor-pointer',
+    "hover:bg-gray-50 transition-colors duration-200 cursor-pointer",
     densityClasses.row
   );
 
   const bodyClasses = cn(
-    'bg-white divide-y divide-gray-200',
+    "bg-white divide-y divide-gray-200",
     {
-      'text-xs': size === 'sm',
-      'text-sm': size === 'md',
-      'text-base': size === 'lg',
+      "text-xs": size === "sm",
+      "text-sm": size === "md",
+      "text-base": size === "lg",
     },
     bodyClassName
   );
 
   const renderCell = (cell: Cell<TData, any>) => {
     // Special handling for select column
-    if (cell.column.id === 'select') {
+    if (cell.column.id === "select") {
       return (
         <td
           key={cell.id}
-        className={cn(
-          'text-center transition-colors duration-200 hover:bg-gray-50',
-          'w-2',
-          densityClasses.cell
-        )}
-          style={{ 
-            width: '32px', 
-            minWidth: '32px' 
+          className={cn(
+            "text-center transition-colors duration-200 hover:bg-gray-50",
+            "w-2",
+            densityClasses.cell
+          )}
+          style={{
+            width: "32px",
+            minWidth: "32px",
           }}
         >
           <div className="flex items-center justify-center">
@@ -135,32 +137,40 @@ export function DataTableBody<TData>({
 
     const columnColors = getColumnStatusColors(cell);
     const isPinned = cell.column.getIsPinned();
-    
+
     // Get all visible columns to determine if this is the last pinned column
     const visibleColumns = table.getVisibleLeafColumns();
-    const pinnedColumns = visibleColumns.filter(col => col.getIsPinned());
-    const isLastPinnedLeft = isPinned === 'left' && pinnedColumns.filter(col => col.getIsPinned() === 'left').pop()?.id === cell.column.id;
-    const isLastPinnedRight = isPinned === 'right' && pinnedColumns.filter(col => col.getIsPinned() === 'right').pop()?.id === cell.column.id;
-    
+    const pinnedColumns = visibleColumns.filter((col) => col.getIsPinned());
+    const isLastPinnedLeft =
+      isPinned === "left" &&
+      pinnedColumns.filter((col) => col.getIsPinned() === "left").pop()?.id ===
+        cell.column.id;
+    const isLastPinnedRight =
+      isPinned === "right" &&
+      pinnedColumns.filter((col) => col.getIsPinned() === "right").pop()?.id ===
+        cell.column.id;
+
     return (
       <td
         key={cell.id}
         className={cn(
-          'text-gray-900 whitespace-nowrap transition-colors duration-200 relative',
+          "text-gray-900 whitespace-nowrap transition-colors duration-200 relative",
           densityClasses.cell,
-          !columnColors.bg && 'hover:bg-gray-50',
-          typeof cellClassName === 'function' ? cellClassName(cell) : cellClassName,
+          !columnColors.bg && "hover:bg-gray-50",
+          typeof cellClassName === "function"
+            ? cellClassName(cell)
+            : cellClassName,
           // Pinned column styling - only last pinned column gets border
           {
-            'border-r-2 border-r-blue-300': isLastPinnedLeft,
-            'border-l-2 border-l-blue-300': isLastPinnedRight,
+            "border-r-2 border-r-blue-300": isLastPinnedLeft,
+            "border-l-2 border-l-blue-300": isLastPinnedRight,
           }
         )}
         style={{
           backgroundColor: columnColors.bg || undefined,
           color: columnColors.text || undefined,
           width: `${columnWidths[cell.column.id] || cell.column.getSize()}px`,
-          minWidth: '100px',
+          minWidth: "100px",
         }}
         onMouseEnter={(e) => {
           if (columnColors.bg) {
@@ -173,11 +183,11 @@ export function DataTableBody<TData>({
               e.currentTarget.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
             }
           } else {
-            e.currentTarget.style.backgroundColor = '#f9fafb';
+            e.currentTarget.style.backgroundColor = "#f9fafb";
           }
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = columnColors.bg || '';
+          e.currentTarget.style.backgroundColor = columnColors.bg || "";
         }}
       >
         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -192,7 +202,7 @@ export function DataTableBody<TData>({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        popoverRef.current && 
+        popoverRef.current &&
         !popoverRef.current.contains(event.target as Node)
       ) {
         setOpenPopover(null);
@@ -200,16 +210,16 @@ export function DataTableBody<TData>({
     };
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setOpenPopover(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
@@ -217,7 +227,7 @@ export function DataTableBody<TData>({
     const rect = button.getBoundingClientRect();
     const popoverWidth = 192; // w-48 = 192px
     const viewportWidth = window.innerWidth;
-    
+
     // Calculate left position, ensuring it doesn't go off screen
     let left = rect.right - popoverWidth;
     if (left < 0) {
@@ -226,7 +236,7 @@ export function DataTableBody<TData>({
     if (left + popoverWidth > viewportWidth) {
       left = viewportWidth - popoverWidth - 10; // 10px margin from edge
     }
-    
+
     setPopoverPosition({
       top: rect.bottom + 4,
       left: left,
@@ -254,8 +264,9 @@ export function DataTableBody<TData>({
             <MoreHorizontalIcon className="w-4 h-4" />
           </button>
 
-          {isOpen && createPortal(
-              <div 
+          {isOpen &&
+            createPortal(
+              <div
                 ref={popoverRef}
                 className="fixed w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-[9999]"
                 style={{
@@ -263,40 +274,46 @@ export function DataTableBody<TData>({
                   left: popoverPosition.left,
                 }}
               >
-              <div className="py-1">
-                {actions.map((action, index) => {
-                  const isDisabled = action.disabled?.(row) || false;
-                  const itemClasses = cn(
-                    'flex items-center gap-2 px-3 py-2 text-sm transition-colors cursor-pointer',
-                    {
-                      'text-gray-700 hover:bg-gray-100': !isDisabled && action.variant === 'default' || !action.variant,
-                      'text-red-700 hover:bg-red-50': !isDisabled && action.variant === 'destructive',
-                      'text-gray-600 hover:bg-gray-50': !isDisabled && action.variant === 'outline',
-                      'text-gray-400 cursor-not-allowed': isDisabled,
-                    }
-                  );
+                <div className="py-1">
+                  {actions.map((action, index) => {
+                    const isDisabled = action.disabled?.(row) || false;
+                    const itemClasses = cn(
+                      "flex items-center gap-2 px-3 py-2 text-sm transition-colors cursor-pointer",
+                      {
+                        "text-gray-700 hover:bg-gray-100":
+                          (!isDisabled && action.variant === "default") ||
+                          !action.variant,
+                        "text-red-700 hover:bg-red-50":
+                          !isDisabled && action.variant === "destructive",
+                        "text-gray-600 hover:bg-gray-50":
+                          !isDisabled && action.variant === "outline",
+                        "text-gray-400 cursor-not-allowed": isDisabled,
+                      }
+                    );
 
-                  return (
-                    <div
-                      key={index}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!isDisabled) {
-                          action.onClick(row);
-                          setOpenPopover(null);
-                        }
-                      }}
-                      className={itemClasses}
-                    >
-                      {action.icon && <span className="w-4 h-4">{action.icon}</span>}
-                      <span>{action.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>,
-            document.body
-          )}
+                    return (
+                      <div
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!isDisabled) {
+                            action.onClick(row);
+                            setOpenPopover(null);
+                          }
+                        }}
+                        className={itemClasses}
+                      >
+                        {action.icon && (
+                          <span className="w-4 h-4">{action.icon}</span>
+                        )}
+                        <span>{action.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>,
+              document.body
+            )}
         </div>
       </td>
     );
@@ -305,31 +322,33 @@ export function DataTableBody<TData>({
   const renderRow = (row: Row<TData>) => {
     const rowColors = getRowStatusColors(row);
     const isEven = row.index % 2 !== 0;
-    
+
     return (
-      <>
+      <React.Fragment key={row.id}>
         <tr
-          key={row.id}
           className={cn(
             rowClasses,
-            typeof rowClassName === 'function' ? rowClassName(row) : rowClassName,
+            typeof rowClassName === "function"
+              ? rowClassName(row)
+              : rowClassName,
             {
-              'bg-blue-50': row.getIsSelected(),
-              'cursor-pointer': onRowClick || onRowDoubleClick || row.getCanExpand(),
-              'hover:bg-blue-200': !rowColors.bg && !row.getIsSelected(),
-              'bg-gray-100': !rowColors.bg && !row.getIsSelected() && isEven,
-              'bg-white': !rowColors.bg && !row.getIsSelected() && !isEven,
+              "bg-blue-50": row.getIsSelected(),
+              "cursor-pointer":
+                onRowClick || onRowDoubleClick || row.getCanExpand(),
+              "hover:bg-blue-200": !rowColors.bg && !row.getIsSelected(),
+              "bg-gray-100": !rowColors.bg && !row.getIsSelected() && isEven,
+              "bg-white": !rowColors.bg && !row.getIsSelected() && !isEven,
             }
           )}
           style={{
-            backgroundColor: row.getIsSelected() ? '#dbeafe' : rowColors.bg, // Blue-100 for selected rows
+            backgroundColor: row.getIsSelected() ? "#dbeafe" : rowColors.bg, // Blue-100 for selected rows
             color: rowColors.text,
             borderColor: rowColors.border,
           }}
           onMouseEnter={(e) => {
             if (row.getIsSelected()) {
               // For selected rows, use a darker blue
-              e.currentTarget.style.backgroundColor = '#bfdbfe'; // Blue-200
+              e.currentTarget.style.backgroundColor = "#bfdbfe"; // Blue-200
             } else if (rowColors.bg) {
               // Create a slightly darker version for hover
               const rgb = rowColors.bg.match(/\d+/g);
@@ -340,55 +359,64 @@ export function DataTableBody<TData>({
                 e.currentTarget.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
               }
             } else {
-              e.currentTarget.style.backgroundColor = '#f9fafb';
+              e.currentTarget.style.backgroundColor = "#f9fafb";
             }
           }}
           onMouseLeave={(e) => {
             if (row.getIsSelected()) {
-              e.currentTarget.style.backgroundColor = '#dbeafe'; // Blue-100 for selected
+              e.currentTarget.style.backgroundColor = "#dbeafe"; // Blue-100 for selected
             } else {
-              e.currentTarget.style.backgroundColor = rowColors.bg || '';
+              e.currentTarget.style.backgroundColor = rowColors.bg || "";
             }
           }}
-        onClick={() => {
-          if (row.getCanExpand()) {
-            row.toggleExpanded();
-          }
-          onRowClick?.(row);
-        }}
-        onDoubleClick={() => onRowDoubleClick?.(row)}
-      >
-        {row.getVisibleCells().map(renderCell)}
-        {renderActions(row)}
-      </tr>
-      {row.getIsExpanded() && row.subRows && row.subRows.length > 0 && (
-        <tr key={`${row.id}-expanded`} className="bg-gray-50">
-          <td colSpan={row.getVisibleCells().length + (showActions ? 1 : 0)} className="px-4 py-2">
-            <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-              <div className="text-sm text-gray-600 mb-2">Expanded Details:</div>
-              <div className="space-y-2">
-                {Object.entries(row.original as Record<string, any>).map(([key, value]) => (
-                  <div key={key} className="flex">
-                    <span className="font-medium text-gray-700 w-32 capitalize">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}:
-                    </span>
-                    <span className="text-gray-900">
-                      {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </td>
+          onClick={() => {
+            if (row.getCanExpand()) {
+              row.toggleExpanded();
+            }
+            onRowClick?.(row);
+          }}
+          onDoubleClick={() => onRowDoubleClick?.(row)}
+        >
+          {row.getVisibleCells().map((cell) => renderCell(cell))}
+          {renderActions(row)}
         </tr>
-      )}
-    </>
+        {row.getIsExpanded() && row.subRows && row.subRows.length > 0 && (
+          <tr key={`${row.id}-expanded`} className="bg-gray-50">
+            <td
+              colSpan={row.getVisibleCells().length + (showActions ? 1 : 0)}
+              className="px-4 py-2"
+            >
+              <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                <div className="text-sm text-gray-600 mb-2">
+                  Expanded Details:
+                </div>
+                <div className="space-y-2">
+                  {Object.entries(row.original as Record<string, any>).map(
+                    ([key, value]) => (
+                      <div key={key} className="flex">
+                        <span className="font-medium text-gray-700 w-32 capitalize">
+                          {key.replace(/([A-Z])/g, " $1").trim()}:
+                        </span>
+                        <span className="text-gray-900">
+                          {typeof value === "object"
+                            ? JSON.stringify(value)
+                            : String(value)}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </td>
+          </tr>
+        )}
+      </React.Fragment>
     );
   };
 
   return (
     <tbody className={bodyClasses}>
-      {table.getRowModel().rows.map(renderRow)}
+      {table.getRowModel().rows.map((row) => renderRow(row))}
     </tbody>
   );
 }
