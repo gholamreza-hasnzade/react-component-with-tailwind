@@ -392,6 +392,7 @@ export function DataTable<TData, TValue>({
     enableColumnPinning,
     enableGrouping,
     enableExpanding,
+    columnResizeMode: 'onChange',
     onSortingChange: (updater) => {
       const newSorting =
         typeof updater === "function" ? updater(sorting) : updater;
@@ -498,7 +499,7 @@ export function DataTable<TData, TValue>({
 
   // Styling classes
   const tableClasses = cn(
-    "w-full border-collapse",
+    "w-full border-collapse table-fixed",
     {
       "border border-gray-200 rounded-lg": variant === "bordered",
       "divide-y divide-gray-200": variant === "striped",

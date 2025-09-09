@@ -378,7 +378,6 @@ export function DataTableHeader<TData>({
           width: `${columnWidths[header.column.id] || header.getSize()}px`, 
           minWidth: '100px' 
         }}
-      
         draggable={enableColumnOrdering && !header.column.getIsPinned()}
         onDragStart={(e) => handleDragStart(e, header.column.id)}
         onDragOver={(e) => handleDragOver(e, header.column.id)}
@@ -412,6 +411,16 @@ export function DataTableHeader<TData>({
             </div>
           )}
         </div>
+        
+        {/* Resize handle */}
+        {header.column.getCanResize() && (
+          <div
+            onMouseDown={header.getResizeHandler()}
+            onTouchStart={header.getResizeHandler()}
+            className="absolute right-0 top-0 h-full w-1 bg-transparent hover:bg-blue-500 cursor-col-resize select-none touch-none"
+            style={{ transform: 'translateX(50%)' }}
+          />
+        )}
       </th>
     );
   };
