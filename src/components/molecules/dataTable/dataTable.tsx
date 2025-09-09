@@ -501,20 +501,22 @@ export function DataTable<TData, TValue>({
   }, [rowSelection, onRowSelect, table]);
 
   // Styling classes
-  const tableClasses = cn(
+  const tableClasses = useMemo(() => cn(
     "w-full border-collapse table-fixed",
     {
       "border border-gray-200 rounded-lg": variant === "bordered",
       "divide-y divide-gray-200": variant === "striped",
     },
     tableClassName
-  );
+  ), [variant, tableClassName]);
 
   // Get column widths for consistent alignment
-  const columnWidths = table.getAllColumns().reduce((acc, column) => {
-    acc[column.id] = column.getSize();
-    return acc;
-  }, {} as Record<string, number>);
+  const columnWidths = useMemo(() => {
+    return table.getAllColumns().reduce((acc, column) => {
+      acc[column.id] = column.getSize();
+      return acc;
+    }, {} as Record<string, number>);
+  }, [table.getAllColumns(), columnSizing]);
 
   // Loading state - only show full loading when no data and no API mode
   if ((loading || loadingProp) && data.length === 0 && !isApiMode) {

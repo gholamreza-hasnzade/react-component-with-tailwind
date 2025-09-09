@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import type { Table, Header, HeaderGroup } from '@tanstack/react-table';
 import { getDensityClasses, type RowDensity } from './dataTableDensity.utils';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { FilterConfig } from './dataTableFilters';
 
 interface DataTableHeaderProps<TData> {
@@ -45,7 +45,7 @@ export function DataTableHeader<TData>({
 }: DataTableHeaderProps<TData>) {
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
-  const densityClasses = getDensityClasses(density);
+  const densityClasses = useMemo(() => getDensityClasses(density), [density]);
 
   const getColumnFilterValue = (columnId: string) => {
     return columnFilters[columnId] || '';
@@ -348,9 +348,11 @@ export function DataTableHeader<TData>({
     
     // Get all visible columns to determine if this is the last pinned column
     const visibleColumns = table.getVisibleLeafColumns();
-    const pinnedColumns = visibleColumns.filter(col => col.getIsPinned());
-    const isLastPinnedLeft = isPinned === 'left' && pinnedColumns.filter(col => col.getIsPinned() === 'left').pop()?.id === header.column.id;
-    const isLastPinnedRight = isPinned === 'right' && pinnedColumns.filter(col => col.getIsPinned() === 'right').pop()?.id === header.column.id;
+    const leftPinnedColumns = visibleColumns.filter(col => col.getIsPinned() === 'left');
+    const rightPinnedColumns = visibleColumns.filter(col => col.getIsPinned() === 'right');
+    
+    const isLastPinnedLeft = isPinned === 'left' && leftPinnedColumns.length > 0 && leftPinnedColumns[leftPinnedColumns.length - 1].id === header.column.id;
+    const isLastPinnedRight = isPinned === 'right' && rightPinnedColumns.length > 0 && rightPinnedColumns[0].id === header.column.id;
     
     return (
       <th
@@ -385,7 +387,7 @@ export function DataTableHeader<TData>({
         onDrop={(e) => handleDrop(e, header.column.id)}
       >
         <div className="space-y-1">
-          <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
             {/* Drag handle */}
             {enableColumnOrdering && !header.column.getIsPinned() && (
               <div className="cursor-grab active:cursor-grabbing" >
@@ -393,17 +395,17 @@ export function DataTableHeader<TData>({
               </div>
             )}
 
-            {header.isPlaceholder
-              ? null
-              : flexRender(header.column.columnDef.header, header.getContext())}
-            {renderSortIcon(header)}
-            {/* Pin indicator */}
-            {isPinned && (
-              <div title={`Pinned ${isPinned}`}>
-                <PinIcon className="w-3 h-3 text-blue-600" />
-              </div>
-            )}
-          </div>
+          {header.isPlaceholder
+            ? null
+            : flexRender(header.column.columnDef.header, header.getContext())}
+          {renderSortIcon(header)}
+          {/* Pin indicator */}
+          {isPinned && (
+            <div title={`Pinned ${isPinned}`}>
+              <PinIcon className="w-3 h-3 text-blue-600" />
+            </div>
+          )}
+        </div>
           {/* Inline Filter */}
           {filterConfigs[header.column.id] && filterConfigs[header.column.id].showFilter !== false && (
             <div className="mt-1">

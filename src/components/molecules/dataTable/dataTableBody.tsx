@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { flexRender } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
@@ -91,14 +91,14 @@ export function DataTableBody<TData>({
     return colors || { bg: undefined, text: undefined };
   };
 
-  const densityClasses = getDensityClasses(density);
+  const densityClasses = useMemo(() => getDensityClasses(density), [density]);
 
-  const rowClasses = cn(
+  const rowClasses = useMemo(() => cn(
     "hover:bg-gray-50 transition-colors duration-200 cursor-pointer",
     densityClasses.row
-  );
+  ), [densityClasses.row]);
 
-  const bodyClasses = cn(
+  const bodyClasses = useMemo(() => cn(
     "bg-white divide-y divide-gray-200",
     {
       "text-xs": size === "sm",
@@ -106,7 +106,7 @@ export function DataTableBody<TData>({
       "text-base": size === "lg",
     },
     bodyClassName
-  );
+  ), [size, bodyClassName]);
 
   const renderCell = (cell: Cell<TData, unknown>) => {
     // Special handling for select column
@@ -142,15 +142,17 @@ export function DataTableBody<TData>({
 
     // Get all visible columns to determine if this is the last pinned column
     const visibleColumns = table.getVisibleLeafColumns();
-    const pinnedColumns = visibleColumns.filter((col) => col.getIsPinned());
+    const leftPinnedColumns = visibleColumns.filter((col) => col.getIsPinned() === "left");
+    const rightPinnedColumns = visibleColumns.filter((col) => col.getIsPinned() === "right");
+    
     const isLastPinnedLeft =
       isPinned === "left" &&
-      pinnedColumns.filter((col) => col.getIsPinned() === "left").pop()?.id ===
-        cell.column.id;
+      leftPinnedColumns.length > 0 &&
+      leftPinnedColumns[leftPinnedColumns.length - 1].id === cell.column.id;
     const isLastPinnedRight =
       isPinned === "right" &&
-      pinnedColumns.filter((col) => col.getIsPinned() === "right").pop()?.id ===
-        cell.column.id;
+      rightPinnedColumns.length > 0 &&
+      rightPinnedColumns[0].id === cell.column.id;
 
     return (
       <td
