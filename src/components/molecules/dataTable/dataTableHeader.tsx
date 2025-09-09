@@ -323,13 +323,13 @@ export function DataTableHeader<TData>({
           key={header.id}
           colSpan={header.colSpan}
           className={cn(
-            'text-center font-medium text-gray-900 whitespace-nowrap transition-colors duration-200 hover:bg-gray-100',
+            'text-center font-medium text-gray-900 whitespace-nowrap transition-colors duration-200 hover:bg-gray-100 px-2',
             'w-2',
             densityClasses.header
           )}
           style={{ 
-            width: '32px', 
-            minWidth: '32px' 
+            width: '50px', 
+            minWidth: '50px' 
           }}
         >
           <div className="flex items-center justify-center">

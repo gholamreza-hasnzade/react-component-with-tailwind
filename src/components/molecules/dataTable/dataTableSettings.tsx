@@ -177,7 +177,7 @@ export function DataTableSettings<TData>({
               Pin columns to left or right
             </div>
             <div className="space-y-2">
-              {columns.map((column) => {
+              {columns.filter(column => column.id !== 'select').map((column) => {
                 const isPinned = column.getIsPinned();
                 const pinStatus =
                   isPinned === "left"

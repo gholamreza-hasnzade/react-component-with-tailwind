@@ -287,7 +287,9 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
-  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({});
+  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(
+    enableRowSelection ? { left: ['select'] } : {}
+  );
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
   const [grouping, setGrouping] = useState<GroupingState>([]);
   const [expanded, setExpanded] = useState<ExpandedState>({});
@@ -355,6 +357,7 @@ export function DataTable<TData, TValue>({
         ),
         enableSorting: false,
         enableHiding: false,
+        enablePinning: false,
         size: 50,
       });
     }

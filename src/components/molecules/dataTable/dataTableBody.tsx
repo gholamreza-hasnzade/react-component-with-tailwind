@@ -120,8 +120,8 @@ export function DataTableBody<TData>({
             densityClasses.cell
           )}
           style={{
-            width: "32px",
-            minWidth: "32px",
+            width: "50px",
+            minWidth: "50px",
           }}
         >
           <div className="flex items-center justify-center">
