@@ -33,6 +33,12 @@ import { DataTablePagination } from './dataTablePagination';
 import { DataTableSettings } from './dataTableSettings';
 import { DataTableHeader } from './dataTableHeader';
 import { DataTableBody } from './dataTableBody';
+import { DataTableFilters, type FilterConfig } from './dataTableFilters';
+import { DataTableDensity } from './dataTableDensity';
+import { type RowDensity } from './dataTableDensity.utils';
+import { DataTableExport, type ExportFormat } from './dataTableExport';
+import { DataTableSearch, type SearchConfig } from './dataTableSearch';
+import { DataTableGrouping, type GroupingConfig } from './dataTableGrouping';
 
 // Types
 export interface DataTableProps<TData, TValue> {
@@ -104,7 +110,6 @@ export interface DataTableProps<TData, TValue> {
   // Styling
   variant?: 'default' | 'bordered' | 'striped' | 'hover';
   size?: 'sm' | 'md' | 'lg';
-  density?: 'compact' | 'normal' | 'comfortable';
   // Actions
   actions?: Array<{
     label: string;
@@ -115,11 +120,56 @@ export interface DataTableProps<TData, TValue> {
   }>;
   showActions?: boolean;
   actionsLabel?: string;
+  // Status configuration
+  statusConfig?: {
+    field: keyof TData;
+    colors: {
+      [key: string]: {
+        bg: string;
+        text: string;
+        border?: string;
+      };
+    };
+  };
+  columnStatusConfig?: {
+    [columnId: string]: {
+      field: keyof TData;
+      colors: {
+        [key: string]: {
+          bg: string;
+          text: string;
+        };
+      };
+    };
+  };
+  // Advanced Features
+  filterConfigs?: Record<string, FilterConfig>;
+  searchConfig?: SearchConfig;
+  groupingConfig?: GroupingConfig;
+  density?: RowDensity;
+  onDensityChange?: (density: RowDensity) => void;
+  isFullscreen?: boolean;
+  onFullscreenToggle?: () => void;
+  exportConfig?: {
+    enabled?: boolean;
+    filename?: string;
+    formats?: ExportFormat[];
+    exportOnlySelected?: boolean;
+  };
+  inlineEditConfig?: Record<string, {
+    enabled: boolean;
+    onSave: (rowId: string, columnId: string, value: unknown) => Promise<void> | void;
+    onCancel?: (rowId: string, columnId: string) => void;
+    validation?: (value: unknown) => string | null;
+    inputType?: 'text' | 'number' | 'email' | 'tel' | 'url' | 'textarea' | 'select';
+    selectOptions?: { label: string; value: unknown }[];
+    placeholder?: string;
+  }>;
 }
 
 
 // Utility functions
-const fuzzyFilter = (row: Row<unknown>, columnId: string, value: string, addMeta: any) => {
+const fuzzyFilter = (row: Row<unknown>, columnId: string, value: string, addMeta: (meta: { itemRank: { passed: boolean; results: unknown[] } }) => void) => {
   const itemRank = fuzzySort(value, [row.getValue(columnId)]);
   addMeta({ itemRank });
   return itemRank.passed;
@@ -153,13 +203,8 @@ export function DataTable<TData, TValue>({
   enableColumnVisibility = true,
   enableGrouping = true,
   enableExpanding = true,
-  enableFaceting = true,
-  enableRowPinning = true,
   enableMultiSort = true,
-  enableGlobalFiltering = true,
   enableFuzzyFiltering = true,
-  enableColumnFaceting = true,
-  enableGlobalFaceting = true,
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
@@ -202,10 +247,20 @@ export function DataTable<TData, TValue>({
   renderFooter,
   variant = 'default',
   size = 'md',
-  density = 'normal',
   actions = [],
   showActions = false,
   actionsLabel = 'Actions',
+  statusConfig,
+  columnStatusConfig,
+  // Advanced Features
+  filterConfigs,
+  searchConfig,
+  groupingConfig,
+  density: densityProp = 'normal',
+  onDensityChange,
+  isFullscreen = false,
+  onFullscreenToggle,
+  exportConfig,
 }: DataTableProps<TData, TValue>) {
   // State management
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -223,6 +278,12 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [globalFilter, setGlobalFilter] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  
+  
+  // Advanced Features State
+  const [density, setDensity] = useState<RowDensity>(densityProp);
+  const [columnFiltersState, setColumnFiltersState] = useState<Record<string, unknown>>({});
+  const [groupingState, setGroupingState] = useState<string[]>([]);
 
   // Memoized columns with selection column
   const memoizedColumns = useMemo(() => {
@@ -282,18 +343,10 @@ export function DataTable<TData, TValue>({
     enableFilters: enableFiltering,
     enableGlobalFilter,
     manualPagination: !enablePagination,
-    enableColumnResizing: enableColumnOrdering,
+    enableColumnResizing: enableColumnSizing,
     enableColumnPinning,
-    enableColumnSizing,
-    enableColumnVisibility,
     enableGrouping,
     enableExpanding,
-    enableFaceting,
-    enableRowPinning,
-    enableGlobalFiltering,
-    enableFuzzyFiltering,
-    enableColumnFaceting,
-    enableGlobalFaceting,
     onSortingChange: (updater) => {
       const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
       setSorting(newSorting);
@@ -377,7 +430,7 @@ export function DataTable<TData, TValue>({
       const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => ({ original: row.original }));
       onRowSelect(selectedRows);
     }
-  }, [rowSelection, onRowSelect]);
+  }, [rowSelection, onRowSelect, table]);
 
   // Styling classes
   const tableClasses = cn(
@@ -466,6 +519,66 @@ export function DataTable<TData, TValue>({
         />
       )}
 
+      {/* Advanced Search */}
+      {searchConfig?.enabled && (
+        <DataTableSearch
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          config={searchConfig}
+        />
+      )}
+
+      {/* Advanced Filters */}
+      {filterConfigs && Object.keys(filterConfigs).length > 0 && (
+        <DataTableFilters
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          columnFilters={columnFiltersState}
+          setColumnFilters={setColumnFiltersState}
+          filterConfigs={filterConfigs}
+        />
+      )}
+
+      {/* Grouping */}
+      {groupingConfig?.enabled && (
+        <DataTableGrouping
+          table={table}
+          config={{
+            ...groupingConfig,
+            groupBy: groupingState,
+            onGroupByChange: setGroupingState,
+          }}
+          data={data}
+        />
+      )}
+
+      {/* Density and Fullscreen Controls */}
+      <div className="flex items-center justify-between mb-4">
+        <DataTableDensity
+          table={table}
+          density={density}
+          onDensityChange={(newDensity) => {
+            setDensity(newDensity);
+            onDensityChange?.(newDensity);
+          }}
+          isFullscreen={isFullscreen}
+          onFullscreenToggle={onFullscreenToggle || (() => {})}
+        />
+        
+        {/* Export */}
+        {exportConfig?.enabled && (
+          <DataTableExport
+            table={table}
+            data={data}
+            filename={exportConfig.filename}
+            selectedRows={table.getFilteredSelectedRowModel().rows.map(row => row.original)}
+            exportOnlySelected={exportConfig.exportOnlySelected}
+          />
+        )}
+      </div>
+
       {/* Column Settings */}
       {showSettings && (
         <DataTableSettings
@@ -474,8 +587,11 @@ export function DataTable<TData, TValue>({
           showColumnOrdering={enableColumnOrdering}
           showColumnPinning={enableColumnPinning}
           showColumnSizing={enableColumnSizing}
+          onClose={() => setShowSettings(false)}
         />
       )}
+      
+      
 
       {/* Table */}
       <div className="relative">
@@ -485,6 +601,7 @@ export function DataTable<TData, TValue>({
             table={table}
             headerClassName={headerClassName}
             size={size}
+            density={density}
             showActions={showActions}
             actionsLabel={actionsLabel}
           />
@@ -499,6 +616,8 @@ export function DataTable<TData, TValue>({
             onRowDoubleClick={handleRowDoubleClick}
             actions={actions}
             showActions={showActions}
+            statusConfig={statusConfig}
+            columnStatusConfig={columnStatusConfig}
           />
           </table>
         </div>

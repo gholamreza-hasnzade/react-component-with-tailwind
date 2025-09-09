@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/atoms/checkbox/checkbox';
 import { cn } from '@/lib/utils';
-import { GripVerticalIcon } from 'lucide-react';
+import { GripVerticalIcon, XIcon } from 'lucide-react';
 import type { Table } from '@tanstack/react-table';
 
 interface DataTableSettingsProps<TData> {
@@ -11,6 +11,7 @@ interface DataTableSettingsProps<TData> {
   showColumnPinning?: boolean;
   showColumnSizing?: boolean;
   className?: string;
+  onClose?: () => void;
 }
 
 export function DataTableSettings<TData>({
@@ -20,10 +21,12 @@ export function DataTableSettings<TData>({
   showColumnPinning = true,
   showColumnSizing = true,
   className,
+  onClose,
 }: DataTableSettingsProps<TData>) {
   const columns = table.getAllColumns();
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+
 
   const handleDragStart = (e: React.DragEvent, columnId: string) => {
     setDraggedColumn(columnId);
@@ -71,7 +74,22 @@ export function DataTableSettings<TData>({
   };
 
   return (
-    <div className={cn('p-4 border-b border-gray-200 bg-gray-50', className)}>
+    <div className={cn('p-4 border-b border-gray-200 bg-gray-50 shadow-lg', className)}>
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">Table Settings</h2>
+          <p className="text-sm text-gray-600">Configure your table columns and display options</p>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="Close settings"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+        )}
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {showColumnVisibility && (
           <div>

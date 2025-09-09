@@ -11,11 +11,14 @@ interface Person {
   lastName: string;
   age: number;
   email: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'pending';
   role: string;
   department: string;
   salary: number;
   joinDate: string;
+  isRead: boolean;
+  isLiked: boolean;
+  priority: 'high' | 'medium' | 'low';
   subRows?: Person[];
 }
 
@@ -32,6 +35,9 @@ const sampleData: Person[] = [
     department: 'Engineering',
     salary: 75000,
     joinDate: '2022-01-15',
+    isRead: true,
+    isLiked: true,
+    priority: 'high',
     subRows: [
       {
         id: '1-1',
@@ -44,6 +50,9 @@ const sampleData: Person[] = [
         department: 'Engineering',
         salary: 85000,
         joinDate: '2022-01-15',
+        isRead: true,
+        isLiked: true,
+        priority: 'high',
         subRows: [],
       }
     ],
@@ -54,11 +63,14 @@ const sampleData: Person[] = [
     lastName: 'Smith',
     age: 28,
     email: 'jane.smith@example.com',
-    status: 'active',
+    status: 'inactive',
     role: 'Designer',
     department: 'Design',
     salary: 65000,
     joinDate: '2022-03-20',
+    isRead: false,
+    isLiked: false,
+    priority: 'medium',
     subRows: [
       {
         id: '2-1',
@@ -71,6 +83,9 @@ const sampleData: Person[] = [
         department: 'Design',
         salary: 75000,
         joinDate: '2022-03-20',
+        isRead: false,
+        isLiked: false,
+        priority: 'medium',
         subRows: [],
       }
     ],
@@ -86,6 +101,9 @@ const sampleData: Person[] = [
     department: 'Engineering',
     salary: 90000,
     joinDate: '2021-11-10',
+    isRead: false,
+    isLiked: false,
+    priority: 'high',
     subRows: [],
   },
   {
@@ -94,10 +112,13 @@ const sampleData: Person[] = [
     lastName: 'Brown',
     age: 32,
     email: 'alice.brown@example.com',
-    status: 'active',
+    status: 'pending',
     role: 'Analyst',
     department: 'Finance',
     salary: 70000,
+    isRead: true,
+    isLiked: true,
+    priority: 'low',
     joinDate: '2022-05-08',
     subRows: [
       {
@@ -111,6 +132,9 @@ const sampleData: Person[] = [
         department: 'Finance',
         salary: 80000,
         joinDate: '2022-05-08',
+        isRead: true,
+        isLiked: true,
+        priority: 'low',
         subRows: [],
       }
     ],
@@ -121,11 +145,14 @@ const sampleData: Person[] = [
     lastName: 'Wilson',
     age: 29,
     email: 'charlie.wilson@example.com',
-    status: 'active',
+    status: 'pending',
     role: 'Developer',
     department: 'Engineering',
     salary: 80000,
     joinDate: '2022-02-14',
+    isRead: true,
+    isLiked: true,
+    priority: 'high',
     subRows: [],
   },
 ];
@@ -180,6 +207,42 @@ const columns: ColumnDef<Person, any>[] = [
   columnHelper.accessor('joinDate', {
     header: 'Join Date',
     cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+  }),
+  columnHelper.accessor('isRead', {
+    header: 'Read',
+    cell: (info) => (
+      <span className={`px-2 py-1 rounded text-xs font-medium ${
+        info.getValue() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+      }`}>
+        {info.getValue() ? 'Yes' : 'No'}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('isLiked', {
+    header: 'Liked',
+    cell: (info) => (
+      <span className={`px-2 py-1 rounded text-xs font-medium ${
+        info.getValue() ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+      }`}>
+        {info.getValue() ? '❤️' : '🤍'}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('priority', {
+    header: 'Priority',
+    cell: (info) => {
+      const priority = info.getValue();
+      const colors = {
+        high: 'bg-red-100 text-red-800',
+        medium: 'bg-yellow-100 text-yellow-800',
+        low: 'bg-green-100 text-green-800',
+      };
+      return (
+        <span className={`px-2 py-1 rounded text-xs font-medium ${colors[priority]}`}>
+          {priority}
+        </span>
+      );
+    },
   }),
 ];
 
@@ -335,8 +398,8 @@ export function DataTableExample() {
           showSelectedCount={true}
           showExportButtons={false}
           showRefreshButton={false}
-          showSettingsButton={false}
-          renderToolbar={CustomToolbar}
+          showSettingsButton={true}
+          /* renderToolbar={CustomToolbar} */
           variant="hover"
           size="md"
           density="normal"
@@ -345,6 +408,68 @@ export function DataTableExample() {
           actions={actions}
           showActions={true}
           actionsLabel="Actions"
+          // Row status configuration
+          /* statusConfig={{
+            field: 'isRead',
+            colors: {
+              true: {
+                bg: '#f0fdf4', // green-50
+                text: '#166534', // green-800
+                border: '#bbf7d0', // green-200
+              },
+              false: {
+                bg: '#fef2f2', // red-50
+                text: '#991b1b', // red-800
+                border: '#fecaca', // red-200
+              },
+            },
+          }} */
+          // Column status configuration
+          /* columnStatusConfig={{
+            isRead: {
+              field: 'isRead',
+              colors: {
+                true: {
+                  bg: '#f8fafc', // slate-50
+                  text: '#475569', // slate-600
+                },
+                false: {
+                  bg: '#dbeafe', // blue-100
+                  text: '#1e40af', // blue-800
+                },
+              },
+            },
+            isLiked: {
+              field: 'isLiked',
+              colors: {
+                true: {
+                  bg: '#fef2f2', // red-50
+                  text: 'red', // red-600
+                },
+                false: {
+                  bg: '#f9fafb', // gray-50
+                  text: '#6b7280', // gray-500
+                },
+              },
+            },
+            priority: {
+              field: 'priority',
+              colors: {
+                high: {
+                  bg: '#fef2f2', // red-50
+                  text: '#dc2626', // red-600
+                },
+                medium: {
+                  bg: '#fffbeb', // yellow-50
+                  text: '#d97706', // yellow-600
+                },
+                low: {
+                  bg: '#f0fdf4', // green-50
+                  text: '#16a34a', // green-600
+                },
+              },
+            },
+          }} */
         />
       </div>
     </div>
