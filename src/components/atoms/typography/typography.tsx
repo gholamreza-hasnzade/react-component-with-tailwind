@@ -1,29 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-
-// Hook for text direction detection
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
-
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, [dir]);
-
-  return textDirection;
-}
+import { useTextDirection } from "@/hooks/useTextDirection"
 
 const variantMap = {
   h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent",
@@ -162,7 +139,11 @@ function Typography({
   capitalize = false,
   ...props
 }: TypographyProps) {
-  const textDirection = useTextDirection(dir);
+  const { direction: textDirection } = useTextDirection({ 
+    defaultDirection: dir || "auto",
+    detectFromDOM: true,
+    detectFromLocale: true
+  });
   
   // Determine the HTML element to render
   const Component = as || getDefaultElement(variant);

@@ -1,11 +1,11 @@
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
-import { DataTableApiExample } from "./components/molecules/dataTable/dataTableApi.example";
+import { TypographyExample } from "./components/atoms/typography/typography.example";
 
 function App() {
   return (
     <>
       <div className="w-full min-h-screen bg-gray-50">
-        <DataTableApiExample />
+        <TypographyExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

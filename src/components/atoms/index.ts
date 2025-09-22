@@ -1,17 +1,12 @@
 export { Accordion } from "@/components/atoms/accordion/accordion";
-export type {
-  AccordionProps,
-  AccordionItemProps,
-  AccordionTriggerProps,
-  AccordionContentProps,
-} from "@/components/atoms/accordion/accordion";
+export type { AccordionProps } from "@/components/atoms/accordion/accordion";
 
 export { ActionsDropdown } from "@/components/atoms/actionsDropdown/actionsDropdown";
 export { Button } from "@/components/atoms/button/button";
 export { Checkbox } from "@/components/atoms/checkbox/checkbox";
 export { Avatar } from "@/components/atoms/avatar/avatar";
 export { Badge } from "@/components/atoms/badge/badge";
-export type { BadgeProps, BadgeVariant, BadgeSize } from "@/components/atoms/badge/badge";
+export type { BadgeProps } from "@/components/atoms/badge/badge";
 export {
   Dialog,
   ConfirmDialog,
@@ -50,4 +45,7 @@ export { Tooltip } from "@/components/atoms/tooltip/tooltip";
 export type { TooltipProps } from "@/components/atoms/tooltip/tooltip";
 
 export { SpeedDial } from "@/components/atoms/speedDial/speedDial";
-export type { SpeedDialProps, SpeedDialAction } from "@/components/atoms/speedDial/speedDial";
+export type {
+  SpeedDialProps,
+  SpeedDialAction,
+} from "@/components/atoms/speedDial/speedDial";
