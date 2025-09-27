@@ -49,3 +49,6 @@ export type {
   SpeedDialProps,
   SpeedDialAction,
 } from "@/components/atoms/speedDial/speedDial";
+
+export { FullCalendar } from "@/components/atoms/fullcalendar";
+export type { FullCalendarProps, FullCalendarEvent } from "@/components/atoms/fullcalendar";
