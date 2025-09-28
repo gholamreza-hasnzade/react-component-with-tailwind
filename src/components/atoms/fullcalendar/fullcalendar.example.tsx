@@ -284,7 +284,7 @@ export const FullCalendarExample: React.FC = () => {
         message={`آیا می‌خواهید رویداد "${eventToDelete?.title}" را حذف کنید؟`}
         confirmText="حذف"
         cancelText="لغو"
-        confirmVariant="danger"
+        variant="error"
       />
     </div>
   )
