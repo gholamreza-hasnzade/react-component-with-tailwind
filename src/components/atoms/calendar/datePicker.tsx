@@ -5,12 +5,24 @@ import { Calendar as CalendarIcon } from "lucide-react"
 import { Calendar } from "./calendar"
 import { cn } from "@/lib/utils"
 
+export type DateFormat = 
+  | "fa-short"       // ۱۴۰۴/۷/۲۱
+  | "fa-long"        // شنبه، ۲۱ مهر ۱۴۰۴
+  | "fa-medium"      // ۲۱ مهر ۱۴۰۴
+  | "en-short"       // 10/11/2025
+  | "en-long"        // Saturday, October 11, 2025
+  | "en-medium"      // Oct 11, 2025
+  | "iso"            // 2025-10-11
+  | "custom"         // Use customFormat prop
+
 interface DatePickerProps {
   selected?: Date
   onSelect?: (date: Date | undefined) => void
   placeholder?: string
   className?: string
   disabled?: boolean
+  format?: DateFormat
+  customFormat?: (date: Date) => string
 }
 
 export function DatePicker({
@@ -19,6 +31,8 @@ export function DatePicker({
   placeholder = "انتخاب تاریخ",
   className,
   disabled = false,
+  format = "fa-short",
+  customFormat,
 }: DatePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -48,6 +62,59 @@ export function DatePicker({
     setIsOpen(false)
   }
 
+  const formatDate = (date: Date): string => {
+    if (customFormat) {
+      return customFormat(date)
+    }
+
+    switch (format) {
+      case "fa-short":
+        return date.toLocaleDateString("fa-IR")
+      
+      case "fa-long":
+        return date.toLocaleDateString("fa-IR", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      
+      case "fa-medium":
+        return date.toLocaleDateString("fa-IR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      
+      case "en-short":
+        return date.toLocaleDateString("en-US")
+      
+      case "en-long":
+        return date.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      
+      case "en-medium":
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      
+      case "iso":
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      
+      default:
+        return date.toLocaleDateString("fa-IR")
+    }
+  }
+
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       <button
@@ -63,13 +130,7 @@ export function DatePicker({
         dir="rtl"
       >
         <span className={cn(!selected && "text-gray-400")}>
-          {selected
-            ? selected.toLocaleDateString("fa-IR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            : placeholder}
+          {selected ? formatDate(selected) : placeholder}
         </span>
         <CalendarIcon className="h-4 w-4 text-gray-500" />
       </button>

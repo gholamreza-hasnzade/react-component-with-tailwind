@@ -56,6 +56,7 @@ export function DateRangePickerExample() {
             onSelect={setRange}
             placeholder="از تاریخ - تا تاریخ"
             className="max-w-md"
+            
           />
         </div>
         {range?.from && (

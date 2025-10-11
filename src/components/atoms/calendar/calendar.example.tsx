@@ -70,7 +70,7 @@ export function CalendarRangeExample() {
 
 export function CalendarMultipleExample() {
   const [dates, setDates] = React.useState<Date[] | undefined>([])
-
+  console.log(dates,"dates")
   return (
     <div className="flex flex-col gap-8 p-8">
       <div>
