@@ -1,11 +1,11 @@
-import FullCalendarExample from "./components/atoms/fullcalendar/fullcalendar.example";
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
+import { TreeExample } from "./components/atoms/tree/tree.example";
 
 function App() {
   return (
     <>
       <div className="w-full min-h-screen bg-gray-50">
-        <FullCalendarExample />
+        <TreeExample />
       </div>
       <ToastContainer position="top-right" maxToasts={5} />
     </>

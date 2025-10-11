@@ -6,6 +6,40 @@ import interactionPlugin from '@fullcalendar/interaction'
 import type { EventInput, DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core'
 import { cn } from '@/lib/utils'
 
+// Custom Persian locale for FullCalendar
+import { createLocale } from '@fullcalendar/core'
+
+const customPersianLocale = createLocale({
+  code: 'fa-custom',
+  week: {
+    dow: 6, // Saturday is the first day of the week
+    doy: 12 // The week that contains Jan 12th is the first week of the year
+  },
+  buttonText: {
+    prev: 'قبلی',
+    next: 'بعدی',
+    today: 'امروز',
+    month: 'ماه',
+    week: 'هفته',
+    day: 'روز',
+    list: 'لیست'
+  },
+  weekText: 'هفته',
+  allDayText: 'تمام روز',
+  moreLinkText: 'بیشتر',
+  noEventsText: 'رویدادی وجود ندارد',
+  monthNames: [
+    'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+    'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+  ],
+  monthNamesShort: [
+    'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+    'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+  ],
+  dayNames: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
+  dayNamesShort: ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'],
+  dayNamesMin: ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
+})
 const PERSIAN_MONTHS = [
   'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
   'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
