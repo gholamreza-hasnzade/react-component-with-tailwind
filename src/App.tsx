@@ -1,12 +1,11 @@
-import { DateFormatExamples ,CalendarMultipleExample} from "./components/atoms/calendar";
+import { SelectExample } from "./components/atoms/select/select.example";
 import { ToastContainer } from "./components/atoms/toast/ToastContainer";
-/* 0110035070 */
 function App() {
   return (
     <>
       <div className="w-full min-h-screen bg-gray-50">
         <div className="container mx-auto">
-          <CalendarMultipleExample />
+          <SelectExample />
         </div>
       </div>
       <ToastContainer position="top-right" maxToasts={5} />

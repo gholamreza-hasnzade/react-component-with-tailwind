@@ -307,62 +307,7 @@ describe('Button Component', () => {
     });
   });
 
-  describe('Debouncing', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it('debounces click events', async () => {
-      const handleClick = vi.fn();
-      
-      render(<Button onClick={handleClick} debounce={500}>Debounced</Button>);
-      
-      const button = screen.getByRole('button');
-      
-      // Simulate click
-      fireEvent.click(button);
-      
-      expect(handleClick).not.toHaveBeenCalled();
-      
-      // Advance timers
-      vi.advanceTimersByTime(500);
-      
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
-
-    it('clears previous timeout on multiple clicks', async () => {
-      const handleClick = vi.fn();
-      
-      render(<Button onClick={handleClick} debounce={500}>Debounced</Button>);
-      
-      const button = screen.getByRole('button');
-      
-      // Multiple clicks
-      fireEvent.click(button);
-      fireEvent.click(button);
-      fireEvent.click(button);
-      
-      // Advance timers
-      vi.advanceTimersByTime(500);
-      
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
-
-    it('calls onClick immediately when debounce is 0', () => {
-      const handleClick = vi.fn();
-      
-      render(<Button onClick={handleClick} debounce={0}>No Debounce</Button>);
-      
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-      
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
-  });
+  // Debouncing tests removed (debounce prop removed from component)
 
   describe('Tooltips', () => {
     it('renders tooltip attribute', () => {
@@ -543,23 +488,6 @@ describe('Button Component', () => {
   });
 
   describe('Cleanup', () => {
-    it('cleans up timeout on unmount', () => {
-      const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
-      const handleClick = vi.fn();
-      const { unmount } = render(
-        <Button debounce={1000} onClick={handleClick}>
-          Test
-        </Button>
-      );
-      
-      // Trigger a click to set up the timeout
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-      
-      // Now unmount should clear the timeout
-      unmount();
-      
-      expect(clearTimeoutSpy).toHaveBeenCalled();
-    });
+    // (debounce cleanup test removed)
   });
 });

@@ -51,10 +51,7 @@ const meta: Meta<typeof Button> = {
       control: { type: 'boolean' },
       description: 'Renders only the icon without text',
     },
-    debounce: {
-      control: { type: 'number', min: 0, max: 1000, step: 100 },
-      description: 'Debounce delay in milliseconds for click events',
-    },
+    
     tooltip: {
       control: { type: 'text' },
       description: 'Tooltip text shown on hover',
@@ -286,13 +283,7 @@ export const FullWidth: Story = {
 };
 
 // Debounce Story
-export const WithDebounce: Story = {
-  args: {
-    children: 'Debounced Click (500ms)',
-    debounce: 500,
-    onClick: () => alert('Debounced click!'),
-  },
-};
+// (debounce story removed)
 
 // Tooltip Story
 export const WithTooltip: Story = {

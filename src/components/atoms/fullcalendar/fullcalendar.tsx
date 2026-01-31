@@ -7,7 +7,7 @@ import type { EventInput, DateSelectArg, EventClickArg, EventDropArg } from '@fu
 import { cn } from '@/lib/utils'
 
 // Custom Persian locale for FullCalendar
-import { createLocale } from '@fullcalendar/core'
+/* import type { createLocale } from '@fullcalendar/core'
 
 const customPersianLocale = createLocale({
   code: 'fa-custom',
@@ -39,7 +39,7 @@ const customPersianLocale = createLocale({
   dayNames: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
   dayNamesShort: ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'],
   dayNamesMin: ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
-})
+}) */
 const PERSIAN_MONTHS = [
   'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
   'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'

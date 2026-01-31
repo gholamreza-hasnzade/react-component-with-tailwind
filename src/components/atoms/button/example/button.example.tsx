@@ -16,12 +16,7 @@ export const ButtonExamples = () => {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold text-gray-800">Variants</h2>
         <div className="flex flex-wrap gap-4">
-          <Button
-            onClick={() => handleClick("Contained button clicked")}
-            debounce={1000}
-          >
-            Contained
-          </Button>
+          <Button onClick={() => handleClick("Contained button clicked")}>Contained</Button>
           <Button
             variant="outlined"
             onClick={() => handleClick("Outlined button clicked")}
