@@ -1,7 +1,59 @@
 import React from 'react';
-import { MeterGroup, Meter } from './MeterGroup';
+import { MeterGroup, Meter } from './meterGroup';
 
 export const MeterGroupExample: React.FC = () => {
+  // 24-Hour Attendance Tracking Example
+  // Employee: IN (working), OFF (break/lunch), OUT (not at work)
+  const attendanceMeters = [
+    {
+      label: 'Monday - 24h Timeline',
+      segments: [
+        { value: 8, variant: 'success' as const, label: 'IN (8h)' },
+        { value: 1, variant: 'warning' as const, label: 'OFF (1h)' },
+        { value: 7, variant: 'success' as const, label: 'IN (7h)' },
+        { value: 8, variant: 'default' as const, label: 'OUT (8h)' }
+      ],
+      size: 'lg' as const,
+      showValue: true,
+      showLabel: true
+    },
+    {
+      label: 'Tuesday - 24h Timeline',
+      segments: [
+        { value: 9, variant: 'success' as const, label: 'IN (9h)' },
+        { value: 1.5, variant: 'warning' as const, label: 'OFF (1.5h)' },
+        { value: 6, variant: 'success' as const, label: 'IN (6h)' },
+        { value: 7.5, variant: 'default' as const, label: 'OUT (7.5h)' }
+      ],
+      size: 'lg' as const,
+      showValue: true,
+      showLabel: true
+    },
+    {
+      label: 'Wednesday - 24h Timeline',
+      segments: [
+        { value: 8, variant: 'success' as const, label: 'IN (8h)' },
+        { value: 1, variant: 'warning' as const, label: 'OFF (1h)' },
+        { value: 7, variant: 'success' as const, label: 'IN (7h)' },
+        { value: 8, variant: 'default' as const, label: 'OUT (8h)' }
+      ],
+      size: 'lg' as const,
+      showValue: true,
+      showLabel: true
+    },
+    {
+      label: 'Weekly Summary',
+      segments: [
+        { value: 50, variant: 'success' as const, label: 'Total IN (50h)' },
+        { value: 3.5, variant: 'warning' as const, label: 'Total OFF (3.5h)' },
+        { value: 10.5, variant: 'error' as const, label: 'Below Target (10.5h)' }
+      ],
+      size: 'lg' as const,
+      showValue: true,
+      showLabel: true
+    }
+  ];
+
   const horizontalMeters = [
     {
       label: 'CPU Usage',
@@ -115,13 +167,27 @@ export const MeterGroupExample: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-12">
+      {/* Attendance/Time Tracking Section */}
+      <div>
+        <h2 className="text-3xl font-bold mb-2 text-blue-900">⏰ Employee Attendance Tracking (24h)</h2>
+        <p className="text-gray-600 mb-6">Track daily work hours - IN (working), OFF (break), OUT (off duty)</p>
+        <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg border-2 border-blue-200">
+          <MeterGroup 
+            meters={attendanceMeters}
+            layout="vertical"
+            gap="lg"
+            className="space-y-6"
+          />
+        </div>
+      </div>
+
       <div>
         <h2 className="text-2xl font-bold mb-4">Interactive Segmented Horizontal Meters</h2>
         <p className="text-gray-600 mb-4">Click on any colored segment to interact with it!</p>
         <MeterGroup 
           meters={horizontalMeters} 
-          layout="horizontal" 
+          layout="vertical" 
           gap="lg"
           onSegmentClick={handleSegmentClick}
           className="p-4 bg-gray-50 rounded-lg"

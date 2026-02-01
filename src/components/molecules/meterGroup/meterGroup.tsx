@@ -19,7 +19,6 @@ export interface MeterProps {
 
 export interface MeterGroupProps {
   meters: MeterProps[];
-  layout?: 'horizontal' | 'vertical';
   gap?: 'sm' | 'md' | 'lg';
   className?: string;
   onSegmentClick?: (meterIndex: number, segment: MeterSegment, segmentIndex: number) => void;
@@ -169,18 +168,10 @@ const Meter: React.FC<MeterProps> = ({
 
 export const MeterGroup: React.FC<MeterGroupProps> = ({
   meters,
-  layout = 'horizontal',
   gap = 'md',
   className,
   onSegmentClick,
 }) => {
-  const getLayoutClasses = () => {
-    switch (layout) {
-      case 'vertical': return 'flex flex-col w-full';
-      default: return 'flex flex-row';
-    }
-  };
-
   const getGapClasses = () => {
     switch (gap) {
       case 'sm': return 'gap-2';
@@ -196,12 +187,12 @@ export const MeterGroup: React.FC<MeterGroupProps> = ({
   };
 
   return (
-    <div className={cn(getLayoutClasses(), getGapClasses(), className)}>
+    <div className={cn('flex flex-col w-full', getGapClasses(), className)}>
       {meters.map((meter, index) => (
         <Meter
           key={index}
           {...meter}
-          className={layout === 'vertical' ? 'w-full' : 'flex-1'}
+          className='w-full'
           onSegmentClick={onSegmentClick ? (segment, segmentIndex) => handleMeterSegmentClick(index, segment, segmentIndex) : undefined}
         />
       ))}
