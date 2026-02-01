@@ -2,6 +2,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal, Home, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTextDirection } from "@/hooks/useTextDirection";
 
 export interface BreadcrumbItem {
   label: string;
@@ -63,29 +64,6 @@ export interface BreadcrumbProps extends React.ComponentProps<"nav"> {
   };
 }
 
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
-
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, [dir]);
-
-  return textDirection;
-}
-
 function BreadcrumbComponent({
   items,
   separator = <ChevronRight className="h-4 w-4" />,
@@ -118,7 +96,9 @@ function BreadcrumbComponent({
 }: BreadcrumbProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isCondensedMenuOpen, setIsCondensedMenuOpen] = React.useState(false);
-  const textDirection = useTextDirection(dir);
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    });
 
   const shouldTruncate = items.length > maxItems && !isExpanded;
   const shouldShowCondensed =

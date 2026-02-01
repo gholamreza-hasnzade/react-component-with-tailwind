@@ -1,31 +1,8 @@
-import * as React from "react";
+import React from "react"
+import { cn } from "@/lib/utils"
+import { useTextDirection } from "@/hooks/useTextDirection"
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import { ImageIcon, AlertCircle, Loader2, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
-
-// Hook for text direction detection
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">(
-    "ltr"
-  );
-
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, [dir]);
-
-  return textDirection;
-}
 
 // Image variants using class-variance-authority
 const imageVariants = cva(
@@ -137,7 +114,9 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     },
     ref
   ) => {
-    const textDirection = useTextDirection(dir);
+    const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    });
     const [imageState, setImageState] = React.useState<
       "loading" | "loaded" | "error"
     >(src ? "loading" : "error");

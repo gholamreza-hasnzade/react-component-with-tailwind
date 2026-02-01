@@ -2,27 +2,7 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X, AlertCircle, CheckCircle, AlertTriangle, Info, Bell } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr");
-
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, [dir]);
-
-  return textDirection;
-}
+import { useTextDirection } from "@/hooks/useTextDirection"
 
 const alertVariants = cva(
   "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
@@ -88,7 +68,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     animationDuration = 300,
     ...props 
   }, ref) => {
-    const textDirection = useTextDirection(dir)
+    const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
     const [isVisible, setIsVisible] = React.useState(true)
     const [isAnimating, setIsAnimating] = React.useState(false)
     const [isEntering, setIsEntering] = React.useState(animated)

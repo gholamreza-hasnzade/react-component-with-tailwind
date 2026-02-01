@@ -1,28 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-
-// Hook for text direction detection
-function useTextDirection(dir?: "ltr" | "rtl" | "auto") {
-  const [textDirection, setTextDirection] = React.useState<"ltr" | "rtl">("ltr");
-
-  React.useEffect(() => {
-    if (dir === "auto") {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      const detectedDir = htmlDir || bodyDir || "ltr";
-      setTextDirection(detectedDir);
-    } else if (dir) {
-      setTextDirection(dir);
-    } else {
-      const htmlDir = document.documentElement.dir as "ltr" | "rtl";
-      const bodyDir = document.body.dir as "ltr" | "rtl";
-      setTextDirection(htmlDir || bodyDir || "ltr");
-    }
-  }, [dir]);
-
-  return textDirection;
-}
+import { useTextDirection } from "@/hooks/useTextDirection"
 
 // Card variants using class-variance-authority
 const cardVariants = cva(
@@ -82,7 +61,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     children,
     ...props 
   }, ref) => {
-    const textDirection = useTextDirection(dir)
+    const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
     const Comp = asChild ? React.Fragment : "div"
 
     const cardClasses = cn(
@@ -131,7 +112,9 @@ const CardHeader = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <div
@@ -151,7 +134,9 @@ const CardTitle = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <h3
@@ -174,7 +159,9 @@ const CardDescription = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <p
@@ -194,7 +181,9 @@ const CardContent = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <div
@@ -214,7 +203,9 @@ const CardFooter = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <div
@@ -236,7 +227,9 @@ const CardImage = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, src, alt, dir, children, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   return (
     <div
@@ -267,7 +260,9 @@ const CardBadge = React.forwardRef<
     dir?: "ltr" | "rtl" | "auto"
   }
 >(({ className, variant = "default", dir, ...props }, ref) => {
-  const textDirection = useTextDirection(dir)
+  const { direction: textDirection } = useTextDirection({ 
+      defaultDirection: dir || "auto"
+    })
   
   const badgeVariants = {
     default: "bg-primary text-primary-foreground",
