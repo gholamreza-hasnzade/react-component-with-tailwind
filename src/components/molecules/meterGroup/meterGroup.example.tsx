@@ -175,7 +175,6 @@ export const MeterGroupExample: React.FC = () => {
         <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg border-2 border-blue-200">
           <MeterGroup 
             meters={attendanceMeters}
-            layout="vertical"
             gap="lg"
             className="space-y-6"
           />
@@ -187,7 +186,6 @@ export const MeterGroupExample: React.FC = () => {
         <p className="text-gray-600 mb-4">Click on any colored segment to interact with it!</p>
         <MeterGroup 
           meters={horizontalMeters} 
-          layout="vertical" 
           gap="lg"
           onSegmentClick={handleSegmentClick}
           className="p-4 bg-gray-50 rounded-lg"
@@ -201,7 +199,6 @@ export const MeterGroupExample: React.FC = () => {
         <div className="p-4 bg-gray-50 rounded-lg max-w-md border-2 border-blue-200">
           <MeterGroup 
             meters={verticalMeters} 
-            layout="vertical" 
             gap="md"
             onSegmentClick={handleSegmentClick}
             className="w-full"
